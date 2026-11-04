@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "packId": "duoquest-starter",
+  "title": "Khởi động cùng DuoQuest",
+  "language": "vi",
+  "category": "general",
+  "questions": [
+    {
+      "id": "q1",
+      "type": "single_choice",
+      "topic": "Địa lý",
+      "difficulty": "easy",
+      "prompt": "Thủ đô của Việt Nam là thành phố nào?",
+      "options": [
+        { "id": "A", "text": "Hà Nội" },
+        { "id": "B", "text": "Đà Nẵng" },
+        { "id": "C", "text": "Huế" },
+        { "id": "D", "text": "Cần Thơ" }
+      ],
+      "correctOptionId": "A",
+      "explanation": "Hà Nội là thủ đô của Việt Nam.",
+      "timeLimitSeconds": 20
+    },
+    {
+      "id": "q2",
+      "type": "single_choice",
+      "topic": "Khoa học",
+      "difficulty": "easy",
+      "prompt": "Công thức hóa học của nước là gì?",
+      "options": [
+        { "id": "A", "text": "CO₂" },
+        { "id": "B", "text": "H₂O" },
+        { "id": "C", "text": "O₂" },
+        { "id": "D", "text": "NaCl" }
+      ],
+      "correctOptionId": "B",
+      "explanation": "Một phân tử nước có hai nguyên tử hydro và một nguyên tử oxy.",
+      "timeLimitSeconds": 20
+    },
+    {
+      "id": "q3",
+      "type": "single_choice",
+      "topic": "Toán học",
+      "difficulty": "easy",
+      "prompt": "Số nguyên tố nhỏ nhất là số nào?",
+      "options": [
+        { "id": "A", "text": "0" },
+        { "id": "B", "text": "1" },
+        { "id": "C", "text": "2" },
+        { "id": "D", "text": "3" }
+      ],
+      "correctOptionId": "C",
+      "explanation": "2 là số nguyên tố nhỏ nhất và là số nguyên tố chẵn duy nhất.",
+      "timeLimitSeconds": 20
+    },
+    {
+      "id": "q4",
+      "type": "single_choice",
+      "topic": "Thiên văn",
+      "difficulty": "easy",
+      "prompt": "Hành tinh nào thường được gọi là hành tinh đỏ?",
+      "options": [
+        { "id": "A", "text": "Sao Kim" },
+        { "id": "B", "text": "Sao Mộc" },
+        { "id": "C", "text": "Sao Thổ" },
+        { "id": "D", "text": "Sao Hỏa" }
+      ],
+      "correctOptionId": "D",
+      "explanation": "Oxit sắt trên bề mặt tạo nên màu đỏ đặc trưng của Sao Hỏa.",
+      "timeLimitSeconds": 20
+    }
+  ]
+}

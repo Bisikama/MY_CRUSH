@@ -1,0 +1,129 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Player {
+  id          String   @id @default(uuid()) @db.Uuid
+  nickname    String
+  tokenHash   String   @unique
+  xp          Int      @default(0)
+  createdAt   DateTime @default(now())
+  wallet      Wallet?
+  inventory   Inventory[]
+  loadout     Loadout[]
+  sessions    SessionPlayer[]
+  packs       QuizQuestionPack[]
+}
+
+model QuizQuestionPack {
+  id          String   @id @default(uuid()) @db.Uuid
+  packId      String
+  version     Int
+  title       String
+  ownerId     String?  @db.Uuid
+  owner       Player?  @relation(fields: [ownerId], references: [id])
+  trusted     Boolean  @default(false)
+  content     Json
+  createdAt   DateTime @default(now())
+  sessions    GameSession[]
+  @@unique([packId, version])
+  @@index([ownerId])
+}
+
+model GameSession {
+  id           String   @id @db.Uuid
+  roomCode     String
+  gameId       String   @default("quiz")
+  mode         String
+  layout       String
+  status       String   @default("IN_PROGRESS")
+  packVersionId String  @db.Uuid
+  pack         QuizQuestionPack @relation(fields: [packVersionId], references: [id])
+  questionSnapshot Json
+  startedAt    DateTime @default(now())
+  finishedAt   DateTime?
+  players      SessionPlayer[]
+  result       MatchResult?
+  answers      QuizPlayerAnswer[]
+  @@index([status])
+}
+
+model SessionPlayer {
+  sessionId String @db.Uuid
+  playerId  String @db.Uuid
+  session   GameSession @relation(fields: [sessionId], references: [id])
+  player    Player @relation(fields: [playerId], references: [id])
+  score     Int @default(0)
+  @@id([sessionId, playerId])
+  @@index([playerId])
+}
+
+model MatchResult {
+  sessionId String @id @db.Uuid
+  session   GameSession @relation(fields: [sessionId], references: [id])
+  payload   Json
+  createdAt DateTime @default(now())
+}
+
+model QuizPlayerAnswer {
+  sessionId String @db.Uuid
+  roundId   String
+  playerId  String @db.Uuid
+  optionId  String
+  correct   Boolean
+  session   GameSession @relation(fields: [sessionId], references: [id])
+  @@id([sessionId, roundId, playerId])
+}
+
+model Wallet {
+  playerId String @id @db.Uuid
+  player   Player @relation(fields: [playerId], references: [id])
+  balance  Int @default(0)
+  ledger   CoinTransaction[]
+}
+
+model CoinTransaction {
+  id             String @id @default(uuid()) @db.Uuid
+  playerId       String @db.Uuid
+  wallet         Wallet @relation(fields: [playerId], references: [playerId])
+  delta          Int
+  reason         String
+  idempotencyKey String @unique
+  createdAt      DateTime @default(now())
+  @@index([playerId, createdAt])
+}
+
+model ItemDefinition {
+  id         String @id
+  name       String
+  kind       String
+  slot       String?
+  price      Int
+  gameId     String?
+  metadata   Json
+  inventory  Inventory[]
+  loadout    Loadout[]
+}
+
+model Inventory {
+  playerId String @db.Uuid
+  itemId   String
+  quantity Int @default(1)
+  player   Player @relation(fields: [playerId], references: [id])
+  item     ItemDefinition @relation(fields: [itemId], references: [id])
+  @@id([playerId, itemId])
+}
+
+model Loadout {
+  playerId String @db.Uuid
+  slot     String
+  itemId   String
+  player   Player @relation(fields: [playerId], references: [id])
+  item     ItemDefinition @relation(fields: [itemId], references: [id])
+  @@id([playerId, slot])
+}

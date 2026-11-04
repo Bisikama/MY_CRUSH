@@ -1,0 +1,105 @@
+'use client';
+import { useState } from 'react';
+import { Button, Card } from '@duoquest/ui';
+import { questionPackSchema, type QuestionPack } from '@duoquest/shared-types';
+import { api, readIdentity } from '../../lib/client';
+
+export default function PacksPage() {
+  const [raw, setRaw] = useState('');
+  const [preview, setPreview] = useState<QuestionPack | null>(null);
+  const [message, setMessage] = useState('');
+  const [busy, setBusy] = useState(false);
+  async function validate() {
+    setBusy(true);
+    setMessage('');
+    setPreview(null);
+    try {
+      const identity = readIdentity();
+      if (!identity) throw new Error('Hãy tạo hồ sơ khách tại trang Chơi trước.');
+      const pack = questionPackSchema.parse(JSON.parse(raw));
+      const data = await api<{ pack: QuestionPack; warning: string }>(
+        '/question-packs/preview',
+        identity.token,
+        pack,
+      );
+      setPreview(data.pack);
+      setMessage(data.warning);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'JSON không hợp lệ');
+    } finally {
+      setBusy(false);
+    }
+  }
+  async function save() {
+    if (!preview) return;
+    setBusy(true);
+    try {
+      await api('/question-packs', readIdentity()?.token, preview);
+      setMessage('Đã lưu phiên bản bộ đề. Bạn có thể chọn bộ đề này khi tạo phòng.');
+      setPreview(null);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : 'Không thể lưu');
+    } finally {
+      setBusy(false);
+    }
+  }
+  return (
+    <div className="narrow">
+      <p className="eyebrow">THƯ VIỆN CỦA BẠN</p>
+      <h1>
+        Mang câu hỏi
+        <br />
+        của bạn <em>vào cuộc chơi.</em>
+      </h1>
+      <p className="lead">
+        Dán bộ đề JSON schemaVersion 1, kiểm tra rồi duyệt nội dung trước khi lưu.
+      </p>
+      <Card>
+        <label htmlFor="pack-json">Nội dung JSON</label>
+        <textarea
+          id="pack-json"
+          rows={14}
+          value={raw}
+          onChange={(event) => {
+            setRaw(event.target.value);
+            setPreview(null);
+          }}
+          placeholder={'{ "schemaVersion": 1, "packId": "my-pack", ... }'}
+        />
+        <Button disabled={busy || !raw.trim()} onClick={() => void validate()}>
+          Kiểm tra & xem trước
+        </Button>
+        {message && (
+          <p className="notice" role="status">
+            {message}
+          </p>
+        )}
+      </Card>
+      {preview && (
+        <Card>
+          <h2>{preview.title}</h2>
+          <p>
+            {preview.questions.length} câu · {preview.language} · {preview.category}
+          </p>
+          {preview.questions.map((question, index) => (
+            <details key={question.id}>
+              <summary>
+                {index + 1}. {question.prompt}
+              </summary>
+              <p>
+                Đáp án {question.correctOptionId}: {question.explanation}
+              </p>
+            </details>
+          ))}
+          <p className="small muted">
+            Xác nhận bạn đã kiểm tra nội dung. Lưu sẽ tạo phiên bản mới; các trận đang chơi giữ
+            snapshot cũ.
+          </p>
+          <Button disabled={busy} onClick={() => void save()}>
+            Xác nhận lưu bộ đề
+          </Button>
+        </Card>
+      )}
+    </div>
+  );
+}

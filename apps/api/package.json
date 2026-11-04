@@ -1,0 +1,37 @@
+{
+  "name": "@duoquest/api",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "tsx watch --tsconfig tsconfig.json src/main.ts",
+    "build": "tsc --noEmit && tsup",
+    "start": "node dist/main.js",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@duoquest/game-core": "workspace:*",
+    "@duoquest/game-quiz": "workspace:*",
+    "@duoquest/game-sdk": "workspace:*",
+    "@duoquest/shared-types": "workspace:*",
+    "@nestjs/common": "12.3.2",
+    "@nestjs/core": "12.3.2",
+    "@nestjs/platform-express": "12.3.2",
+    "@nestjs/platform-socket.io": "12.3.2",
+    "@nestjs/swagger": "^12.1.0",
+    "@nestjs/websockets": "12.3.2",
+    "@prisma/client": "6.19.0",
+    "dotenv": "^16.6.1",
+    "express": "^5.1.0",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2",
+    "socket.io": "^4.8.1",
+    "zod": "^3.25.76",
+    "zod-to-json-schema": "^3.25.2"
+  },
+  "devDependencies": {
+    "@nestjs/testing": "12.3.2",
+    "@types/express": "^5.0.3",
+    "socket.io-client": "^4.8.1",
+    "tsup": "^8.5.0"
+  }
+}

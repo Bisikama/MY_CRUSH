@@ -1,0 +1,13 @@
+{
+  "name": "@duoquest/game-core",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@duoquest/shared-types": "workspace:*"
+  }
+}

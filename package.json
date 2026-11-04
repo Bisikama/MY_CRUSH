@@ -1,0 +1,44 @@
+{
+  "name": "duoquest",
+  "private": true,
+  "packageManager": "pnpm@11.25.0",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "pnpm --parallel --filter @duoquest/api --filter @duoquest/web dev",
+    "build": "pnpm --filter @duoquest/api build && pnpm --filter @duoquest/web build",
+    "typecheck": "tsc --noEmit -p tsconfig.tools.json && pnpm -r typecheck",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "db:generate": "prisma generate",
+    "db:validate": "prisma validate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:seed": "tsx --env-file=.env prisma/seed.ts",
+    "db:up": "docker compose --env-file .env -f infra/compose.yaml up -d",
+    "db:down": "docker compose --env-file .env -f infra/compose.yaml down",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.0",
+    "@playwright/test": "1.56.1",
+    "@types/node": "^22.19.0",
+    "eslint": "^9.39.0",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.6.2",
+    "prisma": "6.19.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.0",
+    "vitest": "^3.2.4",
+    "zod-to-json-schema": "^3.25.0"
+  },
+  "dependencies": {
+    "@prisma/client": "6.19.0",
+    "zod": "^3.25.76"
+  }
+}
