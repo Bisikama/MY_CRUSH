@@ -1,5 +1,11 @@
 # Bộ câu hỏi JSON
 
+> **Mục đích:** Định dạng và quy trình sử dụng bộ câu hỏi JSON.
+> **Đối tượng:** Người soạn đề, lập trình viên và QA.
+> **Trạng thái:** `current`.
+> **Cập nhật:** 2026-11-07 (sắp xếp tài liệu; các mốc kiểm chứng trong nội dung giữ nguyên).
+> **Liên quan:** [Mục lục](../README.md), [Nguồn tham khảo](../../examples/question-pack.schema.json).
+
 Nguồn chuẩn: `packages/shared-types/src/question-pack.ts`. Ví dụ: `examples/question-pack.json`. JSON Schema: `examples/question-pack.schema.json`, sinh bằng `pnpm exec tsx scripts/export-question-schema.ts`. Khi sửa Zod phải sinh lại schema.
 
 Pipeline web/API: parse → Zod validation + business validation → preview (không ghi) → người dùng duyệt → xác nhận lưu phiên bản mới. Không gọi AI tích hợp trong app. Nội dung đưa vào UI dưới dạng text, không render HTML từ pack.

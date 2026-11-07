@@ -1,5 +1,11 @@
 # Đặc tả Auth và phân quyền DuoQuest
 
+> **Mục đích:** Luồng xác thực email, phiên và phân quyền đã triển khai.
+> **Đối tượng:** Lập trình viên frontend/backend và QA.
+> **Trạng thái:** `current`.
+> **Cập nhật:** 2026-11-07 (sắp xếp tài liệu; các mốc kiểm chứng trong nội dung giữ nguyên).
+> **Liên quan:** [Mục lục](../README.md), [Nguồn tham khảo](../../apps/api/src/modules/auth/auth.controller.ts).
+
 Ngày rà soát 06/11/2026. Tài liệu mô tả Auth trong source. Database phát triển cần chạy migration Auth và cấu hình SMTP để gửi mail thật.
 
 ## Phạm vi đã thống nhất

@@ -1,5 +1,11 @@
 # Luật Quiz hiện thực trong foundation
 
+> **Mục đích:** Luật Quiz theo mode và cách chơi.
+> **Đối tượng:** Lập trình viên, thiết kế game và QA.
+> **Trạng thái:** `current`.
+> **Cập nhật:** 2026-11-07 (sắp xếp tài liệu; các mốc kiểm chứng trong nội dung giữ nguyên).
+> **Liên quan:** [Mục lục](../README.md), [Nguồn tham khảo](../../packages/game-quiz/src/quiz.engine.ts).
+
 Một engine, phân nhánh luật qua mode/layout. Mỗi câu: `QUESTION → REVEAL → câu tiếp theo / FINISHED`. Câu hiện tại có ID riêng trong session; deadline do server tạo. Browser chỉ hiển thị đếm ngược có bù clock offset gần đúng.
 
 | Mode                 | Luật                                                                                          |

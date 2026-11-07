@@ -1,5 +1,11 @@
 # Kiến trúc
 
+> **Mục đích:** Kiến trúc hệ thống và ranh giới các workspace/module.
+> **Đối tượng:** Lập trình viên và agent.
+> **Trạng thái:** `current`.
+> **Cập nhật:** 2026-11-07 (sắp xếp tài liệu; các mốc kiểm chứng trong nội dung giữ nguyên).
+> **Liên quan:** [Mục lục](../README.md), [Nguồn tham khảo](../../packages/game-sdk/src/index.ts).
+
 Monorepo quản lý source; NestJS Modular Monolith là tổ chức runtime. Một API instance, một PostgreSQL. Game packages là thư viện nội bộ được bundle vào API.
 
 ```mermaid

@@ -1,5 +1,11 @@
 # Lộ trình và kiểm chứng
 
+> **Mục đích:** Lộ trình và cách chạy các nhóm kiểm thử.
+> **Đối tượng:** Chủ dự án, lập trình viên và QA.
+> **Trạng thái:** `current`.
+> **Cập nhật:** 2026-11-07 (sắp xếp tài liệu; các mốc kiểm chứng trong nội dung giữ nguyên).
+> **Liên quan:** [Mục lục](../README.md), [Nguồn tham khảo](../../package.json).
+
 | Mốc | Trạng thái source foundation                                                                                |
 | --- | ----------------------------------------------------------------------------------------------------------- |
 | M0  | Monorepo, web/API, health, Prisma/migration/seed có source; LAN thiết bị thật cần nghiệm thu                |
@@ -32,4 +38,4 @@ Task tiếp theo ưu tiên: mở rộng browser regression cho Co-op/import → 
 
 Browser e2e hiện có trong `e2e/quiz.spec.ts`: Solo qua refresh/history/quay lại phòng, hai context Duel, shared-screen keyboard/steal và viewport mobile. Chạy `pnpm db:deploy`, `pnpm db:seed`, `pnpm build`, sau đó `pnpm test:e2e` với DATABASE_URL trỏ DB phát triển/test sẵn sàng. Mặc định dùng Chrome đã cài. CI đặt `PLAYWRIGHT_CHANNEL=chromium` và chạy `pnpm exec playwright install --with-deps chromium` trước; không cần Chrome desktop trên CI. Tests tạo guest/room/answer thật trong DB đích, nên dùng DB test. Playwright tự khởi động rồi tắt API/web, yêu cầu cổng 3000/4000 còn trống.
 
-Workflow `.github/workflows/ci.yml` khai báo lint/typecheck/unit/transport/DB/build/browser checks với PostgreSQL service. Workflow chưa được chạy trên GitHub trong phiên dựng source; local checks được ghi riêng trong `docs/11-VERIFICATION.md`.
+Workflow `.github/workflows/ci.yml` khai báo lint/typecheck/unit/transport/DB/build/browser checks với PostgreSQL service. Workflow chưa được chạy trên GitHub trong phiên dựng source; local checks được ghi riêng trong `docs/quality/verification.md`.

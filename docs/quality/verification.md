@@ -1,5 +1,11 @@
 # Kết quả kiểm chứng source foundation
 
+> **Mục đích:** Bằng chứng kiểm chứng theo từng mốc, không chứng nhận source mới nhất.
+> **Đối tượng:** Chủ dự án, lập trình viên và QA.
+> **Trạng thái:** `historical`.
+> **Cập nhật:** 2026-11-07 (sắp xếp tài liệu; các mốc kiểm chứng trong nội dung giữ nguyên).
+> **Liên quan:** [Mục lục](../README.md), [Nguồn tham khảo](../project/roadmap-quality.md).
+
 ## Bổ sung Auth ngày 06/11/2026
 
 Áp dụng hai migration và seed thành công trên PostgreSQL test riêng. Vitest 58/58 pass khi bật DB suite. Chrome pass 4 bài Quiz và 1 bài Auth kiểm tra guest upgrade, xác minh OTP sau reload, đặt lại mật khẩu và đăng nhập. Lint, typecheck, Prisma validate và build API/web pass. Kiểm tra format pass với `--end-of-line auto` trên Windows. SMTP dùng adapter giả trong kiểm thử. Còn nghiệm thu email SMTP thật và LAN hai máy vật lý.
@@ -20,7 +26,7 @@ Ngày thực hiện: 03/11/2026. Đây là kết quả chạy thực tế trong 
 | `pnpm test:e2e`                           | 4 browser tests pass trên Chrome thật                          |
 | `pnpm format:check`                       | Pass sau chuẩn hóa định dạng cuối                              |
 
-Tests thông thường không bật DB suite: 46 tests chạy, 6 DB tests skip có chủ đích. Muốn kiểm chứng transaction thật phải bật suite theo hướng dẫn trong docs/08, không lấy MemoryStore làm bằng chứng database.
+Tests thông thường không bật DB suite: 46 tests chạy, 6 DB tests skip có chủ đích. Muốn kiểm chứng transaction thật phải bật suite theo hướng dẫn trong docs/project/roadmap-quality.md, không lấy MemoryStore làm bằng chứng database.
 
 Môi trường local: Windows, Node 22.19.0, pnpm 11.25.0, PostgreSQL 18.1 có sẵn trên máy, Chrome 156.0.8078.80. Cluster PostgreSQL kiểm thử được tạo riêng trong `.local/pg-verify`, bind 127.0.0.1:55432, database `duoquest_test`. Không dùng hoặc sửa database có sẵn của người dùng. Cluster này được tắt khi kết thúc kiểm chứng; cấu hình `.env` thông thường vẫn dành cho PostgreSQL/Docker phát triển.
 

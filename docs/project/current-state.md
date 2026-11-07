@@ -1,6 +1,12 @@
 # DuoQuest — Tổng hợp hiện trạng dự án
 
-Cập nhật 06/11/2026. Source đã bổ sung xác thực email OTP, cookie session và role PLAYER/ADMIN. Các mô tả guest bearer bên dưới thuộc bản nền ngày 04/11/2026. Xem [đặc tả Auth](13-AUTH-PHAN-QUYEN.md) và [README](../README.md) để chạy migration và cấu hình mail.
+> **Mục đích:** Ảnh chụp hiện trạng source tại các ngày đối chiếu ghi trong nội dung.
+> **Đối tượng:** Chủ dự án và lập trình viên mới.
+> **Trạng thái:** `historical`.
+> **Cập nhật:** 2026-11-07 (sắp xếp tài liệu; các mốc kiểm chứng trong nội dung giữ nguyên).
+> **Liên quan:** [Mục lục](../README.md), [Nguồn tham khảo](../../README.md).
+
+Cập nhật 06/11/2026. Source đã bổ sung xác thực email OTP, cookie session và role PLAYER/ADMIN. Các mô tả guest bearer bên dưới thuộc bản nền ngày 04/11/2026. Xem [đặc tả Auth](../features/auth.md) và [README](../../README.md) để chạy migration và cấu hình mail.
 
 Ngày đối chiếu: **04/11/2026**. Đây là ảnh chụp hiện trạng source, cấu hình và kiểm chứng trong phiên làm việc; cần cập nhật khi dự án thay đổi.
 
@@ -380,7 +386,7 @@ Socket.IO dùng path `/socket.io`, auth `{ token }`; client events: `room:create
 ### Kết quả đã ghi nhận
 
 - **Phiên bổ sung Swagger ngày 04/11/2026:** lint, typecheck, build và format pass; Vitest **50 pass, 6 DB tests skip**. Bốn test Swagger đã pass, gồm kiểm tra HTTP localhost thật. Không chạy lại DB integration hoặc browser e2e trong phiên Swagger.
-- **Bản nền ngày 03/11/2026:** `docs/11-VERIFICATION.md` ghi 52 tests pass khi bật DB suite và 4 browser e2e pass. Đó là kết quả trước khi thêm Swagger, trên database test PostgreSQL 18.1 riêng; không đồng nhất với Docker PostgreSQL 17 đang dùng hiện tại.
+- **Bản nền ngày 03/11/2026:** `docs/quality/verification.md` ghi 52 tests pass khi bật DB suite và 4 browser e2e pass. Đó là kết quả trước khi thêm Swagger, trên database test PostgreSQL 18.1 riêng; không đồng nhất với Docker PostgreSQL 17 đang dùng hiện tại.
 - **Lượt lập báo cáo này:** kiểm tra source/config, versions, Docker status, migration status và HTTP web/API/OpenAPI. Không chạy lại toàn bộ test/build vì chỉ thêm tài liệu.
 - Workflow CI có source; chưa có bằng chứng trong phiên làm việc rằng workflow đã chạy thành công trên GitHub.
 
@@ -426,21 +432,21 @@ Chưa tự chốt các đề xuất trên. Theo yêu cầu chủ dự án, thay 
 
 ## 16. Tài liệu và source để tra cứu
 
-- [README: chạy local/LAN và Swagger](../README.md)
-- [Phạm vi sản phẩm](01-PRODUCT-SCOPE.md)
-- [Kiến trúc](02-ARCHITECTURE.md)
-- [Luật Quiz](03-QUIZ-GAMEPLAY.md)
-- [Room, realtime và LAN](04-ROOMS-REALTIME-LAN.md)
-- [Dữ liệu và transaction](05-DATA-MODEL.md)
-- [Kinh tế và vật phẩm](06-ECONOMY-ITEMS.md)
-- [Bộ câu hỏi JSON](07-QUESTION-PACKS.md)
-- [Roadmap và hướng dẫn test](08-ROADMAP-QUALITY.md)
-- [Quyết định LOCKED / PROPOSAL / OPEN](09-DECISIONS.md)
-- [REST/socket contracts](10-CONTRACTS.md)
-- [Kết quả kiểm chứng bản nền](11-VERIFICATION.md)
-- [Scripts/dependencies root](../package.json), [web](../apps/web/package.json), [API](../apps/api/package.json)
-- [Luật engine thực tế](../packages/game-quiz/src/quiz.engine.ts)
-- [Giao diện lobby/trận/kết quả](../apps/web/src/features/quiz/quiz-stage.tsx)
-- [Prisma schema](../prisma/schema.prisma), [seed](../prisma/seed.ts), [Docker Compose](../infra/compose.yaml)
+- [README: chạy local/LAN và Swagger](../../README.md)
+- [Phạm vi sản phẩm](../product/scope.md)
+- [Kiến trúc](../architecture/overview.md)
+- [Luật Quiz](../features/quiz.md)
+- [Room, realtime và LAN](../features/rooms-realtime-lan.md)
+- [Dữ liệu và transaction](../architecture/data-model.md)
+- [Kinh tế và vật phẩm](../features/economy-items.md)
+- [Bộ câu hỏi JSON](../features/question-packs.md)
+- [Roadmap và hướng dẫn test](roadmap-quality.md)
+- [Quyết định LOCKED / PROPOSAL / OPEN](../architecture/decisions.md)
+- [REST/socket contracts](../architecture/contracts.md)
+- [Kết quả kiểm chứng bản nền](../quality/verification.md)
+- [Scripts/dependencies root](../../package.json), [web](../../apps/web/package.json), [API](../../apps/api/package.json)
+- [Luật engine thực tế](../../packages/game-quiz/src/quiz.engine.ts)
+- [Giao diện lobby/trận/kết quả](../../apps/web/src/features/quiz/quiz-stage.tsx)
+- [Prisma schema](../../prisma/schema.prisma), [seed](../../prisma/seed.ts), [Docker Compose](../../infra/compose.yaml)
 
 Khi code và tài liệu khác nhau, đối chiếu source và quyết định sản phẩm trước khi cập nhật; không xem mô tả tính năng là bằng chứng tính năng đã triển khai.

@@ -5,7 +5,7 @@ export function setupSwagger(app: INestApplication) {
   const config = new DocumentBuilder()
     .setTitle('DuoQuest REST API')
     .setDescription(
-      'Tạo guest hoặc đăng nhập để trình duyệt nhận cookie phiên. Try it out tự lấy CSRF token cho request ghi. Socket.IO được mô tả trong docs/10-CONTRACTS.md.',
+      'Tạo guest hoặc đăng nhập để trình duyệt nhận cookie phiên. Try it out tự lấy CSRF token cho request ghi. Socket.IO được mô tả trong docs/architecture/contracts.md.',
     )
     .setVersion('1.0')
     .addCookieAuth('dq_session', { type: 'apiKey', in: 'cookie' }, 'session-cookie')

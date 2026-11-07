@@ -1,5 +1,11 @@
 # Phạm vi sản phẩm
 
+> **Mục đích:** Phạm vi sản phẩm và các giới hạn V1.
+> **Đối tượng:** Chủ dự án, lập trình viên và agent.
+> **Trạng thái:** `current`.
+> **Cập nhật:** 2026-11-07 (sắp xếp tài liệu; các mốc kiểm chứng trong nội dung giữ nguyên).
+> **Liên quan:** [Mục lục](../README.md), [Nguồn tham khảo](../../README.md).
+
 Nguồn định hướng: `doc/DuoQuest_Kien_truc_va_Dac_ta_San_pham_V1.0.docx`. Bản concept v0.1 chỉ dùng tham khảo khi không mâu thuẫn V1.0.
 
 V1 chỉ Quiz Battle, 3 mode `SOLO`, `DUEL`, `COOP` và 2 layout `SHARED_SCREEN`, `MULTI_DEVICE`. Layout không tạo engine mới. Game 2–3 chưa được chọn. Không có rank trong V1.

@@ -1,8 +1,14 @@
 # Hợp đồng giao tiếp
 
+> **Mục đích:** Hợp đồng REST và Socket.IO hiện tại.
+> **Đối tượng:** Lập trình viên frontend/backend và QA.
+> **Trạng thái:** `current`.
+> **Cập nhật:** 2026-11-07 (sắp xếp tài liệu; các mốc kiểm chứng trong nội dung giữ nguyên).
+> **Liên quan:** [Mục lục](../README.md), [Nguồn tham khảo](../../packages/shared-types/src/index.ts).
+
 Nguồn chuẩn: `packages/shared-types/src/index.ts`. Socket namespace mặc định, path `/socket.io`; REST prefix `/api`. REST và Socket.IO xác thực qua cookie phiên dq_session. Request REST ghi dữ liệu cần Origin hợp lệ và X-CSRF-Token lấy từ GET /api/auth/csrf.
 
-REST Swagger UI ở /api/docs, OpenAPI JSON ở /api/docs-json. Tạo guest hoặc đăng nhập để browser nhận cookie. Swagger tự lấy CSRF token cho request ghi. Xem [đặc tả Auth và phân quyền](13-AUTH-PHAN-QUYEN.md).
+REST Swagger UI ở /api/docs, OpenAPI JSON ở /api/docs-json. Tạo guest hoặc đăng nhập để browser nhận cookie. Swagger tự lấy CSRF token cho request ghi. Xem [đặc tả Auth và phân quyền](../features/auth.md).
 
 ACK: `{ ok:true, data:T }` hoặc `{ ok:false, error:{code,message} }`. Error codes: INVALID_INPUT, UNAUTHORIZED, FORBIDDEN, NOT_FOUND, CONFLICT, TOO_LATE, RATE_LIMITED, INTERNAL. Không trả stack/database details cho browser.
 

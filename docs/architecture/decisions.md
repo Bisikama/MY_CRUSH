@@ -1,5 +1,11 @@
 # Quyết định
 
+> **Mục đích:** Nguồn chính cho các quyết định LOCKED, PROPOSAL và OPEN.
+> **Đối tượng:** Chủ dự án, lập trình viên và agent.
+> **Trạng thái:** `current`.
+> **Cập nhật:** 2026-11-07 (sắp xếp tài liệu; các mốc kiểm chứng trong nội dung giữ nguyên).
+> **Liên quan:** [Mục lục](../README.md), [Nguồn tham khảo](../../AGENTS.md).
+
 ## LOCKED theo Blueprint V1.0
 
 - Monorepo, Next.js/React/TypeScript, Tailwind/shadcn idiom, Zustand, NestJS Modular Monolith, PostgreSQL/Prisma, Socket.IO.
@@ -17,7 +23,7 @@
 - Pack JSON trong một model có version/snapshot, chưa chuẩn hóa thành bảng QuizQuestion riêng. Không tạo abstract repository cho từng model khi chưa có nhu cầu.
 - Internal packages được web transpile/API bundle từ source; không cần Turborepo.
 - REST docs dùng Swagger ở /api/docs và /api/docs-json. Swagger dùng cookie và CSRF cùng luồng với browser.
-- Auth xác minh email bằng mã sáu số trước khi tạo tài khoản. Role cố định PLAYER/ADMIN. Auth tài khoản dùng localhost, guest hỗ trợ LAN. Xem [đặc tả Auth và phân quyền](13-AUTH-PHAN-QUYEN.md).
+- Auth xác minh email bằng mã sáu số trước khi tạo tài khoản. Role cố định PLAYER/ADMIN. Auth tài khoản dùng localhost, guest hỗ trợ LAN. Xem [đặc tả Auth và phân quyền](../features/auth.md).
 
 ## OPEN cần quyết định trước module liên quan
 

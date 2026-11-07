@@ -24,6 +24,7 @@ Sử dụng định dạng **Conventional Commits**:
 ```
 
 ### Quy tắc dòng tiêu đề (Header)
+
 - **Độ dài**: Tối đa **72 ký tự**.
 - **Ngôn ngữ**: Tiếng Việt (ưu tiên theo lịch sử repo) hoặc Tiếng Anh, thống nhất trong cùng một đợt commit.
 - **Phong cách**: Bắt đầu bằng động từ nguyên mẫu (ví dụ: `thêm`, `cập nhật`, `sửa lỗi`, `tách`, `hoàn thiện`), **không** viết hoa chữ cái đầu sau dấu `: `, **không** có dấu chấm `.` ở cuối câu.
@@ -32,18 +33,18 @@ Sử dụng định dạng **Conventional Commits**:
 
 ## 2. Phân loại `<type>`
 
-| Type | Khi nào sử dụng |
-| :--- | :--- |
-| `feat` | Thêm tính năng mới (API mới, màn hình mới, luật game mới, luồng người dùng mới). |
-| `fix` | Sửa lỗi (bug logic, lỗi UI, lỗi race condition, lỗi validation/auth). |
-| `refactor` | Tái cấu trúc code mà không làm thay đổi hành vi nghiệp vụ bên ngoài. |
-| `db` | Thay đổi Prisma schema, thêm migration hoặc cập nhật dữ liệu seed. |
-| `docs` | Thêm mới hoặc cập nhật tài liệu (`README.md`, `docs/*`, Swagger descriptions). |
-| `test` | Thêm hoặc cập nhật unit test, integration test, e2e test (`*.test.ts`, `e2e/*.spec.ts`). |
-| `chore` | Cập nhật cấu hình build, dependencies (`package.json`, `pnpm-lock.yaml`, scripts, `.env.example`). |
-| `ci` | Thay đổi cấu hình GitHub Actions (`.github/workflows/*`). |
-| `style` | Chỉnh sửa định dạng code, lint, prettier, UI/CSS nhỏ không ảnh hưởng logic. |
-| `perf` | Tối ưu hiệu năng truy vấn, realtime socket hoặc render UI. |
+| Type       | Khi nào sử dụng                                                                                    |
+| :--------- | :------------------------------------------------------------------------------------------------- |
+| `feat`     | Thêm tính năng mới (API mới, màn hình mới, luật game mới, luồng người dùng mới).                   |
+| `fix`      | Sửa lỗi (bug logic, lỗi UI, lỗi race condition, lỗi validation/auth).                              |
+| `refactor` | Tái cấu trúc code mà không làm thay đổi hành vi nghiệp vụ bên ngoài.                               |
+| `db`       | Thay đổi Prisma schema, thêm migration hoặc cập nhật dữ liệu seed.                                 |
+| `docs`     | Thêm mới hoặc cập nhật tài liệu (`README.md`, `docs/*`, Swagger descriptions).                     |
+| `test`     | Thêm hoặc cập nhật unit test, integration test, e2e test (`*.test.ts`, `e2e/*.spec.ts`).           |
+| `chore`    | Cập nhật cấu hình build, dependencies (`package.json`, `pnpm-lock.yaml`, scripts, `.env.example`). |
+| `ci`       | Thay đổi cấu hình GitHub Actions (`.github/workflows/*`).                                          |
+| `style`    | Chỉnh sửa định dạng code, lint, prettier, UI/CSS nhỏ không ảnh hưởng logic.                        |
+| `perf`     | Tối ưu hiệu năng truy vấn, realtime socket hoặc render UI.                                         |
 
 ---
 
@@ -80,22 +81,26 @@ Chọn `<scope>` phản ánh đúng module hoặc package chịu tác động ch
 Khi được yêu cầu tạo commit hoặc gợi ý tên commit cho tính năng mới, thực hiện lần lượt các bước sau:
 
 ### Bước 1: Khảo sát các file thay đổi
+
 Chạy lệnh kiểm tra trạng thái và diff:
+
 ```powershell
 git status --short
 git diff --stat
 ```
 
 ### Bước 2: Phân nhóm thay đổi theo tính năng
+
 - Kiểm tra xem các file đang sửa thuộc **một tính năng duy nhất** (ví dụ: toàn bộ luồng Auth + Swagger + E2E của Auth) hay **nhiều tính năng độc lập**.
 - Nếu có các file nháp/tạm thời không thuộc tính năng (ví dụ file thử nghiệm cá nhân), cảnh báo cho người dùng để loại trừ khỏi `git add`.
 - Nếu có nhiều tính năng độc lập, đề xuất tách thành các **atomic commits** theo thứ tự:
   1. `db` / `shared-types` (Schema & Contracts)
   2. `feat(<domain>)` (Logic Backend & Frontend của tính năng)
   3. `test(<domain>)` (Unit / Integration / E2E tests)
-  4. `docs(<domain>)` (Cập nhật `README.md`, `docs/09-DECISIONS.md`, tài liệu chuyên ngành)
+  4. `docs(<domain>)` (Cập nhật `README.md`, `docs/architecture/decisions.md`, tài liệu chuyên ngành)
 
 ### Bước 3: Soạn thảo Commit Message
+
 1. Viết dòng tiêu đề ngắn gọn, nêu bật **giá trị tính năng mới** thay vì chỉ liệt kê tên file sửa.
 2. Nếu thay đổi lớn (nhiều hơn 5 file hoặc thêm tính năng trọn gói), thêm phần **Body** gạch đầu dòng tóm tắt các mảng thay đổi chính (Schema/API, Web UI, Tests, Docs).
 
@@ -104,6 +109,7 @@ git diff --stat
 ## 5. Ví dụ mẫu chuẩn cho DuoQuest
 
 ### Ví dụ 1: Commit một tính năng lớn trọn gói (Full-stack Feature)
+
 ```text
 feat(auth): thêm hệ thống xác thực tài khoản email OTP, phân quyền và Swagger
 
@@ -114,10 +120,10 @@ feat(auth): thêm hệ thống xác thực tài khoản email OTP, phân quyền
 ```
 
 ### Ví dụ 2: Commit tách theo từng phần (Atomic Commits)
+
 - `db(auth): thêm bảng account, session và migration xác thực người dùng`
 - `feat(auth): triển khai luồng đăng ký OTP, đăng nhập và phân quyền role`
 - `feat(swagger): tích hợp tài liệu OpenAPI và xác thực CSRF trên Swagger UI`
 - `feat(web): thêm trang đăng nhập, đăng ký và quên mật khẩu`
 - `test(auth): bổ sung integration test database và playwright e2e cho luồng auth`
-- `docs(auth): cập nhật đặc tả phân quyền 13-AUTH-PHAN-QUYEN và hướng dẫn README`
-
+- `docs(auth): cập nhật đặc tả phân quyền docs/features/auth.md và hướng dẫn README`

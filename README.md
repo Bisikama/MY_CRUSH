@@ -4,6 +4,8 @@ Web game hub học và chơi, ưu tiên **Quiz Battle** với Solo, Duel, Co-op;
 
 ## Chạy local
 
+Tra cứu tài liệu theo mục đích tại [mục lục docs](docs/README.md). Khi tạo hoặc cập nhật tài liệu, làm theo [quy định quản lý](docs/documentation-guide.md).
+
 Yêu cầu Node.js >=22.12, pnpm 11.25.0 và Docker Desktop đang chạy (hoặc PostgreSQL có sẵn).
 
 ```powershell
@@ -37,13 +39,13 @@ Mở http://localhost:3000/register để đăng ký theo ba bước email → m
 
 Điền `AUTH_SECRET` và nhóm `SMTP_*`/`MAIL_FROM` theo `.env.example` để gửi OTP thật. Secret gồm ít nhất 32 byte ngẫu nhiên mã hóa base64url. API development có thể sinh secret theo process nếu thiếu cấu hình, nên restart sẽ làm mất hiệu lực flow xác minh đang mở. Dùng cùng hostname localhost giữa web và API.
 
-Role mặc định là `PLAYER`. Cấp hoặc gỡ Admin qua `pnpm auth:role <email> ADMIN` hoặc `pnpm auth:role <email> PLAYER`. Xem [đặc tả Auth và phân quyền](docs/13-AUTH-PHAN-QUYEN.md).
+Role mặc định là `PLAYER`. Cấp hoặc gỡ Admin qua `pnpm auth:role <email> ADMIN` hoặc `pnpm auth:role <email> PLAYER`. Xem [đặc tả Auth và phân quyền](docs/features/auth.md).
 
 ## Swagger REST API
 
 Sau khi chạy `pnpm dev`, mở http://localhost:4000/api/docs. OpenAPI JSON: http://localhost:4000/api/docs-json.
 
-Tạo guest hoặc đăng nhập qua **Try it out** để browser nhận cookie phiên. Swagger lấy CSRF token trước request ghi. Các thao tác mua/trang bị/lưu bộ đề thay đổi dữ liệu thật. Retry mua hàng phải giữ cùng `requestId` UUID. Xem [contract Socket.IO](docs/10-CONTRACTS.md).
+Tạo guest hoặc đăng nhập qua **Try it out** để browser nhận cookie phiên. Swagger lấy CSRF token trước request ghi. Các thao tác mua/trang bị/lưu bộ đề thay đổi dữ liệu thật. Retry mua hàng phải giữ cùng `requestId` UUID. Xem [contract Socket.IO](docs/architecture/contracts.md).
 
 ## Chơi qua LAN
 
@@ -67,7 +69,7 @@ Browser tự lấy hostname trang web rồi gọi API cùng hostname, cổng 400
 - Lưu câu trả lời, kết quả/lịch sử; kết quả và thưởng cùng transaction; cosmetic purchase/equip API.
 - Web: chọn mode/layout, phòng chờ, chơi Quiz, kết quả/tái đấu, JSON preview/import, hồ sơ/lịch sử, shop tối thiểu.
 
-Đây là **codebase nền tảng có luồng Quiz thực**, chưa phải V1 hoàn thiện. Gift/reaction, power-up gameplay, ôn câu sai có màn hình riêng, âm thanh và khôi phục guest chưa được triển khai. Xem `docs/08-ROADMAP-QUALITY.md` để nhận task tiếp theo.
+Đây là **codebase nền tảng có luồng Quiz thực**, chưa phải V1 hoàn thiện. Gift/reaction, power-up gameplay, ôn câu sai có màn hình riêng, âm thanh và khôi phục guest chưa được triển khai. Xem `docs/project/roadmap-quality.md` để nhận task tiếp theo.
 
 ## Ranh giới package
 
@@ -98,12 +100,12 @@ pnpm format:check
 pnpm test:e2e
 ```
 
-Unit/orchestration tests chạy không cần DB. Socket integration mở Nest + Socket.IO thật và hai client, nhưng dùng store trong RAM **chỉ trong test**. Database integration là một nhóm riêng, chạy trên DB test dùng một lần; xem hướng dẫn trong `docs/08-ROADMAP-QUALITY.md`. Hai thiết bị LAN thật vẫn cần nghiệm thu thủ công.
+Unit/orchestration tests chạy không cần DB. Socket integration mở Nest + Socket.IO thật và hai client, nhưng dùng store trong RAM **chỉ trong test**. Database integration là một nhóm riêng, chạy trên DB test dùng một lần; xem hướng dẫn trong `docs/project/roadmap-quality.md`. Hai thiết bị LAN thật vẫn cần nghiệm thu thủ công.
 
-Browser e2e cần DB đã migrate/seed, production build và Chrome có sẵn (hoặc cấu hình Chromium theo tài liệu chất lượng). CI mẫu ở `.github/workflows/ci.yml`. Kết quả kiểm chứng khi dựng source được lưu trong `docs/11-VERIFICATION.md`.
+Browser e2e cần DB đã migrate/seed, production build và Chrome có sẵn (hoặc cấu hình Chromium theo tài liệu chất lượng). CI mẫu ở `.github/workflows/ci.yml`. Kết quả kiểm chứng khi dựng source được lưu trong `docs/quality/verification.md`.
 
 Để chạy riêng browser E2E cho Auth, dùng database có tên kết thúc `_test`, migrate/seed/build trước rồi đặt `$env:RUN_AUTH_E2E='1'` và chạy `pnpm test:e2e e2e/auth.spec.ts`. Fixture chỉ lắng nghe trên loopback và dùng SMTP giả. Sau khi chạy, bỏ biến bằng `Remove-Item Env:RUN_AUTH_E2E`.
 
 ## Hướng đọc cho agent
 
-Đọc `AGENTS.md` → `docs/09-DECISIONS.md` → tài liệu domain liên quan → code/tests hiện tại. Mỗi task triển khai theo một luồng người dùng, ghi rõ tiêu chí nghiệm thu và cập nhật trạng thái thực tế. Không tự tạo game 2/game 3, microservices hoặc thêm Redis.
+Đọc `AGENTS.md` → [mục lục tài liệu](docs/README.md) → `docs/architecture/decisions.md` → tài liệu domain liên quan → code/tests hiện tại. Mỗi task triển khai theo một luồng người dùng, ghi rõ tiêu chí nghiệm thu và cập nhật trạng thái thực tế. Không tự tạo game 2/game 3, microservices hoặc thêm Redis.

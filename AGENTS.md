@@ -16,13 +16,13 @@ DuoQuest là một **web game hub học và chơi có điểm thưởng/vật ph
 
 ## 2. Trình tự bắt buộc trước khi implement
 
-1. Đọc `README.md`, `docs/09-DECISIONS.md`, tài liệu domain liên quan.
+1. Đọc `README.md`, `docs/README.md`, `docs/architecture/decisions.md`, tài liệu domain liên quan.
 2. Khảo sát source hiện có; **không giả định các file trong tài liệu đã tồn tại**.
 3. Tóm tắt phạm vi thay đổi, dependencies, schema/contract tác động và rủi ro.
 4. Chia thành bước nhỏ, test được; implement theo chiều dọc end-to-end.
 5. Thêm hoặc cập nhật unit/integration/e2e tests phù hợp.
 6. Chạy lint, typecheck, test, build nếu môi trường có; báo trung thực lỗi/chưa chạy.
-7. Cập nhật docs khi API/schema/game rules đã thay đổi; ghi lựa chọn mới vào `docs/09-DECISIONS.md`.
+7. Cập nhật docs khi API/schema/game rules đã thay đổi; ghi lựa chọn mới vào `docs/architecture/decisions.md`.
 
 ## 3. Ranh giới trách nhiệm
 
@@ -62,3 +62,13 @@ DuoQuest là một **web game hub học và chơi có điểm thưởng/vật ph
 - **Kết quả:** thay đổi đã làm, lệnh đã chạy, test pass/fail, phần còn mở.
 
 Không tạo API, Prisma model, env variable, thư mục hay dependency rồi **khẳng định đã tồn tại** nếu chưa kiểm tra repo. Không thêm thư viện chỉ để giải quyết việc có thể xử lý đơn giản trong stack đã chốt.
+
+## 7. Quy định tạo và lưu tài liệu
+
+- Trước khi viết tài liệu, đọc [mục lục](docs/README.md), tìm nội dung cùng chủ đề và ưu tiên cập nhật tài liệu chính. Tuân thủ [quy định tài liệu](docs/documentation-guide.md).
+- Markdown dự án nằm trong `docs/`: `product/` cho phạm vi sản phẩm, `architecture/` cho kiến trúc/dữ liệu/contracts/quyết định, `features/` cho đặc tả tính năng, `project/` cho roadmap/hiện trạng, `quality/` cho bằng chứng kiểm thử, `stitch/<feature>/` cho brief/prompt/screen ID, `prompts/` cho prompt khác, `templates/` cho mẫu. Chỉ tạo `operations/` hoặc `archive/` khi có nội dung phù hợp.
+- Tên file dùng tiếng Anh, chữ thường, `kebab-case`; không đánh số liên tục toàn kho. Tài liệu trong `docs/` phải có mục đích, đối tượng, trạng thái `draft/current/historical`, ngày cập nhật và liên kết nguồn liên quan ở đầu file; dùng [mẫu](docs/templates/document.md).
+- Trạng thái tài liệu độc lập với LOCKED / PROPOSAL / OPEN. Prompt/ảnh Stitch không chứng minh tính năng đã có; ghi project/screen ID, ngày và phạm vi kiểm chứng.
+- Mỗi nội dung có một nguồn chính; dùng liên kết để tránh bản sao. Thêm tài liệu phải cập nhật mục lục; đổi tên/di chuyển phải sửa mọi tham chiếu, kể cả trong prompt, skill và mô tả API.
+- Giữ README/AGENTS ở root, skill tại `.agents/skills/`; `doc/` là bản Word tham khảo cục bộ đang bị Git bỏ qua, không lưu Markdown mới tại đó.
+- Không ghi secret, OTP thực, cookie, token, mật khẩu hoặc dữ liệu cá nhân thật vào tài liệu. Giữ ngày/phạm vi bằng chứng lịch sử và báo trung thực phần chưa kiểm chứng.

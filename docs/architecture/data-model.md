@@ -1,5 +1,11 @@
 # Dữ liệu và transaction
 
+> **Mục đích:** Mô hình dữ liệu và nguyên tắc transaction.
+> **Đối tượng:** Lập trình viên backend.
+> **Trạng thái:** `current`.
+> **Cập nhật:** 2026-11-07 (sắp xếp tài liệu; các mốc kiểm chứng trong nội dung giữ nguyên).
+> **Liên quan:** [Mục lục](../README.md), [Nguồn tham khảo](../../prisma/schema.prisma).
+
 Một PostgreSQL, một `prisma/schema.prisma`, một migration stream. Migration đầu tiên bao gồm CHECK constraints cho balance/quantity/price không âm.
 
 | Domain   | Models                                                                                                    |

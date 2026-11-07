@@ -1,5 +1,11 @@
 # Room realtime và LAN
 
+> **Mục đích:** Vòng đời phòng, realtime, kết nối và giới hạn LAN.
+> **Đối tượng:** Lập trình viên và QA.
+> **Trạng thái:** `current`.
+> **Cập nhật:** 2026-11-07 (sắp xếp tài liệu; các mốc kiểm chứng trong nội dung giữ nguyên).
+> **Liên quan:** [Mục lục](../README.md), [Nguồn tham khảo](../../apps/api/src/modules/rooms/rooms.service.ts).
+
 Room lifecycle: `WAITING → READY → IN_PROGRESS → FINISHED`; Leave/grace expiry/TTL có thể chuyển `CANCELLED`. Ready chỉ khi đủ slot và tất cả đã Ready; Start chỉ host. Không sửa cấu hình lobby trong foundation; tạo phòng mới nếu muốn đổi.
 
 Shared screen: host nhận hai slot server tạo, một identity điều khiển cả hai. Multi-device: mỗi identity một slot; cùng identity ở nhiều tab vẫn là cùng người chơi. Guest có room membership phía server, mã mời không cấp quyền gửi action thay slot khác.
@@ -12,6 +18,6 @@ Reconnect policy **PROPOSAL**: đồng hồ tiếp tục, xin snapshot mới qua
 
 API và web bind `0.0.0.0`; client lấy `window.location` để xác định API host. CORS dùng allowlist `WEB_ORIGINS`, không mở `*`. CORS không thay thế auth. PostgreSQL chỉ bind loopback trên host qua Compose. Xem README để cấu hình IP/firewall.
 
-Socket xác thực bằng cookie phiên và kiểm tra Origin. Phiên thu hồi bị ngắt kết nối qua quy trình disconnect hiện tại. Giới hạn payload 16 KB, 25 thao tác/giây/socket và REST JSON tối đa 1 MB. Luồng tài khoản nghiệm thu trên localhost, guest dùng được qua LAN tin cậy. Xem [đặc tả Auth](13-AUTH-PHAN-QUYEN.md).
+Socket xác thực bằng cookie phiên và kiểm tra Origin. Phiên thu hồi bị ngắt kết nối qua quy trình disconnect hiện tại. Giới hạn payload 16 KB, 25 thao tác/giây/socket và REST JSON tối đa 1 MB. Luồng tài khoản nghiệm thu trên localhost, guest dùng được qua LAN tin cậy. Xem [đặc tả Auth](auth.md).
 
 Socket.IO không mặc định đảm bảo nhận event mọi lần: ACK/actionId và full snapshot ở application layer là bắt buộc. [Delivery guarantees](https://socket.io/docs/v4/delivery-guarantees/).
