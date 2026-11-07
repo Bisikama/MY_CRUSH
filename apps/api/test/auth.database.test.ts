@@ -25,8 +25,8 @@ class AdminFixture {
 class TestRoot {}
 
 const webOrigin = 'http://localhost:3000';
-const password = 'A test passphrase with spaces';
-const nextPassword = 'A new test passphrase with spaces';
+const password = 'A test passphrase with spaces!';
+const nextPassword = 'A new test passphrase with spaces!';
 
 class Browser {
   private readonly cookies = new Map<string, string>();

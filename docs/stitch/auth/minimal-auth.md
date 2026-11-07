@@ -33,9 +33,9 @@ Các screen resource cuối cùng cần review. Lần kiểm tra ngày 2026-11-0
 | Auth Mini — 04 Mật khẩu mới (Polished)  | 6edae88c374b411b97be5d26081e0dfd |
 | Auth Mini — 05 Đổi mật khẩu xong        | bbd907a9fe4d4bf6ba07b2881f092587 |
 
-Đã xem screenshot desktop và đọc HTML của cả năm màn. HTML có CSS animation và prefers-reduced-motion. Chưa kiểm thử tương tác bằng trình duyệt, mobile hoặc tích hợp backend. Các hash link trong prototype không chứng minh đã có navigation liên màn thật. Animation hình minh họa dùng chuyển động toàn khung, chưa phải rig/sprite chuyển động riêng tai/cánh linh vật.
+Đã xem screenshot desktop và đọc HTML của cả năm màn. HTML có CSS animation và prefers-reduced-motion. Đã tải 5 hình minh họa 3D claymation từ Stitch về `apps/web/public/images/auth/` và tích hợp giao diện Auth Mini 01–05 vào `apps/web/src/features/auth/` với route group `(auth)` cho `/login`, `/register`, `/forgot-password`.
 
-Không sửa các màn đăng ký người dùng đã có.
+Không sửa các màn đăng ký người dùng đã có trên Stitch.
 
 ## Lịch sử kiểm tra việc hiển thị trên canvas
 

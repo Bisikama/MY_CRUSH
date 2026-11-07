@@ -12,3 +12,11 @@ test-results/
 playwright-report/
 .local/
 doc
+run-project.md
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+.turbo/
+.vercel/
+

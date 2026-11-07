@@ -1,5 +1,7 @@
 'use client';
 
+import { passwordRequirementsMessage } from '@duoquest/shared-types';
+import { validatePassword } from './auth-api';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -51,8 +53,7 @@ export function AccountSettings({ identity }: { identity: GameIdentity }) {
             onSubmit={(event) => {
               event.preventDefault();
               void run(async () => {
-                if (Array.from(password).length < 15 || Array.from(password).length > 128)
-                  throw new Error('Mật khẩu phải dài 15–128 ký tự.');
+                if (!validatePassword(password)) throw new Error(passwordRequirementsMessage);
                 if (password !== confirmation) throw new Error('Hai mật khẩu chưa khớp.');
                 await api('/auth/password/change', { currentPassword, password });
                 setCurrentPassword('');
@@ -74,6 +75,7 @@ export function AccountSettings({ identity }: { identity: GameIdentity }) {
               required
             />
             <label htmlFor="new-password">Mật khẩu mới</label>
+            <p>{passwordRequirementsMessage}</p>
             <input
               id="new-password"
               type="password"

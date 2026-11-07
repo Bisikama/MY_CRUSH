@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Button, Card } from '@duoquest/ui';
 import { questionPackSchema, type QuestionPack } from '@duoquest/shared-types';
-import { api, loadIdentity } from '../../lib/client';
+import { api, loadIdentity } from '../../../lib/client';
 
 export default function PacksPage() {
   const [raw, setRaw] = useState('');

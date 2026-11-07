@@ -6,6 +6,7 @@ import { serialTransaction } from '../../common/transaction';
 import { digest, equal, fail, mac } from './auth-security';
 import { AuthThrottle } from './auth-throttle';
 import { MailService } from './mail.service';
+import { verificationEmail } from './mail-template';
 
 export type Purpose = 'REGISTER' | 'RESET_PASSWORD';
 const MINUTE = 60_000;
@@ -109,11 +110,8 @@ export class EmailChallenges {
           select: { id: true },
         }))
       ) {
-        outcome = await this.mail.send(
-          challenge.email,
-          'Mã xác minh DuoQuest',
-          'Mã của bạn là ' + code + '. Mã có hiệu lực trong 5 phút.',
-        );
+        const email = verificationEmail(purpose, code);
+        outcome = await this.mail.send(challenge.email, email.subject, email.text, email.html);
       }
       if (outcome === 'rejected') await release();
     } catch (error) {

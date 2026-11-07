@@ -28,9 +28,10 @@ export class MailService {
     to: string,
     subject: string,
     text: string,
+    html?: string,
   ): Promise<'accepted' | 'rejected' | 'unknown'> {
     if (!this.transport) return 'rejected';
-    const delivery = this.transport.sendMail({ from: this.from, to, subject, text }).then(
+    const delivery = this.transport.sendMail({ from: this.from, to, subject, text, html }).then(
       (result) => (result.accepted.length === 1 ? ('accepted' as const) : ('rejected' as const)),
       (error: unknown) => {
         const code = (error as { responseCode?: number }).responseCode;

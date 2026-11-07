@@ -11,7 +11,7 @@
 - **Hiểu sản phẩm:** [Phạm vi](product/scope.md) → [Kiến trúc](architecture/overview.md) → [Quyết định](architecture/decisions.md). [Hiện trạng](project/current-state.md) là ảnh chụp lịch sử, cần đối chiếu source mới nhất.
 - **Triển khai tính năng:** [AGENTS](../AGENTS.md) → [Quyết định](architecture/decisions.md) → đặc tả trong `features/` → [Contracts](architecture/contracts.md) → source/tests liên quan. Có thể dùng [mẫu task](prompts/implement-task.md).
 - **Xem thiết kế Stitch:** [Auth tối giản](stitch/auth/minimal-auth.md) chứa project/screen ID và phạm vi kiểm chứng. So với [đặc tả Auth](features/auth.md) trước khi chuyển thiết kế thành code.
-- **Chạy và kiểm thử:** [README dự án](../README.md) → [Roadmap và hướng dẫn test](project/roadmap-quality.md) → [Bằng chứng kiểm chứng](quality/verification.md).
+- **Chạy và kiểm thử:** [Lệnh chạy nhanh cạnh file env](../run-project.md) → [README dự án](../README.md) → [Roadmap và hướng dẫn test](project/roadmap-quality.md) → [Bằng chứng kiểm chứng](quality/verification.md).
 - **Viết tài liệu:** đọc [quy định](documentation-guide.md), tìm chủ đề có sẵn, rồi dùng [mẫu tài liệu](templates/document.md) nếu thật sự cần file mới.
 
 ## Danh mục và nơi lưu

@@ -30,13 +30,7 @@ export function equal(a: string, b: string) {
 }
 export const tokenSchema = z.string().regex(/^[A-Za-z0-9_-]{43}$/);
 export const emailSchema = z.string().trim().max(254).email().toLowerCase();
-export const passwordSchema = z
-  .string()
-  .max(256)
-  .refine((value) => {
-    const length = Array.from(value).length;
-    return length >= 15 && length <= 128;
-  }, 'Mật khẩu phải dài 15–128 ký tự.');
+export { passwordSchema } from '@duoquest/shared-types';
 
 export function fail(status: number, code: string, message: string): never {
   throw new HttpException({ code, message }, status);

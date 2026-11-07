@@ -9,6 +9,7 @@ import { AuthSessions, type Principal, type Revocation } from './auth-session.se
 import { AuthThrottle } from './auth-throttle';
 import { EmailChallenges } from './email-challenge.service';
 import { MailService } from './mail.service';
+import { passwordChangedEmail } from './mail-template';
 
 const options = { type: argon2id, memoryCost: 19 * 1024, timeCost: 2, parallelism: 1 } as const;
 
@@ -227,12 +228,7 @@ export class AuthService {
   }
 
   private notifyPasswordChanged(email: string) {
-    void this.mail
-      .send(
-        email,
-        'Mật khẩu DuoQuest đã thay đổi',
-        'Mật khẩu DuoQuest của bạn vừa thay đổi. Nếu bạn không thực hiện, hãy đặt lại mật khẩu từ trang đăng nhập.',
-      )
-      .catch(() => {});
+    const message = passwordChangedEmail();
+    void this.mail.send(email, message.subject, message.text, message.html).catch(() => {});
   }
 }

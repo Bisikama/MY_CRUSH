@@ -1,7 +1,7 @@
 'use client';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Card } from '@duoquest/ui';
-import { actionId, api, loadIdentity } from '../../lib/client';
+import { actionId, api, loadIdentity } from '../../../lib/client';
 interface Item {
   id: string;
   name: string;

@@ -25,6 +25,8 @@
 - REST docs dùng Swagger ở /api/docs và /api/docs-json. Swagger dùng cookie và CSRF cùng luồng với browser.
 - Auth xác minh email bằng mã sáu số trước khi tạo tài khoản. Role cố định PLAYER/ADMIN. Auth tài khoản dùng localhost, guest hỗ trợ LAN. Xem [đặc tả Auth và phân quyền](../features/auth.md).
 
+- Yêu cầu mật khẩu mới (2026-11-07, theo yêu cầu chủ dự án): tối thiểu 9 ký tự và ít nhất 1 ký tự đặc biệt; giữ tối đa 128 ký tự Unicode. Xem [đặc tả Auth](../features/auth.md) để biết phạm vi áp dụng.
+
 ## OPEN cần quyết định trước module liên quan
 
 - Khôi phục guest đã mất cookie, gộp hai Player hiện có và quyền sở hữu tiến trình người chơi 2 chung màn hình.

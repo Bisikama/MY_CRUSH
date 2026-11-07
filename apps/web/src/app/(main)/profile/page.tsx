@@ -1,8 +1,8 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { Card } from '@duoquest/ui';
-import { api, loadIdentity, onAuthChanged, type GameIdentity } from '../../lib/client';
-import { AccountSettings } from '../../features/auth/account-settings';
+import { api, loadIdentity, onAuthChanged, type GameIdentity } from '../../../lib/client';
+import { AccountSettings } from '../../../features/auth/account-settings';
 interface Profile {
   nickname: string;
   xp: number;

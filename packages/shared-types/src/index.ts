@@ -10,6 +10,15 @@ export type RoomStatus = 'WAITING' | 'READY' | 'IN_PROGRESS' | 'FINISHED' | 'CAN
 export type Phase = 'QUESTION' | 'REVEAL' | 'FINISHED';
 
 export const nicknameSchema = z.string().trim().min(2).max(30);
+export const passwordRequirementsMessage =
+  'Mật khẩu phải dài 9–128 ký tự và có ít nhất 1 ký tự đặc biệt (ví dụ: !, @, #).';
+export const passwordSchema = z
+  .string()
+  .max(256, passwordRequirementsMessage)
+  .refine((value) => {
+    const length = Array.from(value).length;
+    return length >= 9 && length <= 128 && /[\p{P}\p{S}]/u.test(value);
+  }, passwordRequirementsMessage);
 export const createRoomSchema = z
   .object({
     mode: modeSchema,
