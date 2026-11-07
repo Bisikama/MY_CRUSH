@@ -9,7 +9,6 @@ import type {
   ClientToServerEvents,
   GameLayout,
   GameMode,
-  GuestIdentity,
   PackSummary,
   QuizAction,
   RoomView,
@@ -20,10 +19,12 @@ import {
   api,
   apiOrigin,
   copyText,
-  readIdentity,
+  loadIdentity,
+  onAuthChanged,
+  authChanged,
+  type GameIdentity,
   request,
   roomStorageKey,
-  saveIdentity,
 } from '../../lib/client';
 import { QuizSetup } from './quiz-setup';
 import { QuizStage } from './quiz-stage';
@@ -35,7 +36,7 @@ const errorText = (error: unknown) => (error instanceof Error ? error.message : 
 export function QuizClient({ code }: { code?: string }) {
   const router = useRouter();
   const { room, connected, setRoom, setConnected } = useRoomStore();
-  const [identity, setIdentity] = useState<GuestIdentity | null>(null);
+  const [identity, setIdentity] = useState<GameIdentity | null>(null);
   const [hydrated, setHydrated] = useState(false);
   const [nickname, setNickname] = useState('');
   const [secondNickname, setSecondNickname] = useState('Người chơi 2');
@@ -82,8 +83,25 @@ export function QuizClient({ code }: { code?: string }) {
   }
 
   useEffect(() => {
-    setIdentity(readIdentity());
-    setHydrated(true);
+    let live = true;
+    const refresh = () => {
+      void loadIdentity()
+        .then((value) => {
+          if (live) setIdentity(value);
+        })
+        .catch(() => {
+          if (live) setError('Không thể tải phiên chơi. Hãy kiểm tra API và tải lại trang.');
+        })
+        .finally(() => {
+          if (live) setHydrated(true);
+        });
+    };
+    refresh();
+    const unsubscribe = onAuthChanged(refresh);
+    return () => {
+      live = false;
+      unsubscribe();
+    };
   }, []);
   const run = useCallback(async (fn: () => Promise<void>) => {
     setBusy(true);
@@ -99,7 +117,7 @@ export function QuizClient({ code }: { code?: string }) {
   useEffect(() => {
     if (!identity) return;
     let cancelled = false;
-    void api<PackSummary[]>('/question-packs', identity.token)
+    void api<PackSummary[]>('/question-packs')
       .then((data) => {
         if (!cancelled) {
           setPacks(data);
@@ -110,7 +128,7 @@ export function QuizClient({ code }: { code?: string }) {
         if (!cancelled) setError(errorText(cause));
       });
     const socket: GameSocket = io(apiOrigin(), {
-      auth: { token: identity.token },
+      withCredentials: true,
       autoConnect: false,
     });
     socketRef.current = socket;
@@ -140,7 +158,7 @@ export function QuizClient({ code }: { code?: string }) {
       setConnected(false);
       setError(
         cause.message === 'UNAUTHORIZED'
-          ? 'Phiên khách không hợp lệ. Vào hồ sơ để tạo phiên mới.'
+          ? 'Phiên chơi không hợp lệ. Hãy đăng nhập hoặc tạo guest mới.'
           : 'Không kết nối được API. Kiểm tra host, cổng 4000 và WEB_ORIGINS.',
       );
     });
@@ -211,8 +229,8 @@ export function QuizClient({ code }: { code?: string }) {
 
   async function createIdentity() {
     await run(async () => {
-      const guest = await api<GuestIdentity>('/players/guest', undefined, { nickname });
-      saveIdentity(guest);
+      const guest = await api<GameIdentity>('/players/guest', { nickname });
+      authChanged();
       setIdentity(guest);
     });
   }

@@ -10,7 +10,7 @@ datasource db {
 model Player {
   id          String   @id @default(uuid()) @db.Uuid
   nickname    String
-  tokenHash   String   @unique
+  tokenHash   String?  @unique
   xp          Int      @default(0)
   createdAt   DateTime @default(now())
   wallet      Wallet?
@@ -18,6 +18,63 @@ model Player {
   loadout     Loadout[]
   sessions    SessionPlayer[]
   packs       QuizQuestionPack[]
+  account     Account?
+  authSessions AuthSession[]
+}
+
+enum AccountRole {
+  PLAYER
+  ADMIN
+}
+
+model Account {
+  id              String       @id @default(uuid()) @db.Uuid
+  playerId        String       @unique @db.Uuid
+  player          Player       @relation(fields: [playerId], references: [id])
+  email           String       @unique
+  passwordHash    String
+  emailVerifiedAt DateTime
+  role            AccountRole  @default(PLAYER)
+  sessions        AuthSession[]
+}
+
+model AuthSession {
+  id           String   @id @default(uuid()) @db.Uuid
+  tokenHash    String   @unique
+  playerId     String   @db.Uuid
+  player       Player   @relation(fields: [playerId], references: [id])
+  accountId    String?  @db.Uuid
+  account      Account? @relation(fields: [accountId], references: [id])
+  lastActiveAt DateTime @default(now())
+  expiresAt    DateTime
+  revokedAt    DateTime?
+  @@index([accountId])
+  @@index([playerId])
+  @@index([expiresAt])
+}
+
+model EmailChallenge {
+  id           String   @id @db.Uuid
+  flowHash     String
+  email        String
+  purpose      String
+  playerId     String?  @db.Uuid
+  digest       String?
+  attempts     Int      @default(0)
+  expiresAt    DateTime
+  verifiedAt   DateTime?
+  consumedAt   DateTime?
+  lastSentAt   DateTime
+  sendId       String?  @db.Uuid
+  @@unique([flowHash, purpose])
+  @@index([expiresAt])
+}
+
+model AuthRateLimit {
+  key       String   @id
+  count     Int
+  expiresAt DateTime
+  @@index([expiresAt])
 }
 
 model QuizQuestionPack {

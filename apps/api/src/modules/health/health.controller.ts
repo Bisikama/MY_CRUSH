@@ -1,8 +1,10 @@
+import { Public } from '../auth/auth-guard';
 import { Controller, Get, Inject, ServiceUnavailableException } from '@nestjs/common';
 import { PrismaService } from '../persistence/prisma.service';
 import { ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { ApiEndpoint } from '../../common/api-endpoint';
+@Public()
 @Controller('health')
 @ApiTags('Health')
 export class HealthController {

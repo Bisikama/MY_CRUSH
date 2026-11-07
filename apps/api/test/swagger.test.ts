@@ -11,7 +11,7 @@ import { PlatformStore } from '../src/modules/persistence/store';
 import { PrismaService } from '../src/modules/persistence/prisma.service';
 import { MemoryStore } from './memory.store';
 
-describe('Swagger REST documentation and bearer workflow', () => {
+describe('Swagger REST documentation and cookie workflow', () => {
   let app: INestApplication;
   let origin: string;
   let document: OpenAPIObject;
@@ -33,6 +33,7 @@ describe('Swagger REST documentation and bearer workflow', () => {
   });
 
   afterAll(async () => {
+    app?.getHttpServer().closeAllConnections();
     await app?.close();
   });
 
@@ -43,6 +44,7 @@ describe('Swagger REST documentation and bearer workflow', () => {
     const asset = await fetch(`${origin}/api/docs/swagger-ui-bundle.js`);
     expect(asset.status).toBe(200);
     expect(asset.headers.get('content-type')).toContain('javascript');
+    await asset.arrayBuffer();
     const json = await fetch(`${origin}/api/docs-json`);
     expect(json.status).toBe(200);
     expect(await json.json()).toEqual(document);
@@ -57,13 +59,14 @@ describe('Swagger REST documentation and bearer workflow', () => {
     ]);
     let count = 0;
     for (const [path, item] of Object.entries(document.paths)) {
+      if (path.startsWith('/api/auth/')) continue;
       for (const method of ['get', 'post'] as const) {
         const operation = item[method];
         if (!operation) continue;
         count++;
         expect(operation.summary).toBeTruthy();
         expect(operation.security ?? []).toEqual(
-          publicOperations.has(`${method} ${path}`) ? [] : [{ 'guest-token': [] }],
+          publicOperations.has(`${method} ${path}`) ? [] : [{ 'session-cookie': [] }],
         );
         expect(operation.responses[method === 'post' ? '201' : '200']).toBeDefined();
         if (method === 'post')
@@ -71,9 +74,10 @@ describe('Swagger REST documentation and bearer workflow', () => {
       }
     }
     expect(count).toBe(12);
-    expect(document.components?.securitySchemes?.['guest-token']).toMatchObject({
-      type: 'http',
-      scheme: 'bearer',
+    expect(document.components?.securitySchemes?.['session-cookie']).toMatchObject({
+      type: 'apiKey',
+      in: 'cookie',
+      name: 'dq_session',
     });
     const text = JSON.stringify(document);
     expect(text).toContain('correctOptionId'); // Only the authored pack contract, never a live game snapshot.
@@ -82,28 +86,19 @@ describe('Swagger REST documentation and bearer workflow', () => {
     expect(document.paths['/api/shop/purchases']?.post?.responses['409']).toBeDefined();
   });
 
-  it('keeps guest creation validation and protected profile authorization working', async () => {
-    const invalid = await fetch(`${origin}/api/players/guest`, {
+  it('serves CSRF without a DB session and rejects unauthenticated profile', async () => {
+    const csrf = await fetch(origin + '/api/auth/csrf');
+    expect(csrf.status).toBe(200);
+    expect(csrf.headers.get('set-cookie')).toContain('dq_flow=');
+    expect(await csrf.json()).toHaveProperty('csrfToken');
+    expect((await fetch(origin + '/api/players/me')).status).toBe(401);
+    const forged = await fetch(origin + '/api/players/guest', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nickname: 'x' }),
-    });
-    expect(invalid.status).toBe(400);
-    expect(await invalid.json()).toMatchObject({ code: 'INVALID_INPUT' });
-    const unauthorized = await fetch(`${origin}/api/players/me`);
-    expect(unauthorized.status).toBe(401);
-    const created = await fetch(`${origin}/api/players/guest`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', Origin: 'http://localhost:3000' },
       body: JSON.stringify({ nickname: 'Swagger Guest' }),
     });
-    expect(created.status).toBe(201);
-    const guest = (await created.json()) as { token: string; playerId: string };
-    const profile = await fetch(`${origin}/api/players/me`, {
-      headers: { Authorization: `Bearer ${guest.token}` },
-    });
-    expect(profile.status).toBe(200);
-    expect(await profile.json()).toMatchObject({ id: guest.playerId });
+    expect(forged.status).toBe(403);
+    expect(await forged.json()).toMatchObject({ code: 'CSRF_INVALID' });
   });
 
   it('documents and preserves the readiness failure response', async () => {

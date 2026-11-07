@@ -9,18 +9,19 @@
 
 ## PROPOSAL được hiện thực để khung chạy được
 
-- Guest bearer token 32 random bytes, DB chỉ SHA-256 hash; browser localStorage lưu token để refresh; chưa expiry/rotation/recovery. Có thể thay qua PlayersService mà không đổi Quiz engine.
+- Guest và Account dùng opaque session cookie có thể thu hồi. Legacy guest token chỉ dùng tại endpoint chuyển đổi một lần. Account liên kết một Player để giữ tiến trình khi nâng cấp.
 - Shared screen slot thứ hai là guest server tạo, thuộc controller host, chưa có cách đăng nhập riêng/claim tiến trình slot đó. Không hứa giữ tiến trình của người chơi 2 qua các room mới.
 - Room trong RAM, 30s grace tiếp tục clock rồi cancel/no reward; Leave hủy cả room; idle TTL 15m; max128 rooms.
 - Restart hủy session dang dở, không resume; kết quả đã commit giữ nguyên. DB lỗi lúc kết toán không công bố FINISHED, timer thử lại.
 - Điểm/timer/lives/reward/prices là thông số playtest. Trusted pack reward cap 10 sessions/player/ngày UTC; imported pack không thưởng.
 - Pack JSON trong một model có version/snapshot, chưa chuẩn hóa thành bảng QuizQuestion riêng. Không tạo abstract repository cho từng model khi chưa có nhu cầu.
 - Internal packages được web transpile/API bundle từ source; không cần Turborepo.
-- REST docs dùng `@nestjs/swagger` tại `/api/docs`, JSON tại `/api/docs-json`; chuyển Zod hiện có bằng `zod-to-json-schema` để mô tả request, không thay validation/auth. Swagger cho local/LAN tin cậy, không lưu bearer token qua reload; Socket.IO giữ tài liệu riêng. Không thay database hoặc luật game.
+- REST docs dùng Swagger ở /api/docs và /api/docs-json. Swagger dùng cookie và CSRF cùng luồng với browser.
+- Auth xác minh email bằng mã sáu số trước khi tạo tài khoản. Role cố định PLAYER/ADMIN. Auth tài khoản dùng localhost, guest hỗ trợ LAN. Xem [đặc tả Auth và phân quyền](13-AUTH-PHAN-QUYEN.md).
 
 ## OPEN cần quyết định trước module liên quan
 
-- Guest recovery/account linking và quyền sở hữu tiến trình người chơi 2 chung màn hình.
+- Khôi phục guest đã mất cookie, gộp hai Player hiện có và quyền sở hữu tiến trình người chơi 2 chung màn hình.
 - Mục tiêu từng ải Co-op, inventory tiêu hao và luật power-up cụ thể.
 - Guest nickname moderation/anti-abuse khi mở Internet.
 - Game 2–3, rank, deployment Internet, durable room recovery.

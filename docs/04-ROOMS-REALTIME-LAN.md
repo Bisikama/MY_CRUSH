@@ -12,6 +12,6 @@ Reconnect policy **PROPOSAL**: đồng hồ tiếp tục, xin snapshot mới qua
 
 API và web bind `0.0.0.0`; client lấy `window.location` để xác định API host. CORS dùng allowlist `WEB_ORIGINS`, không mở `*`. CORS không thay thế auth. PostgreSQL chỉ bind loopback trên host qua Compose. Xem README để cấu hình IP/firewall.
 
-Socket giới hạn payload 16KB, 25 thao tác/giây/socket. REST JSON tối đa 1MB. Đây chưa là hệ thống chống abuse Internet; guest creation chưa có chống bot, token chưa có rotation/expiry. Không expose bản nền tảng ra mạng công cộng.
+Socket xác thực bằng cookie phiên và kiểm tra Origin. Phiên thu hồi bị ngắt kết nối qua quy trình disconnect hiện tại. Giới hạn payload 16 KB, 25 thao tác/giây/socket và REST JSON tối đa 1 MB. Luồng tài khoản nghiệm thu trên localhost, guest dùng được qua LAN tin cậy. Xem [đặc tả Auth](13-AUTH-PHAN-QUYEN.md).
 
 Socket.IO không mặc định đảm bảo nhận event mọi lần: ACK/actionId và full snapshot ở application layer là bắt buộc. [Delivery guarantees](https://socket.io/docs/v4/delivery-guarantees/).

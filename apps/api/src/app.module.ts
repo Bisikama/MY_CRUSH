@@ -5,8 +5,16 @@ import { QuestionPacksModule } from './modules/question-packs/question-packs.mod
 import { RealtimeModule } from './modules/realtime/realtime.module';
 import { HealthController } from './modules/health/health.controller';
 import { ShopModule } from './modules/shop/shop.module';
+import { AuthModule } from './modules/auth/auth.module';
 @Module({
-  imports: [PersistenceModule, PlayersModule, QuestionPacksModule, RealtimeModule, ShopModule],
+  imports: [
+    PersistenceModule,
+    AuthModule,
+    PlayersModule,
+    QuestionPacksModule,
+    RealtimeModule,
+    ShopModule,
+  ],
   controllers: [HealthController],
 })
 export class AppModule {}

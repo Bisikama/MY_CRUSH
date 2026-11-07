@@ -1,5 +1,5 @@
 import { applyDecorators } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiCookieAuth, ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import type { SchemaObject } from '@nestjs/swagger';
 import { z } from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
@@ -30,7 +30,7 @@ export function ApiEndpoint(options: {
     ApiOperation({ summary: options.summary, description: options.description }),
     ApiResponse({ status: options.status ?? 200, schema: schema(options.response) }),
   ];
-  if (options.auth) decorators.push(ApiBearerAuth('guest-token'));
+  if (options.auth) decorators.push(ApiCookieAuth('session-cookie'));
   if (options.body)
     decorators.push(
       ApiBody({

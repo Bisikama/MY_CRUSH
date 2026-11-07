@@ -1,4 +1,4 @@
-import type { Ack, GuestIdentity } from '@duoquest/shared-types';
+import type { Ack } from '@duoquest/shared-types';
 
 /** Derive host from the browser: a LAN guest must never call its own localhost. */
 export function apiOrigin() {
@@ -7,21 +7,121 @@ export function apiOrigin() {
   url.port = '4000';
   return url.origin;
 }
-export async function api<T>(path: string, token?: string, body?: unknown): Promise<T> {
-  const response = await fetch(`${apiOrigin()}/api${path}`, {
-    method: body === undefined ? 'GET' : 'POST',
-    headers: {
-      ...(body === undefined ? {} : { 'Content-Type': 'application/json' }),
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    },
-    body: body === undefined ? undefined : JSON.stringify(body),
-  });
+export class ApiError extends Error {
+  constructor(
+    readonly status: number,
+    readonly code: string,
+    message: string,
+  ) {
+    super(message);
+  }
+}
+
+export type GameIdentity = {
+  kind: 'guest' | 'account';
+  playerId: string;
+  nickname: string;
+  email: string | null;
+  role: 'PLAYER' | 'ADMIN' | null;
+};
+
+async function readResponse<T>(response: Response): Promise<T> {
   const data = await response.json();
   if (!response.ok)
-    throw new Error(typeof data.message === 'string' ? data.message : 'Không thể kết nối API');
+    throw new ApiError(
+      response.status,
+      typeof data.code === 'string' ? data.code : '',
+      typeof data.message === 'string' ? data.message : 'Không thể kết nối API.',
+    );
   return data as T;
 }
-export const identityKey = 'duoquest.guest.v1';
+
+let csrfRequest: Promise<string> | undefined;
+function csrf() {
+  if (!csrfRequest) {
+    csrfRequest = fetch(apiOrigin() + '/api/auth/csrf', {
+      credentials: 'include',
+      cache: 'no-store',
+    })
+      .then(readResponse<{ csrfToken: string }>)
+      .then((data) => data.csrfToken)
+      .finally(() => {
+        csrfRequest = undefined;
+      });
+  }
+  return csrfRequest;
+}
+
+export async function api<T>(path: string, body?: unknown): Promise<T> {
+  const write = body !== undefined;
+  for (let attempt = 0; ; attempt++) {
+    const response = await fetch(apiOrigin() + '/api' + path, {
+      method: write ? 'POST' : 'GET',
+      credentials: 'include',
+      cache: 'no-store',
+      headers: write ? { 'Content-Type': 'application/json', 'X-CSRF-Token': await csrf() } : {},
+      body: write ? JSON.stringify(body) : undefined,
+    });
+    try {
+      return await readResponse<T>(response);
+    } catch (error) {
+      if (!(write && attempt === 0 && error instanceof ApiError && error.code === 'CSRF_INVALID'))
+        throw error;
+    }
+  }
+}
+
+const identityKey = 'duoquest.guest.v1';
+let identityRequest: Promise<GameIdentity | null> | undefined;
+export function loadIdentity() {
+  if (!identityRequest)
+    identityRequest = (async () => {
+      const current = await api<GameIdentity | { kind: 'anonymous' }>('/auth/me');
+      if (current.kind !== 'anonymous') return current;
+      let legacy: string | undefined;
+      try {
+        const value = JSON.parse(localStorage.getItem(identityKey) ?? 'null') as {
+          token?: unknown;
+        } | null;
+        if (typeof value?.token === 'string' && /^[A-Za-z0-9_-]{43}$/.test(value.token))
+          legacy = value.token;
+      } catch {
+        /* Browser storage may be unavailable. */
+      }
+      if (!legacy) return null;
+      try {
+        await api('/auth/guest/migrate', { token: legacy });
+      } catch (error) {
+        if (!(error instanceof ApiError && [401, 409].includes(error.status))) throw error;
+      }
+      const next = await api<GameIdentity | { kind: 'anonymous' }>('/auth/me');
+      if (next.kind === 'anonymous') return null;
+      localStorage.removeItem(identityKey);
+      return next;
+    })().finally(() => {
+      identityRequest = undefined;
+    });
+  return identityRequest;
+}
+
+export function authChanged() {
+  if (typeof BroadcastChannel === 'undefined') return;
+  const channel = new BroadcastChannel('duoquest-auth');
+  channel.postMessage('changed');
+  channel.close();
+}
+
+export function onAuthChanged(callback: () => void) {
+  if (typeof BroadcastChannel === 'undefined') return () => {};
+  const channel = new BroadcastChannel('duoquest-auth');
+  channel.onmessage = callback;
+  return () => channel.close();
+}
+
+export function isLocalAccountHost() {
+  return ['localhost', '127.0.0.1', '[::1]'].includes(window.location.hostname);
+}
+
 export const roomStorageKey = (playerId: string) => `duoquest.room.v1:${playerId}`;
 
 export async function copyText(value: string) {
@@ -39,30 +139,6 @@ export async function copyText(value: string) {
   } finally {
     input.remove();
   }
-}
-export function readIdentity(): GuestIdentity | null {
-  try {
-    const raw = window.localStorage.getItem(identityKey);
-    if (!raw) return null;
-    const value: unknown = JSON.parse(raw);
-    if (
-      value &&
-      typeof value === 'object' &&
-      'token' in value &&
-      typeof value.token === 'string' &&
-      'playerId' in value &&
-      typeof value.playerId === 'string' &&
-      'nickname' in value &&
-      typeof value.nickname === 'string'
-    )
-      return value as GuestIdentity;
-  } catch {
-    /* Storage may be unavailable or contain an older format. */
-  }
-  return null;
-}
-export function saveIdentity(identity: GuestIdentity) {
-  window.localStorage.setItem(identityKey, JSON.stringify(identity));
 }
 export function request<T>(send: (ack: (result: Ack<T>) => void) => void): Promise<T> {
   return new Promise((resolve, reject) => {

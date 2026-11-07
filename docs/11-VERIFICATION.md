@@ -1,5 +1,9 @@
 # Kết quả kiểm chứng source foundation
 
+## Bổ sung Auth ngày 06/11/2026
+
+Áp dụng hai migration và seed thành công trên PostgreSQL test riêng. Vitest 58/58 pass khi bật DB suite. Chrome pass 4 bài Quiz và 1 bài Auth kiểm tra guest upgrade, xác minh OTP sau reload, đặt lại mật khẩu và đăng nhập. Lint, typecheck, Prisma validate và build API/web pass. Kiểm tra format pass với `--end-of-line auto` trên Windows. SMTP dùng adapter giả trong kiểm thử. Còn nghiệm thu email SMTP thật và LAN hai máy vật lý.
+
 Ngày thực hiện: 03/11/2026. Đây là kết quả chạy thực tế trong phiên dựng codebase, không thay thế nghiệm thu V1 trên thiết bị đích.
 
 | Kiểm tra                                  | Kết quả                                                        |

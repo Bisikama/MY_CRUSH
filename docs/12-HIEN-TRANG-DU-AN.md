@@ -1,5 +1,7 @@
 # DuoQuest — Tổng hợp hiện trạng dự án
 
+Cập nhật 06/11/2026. Source đã bổ sung xác thực email OTP, cookie session và role PLAYER/ADMIN. Các mô tả guest bearer bên dưới thuộc bản nền ngày 04/11/2026. Xem [đặc tả Auth](13-AUTH-PHAN-QUYEN.md) và [README](../README.md) để chạy migration và cấu hình mail.
+
 Ngày đối chiếu: **04/11/2026**. Đây là ảnh chụp hiện trạng source, cấu hình và kiểm chứng trong phiên làm việc; cần cập nhật khi dự án thay đổi.
 
 Tài liệu dành cho chủ dự án: nắm game đã có gì, người chơi đang trải nghiệm gì, công nghệ đã setup đến đâu và phần nào vẫn cần quyết định. Không phải cam kết mọi tính năng đã được nghiệm thu, cũng không phê duyệt thêm tính năng mới.

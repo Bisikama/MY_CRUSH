@@ -1,7 +1,8 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { Button, Card } from '@duoquest/ui';
-import { api, identityKey, readIdentity } from '../../lib/client';
+import { Card } from '@duoquest/ui';
+import { api, loadIdentity, onAuthChanged, type GameIdentity } from '../../lib/client';
+import { AccountSettings } from '../../features/auth/account-settings';
 interface Profile {
   nickname: string;
   xp: number;
@@ -14,25 +15,38 @@ interface HistoryRow {
 export default function ProfilePage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [history, setHistory] = useState<HistoryRow[]>([]);
+  const [identity, setIdentity] = useState<GameIdentity | null>(null);
   const [message, setMessage] = useState('Đang tải hồ sơ…');
   useEffect(() => {
-    const guest = readIdentity();
-    if (!guest) {
-      setMessage('Hãy tạo hồ sơ khách tại trang Chơi.');
-      return;
-    }
-    void Promise.all([
-      api<Profile>('/players/me', guest.token),
-      api<HistoryRow[]>('/players/me/history', guest.token),
-    ])
-      .then(([data, rows]) => {
+    let live = true;
+    const refresh = () =>
+      void (async () => {
+        const identity = await loadIdentity();
+        if (!live) return;
+        setIdentity(identity);
+        if (!identity) {
+          setProfile(null);
+          setHistory([]);
+          setMessage('Đăng nhập hoặc tạo hồ sơ khách tại trang Chơi.');
+          return;
+        }
+        const [data, rows] = await Promise.all([
+          api<Profile>('/players/me'),
+          api<HistoryRow[]>('/players/me/history'),
+        ]);
+        if (!live) return;
         setProfile(data);
         setHistory(rows);
         setMessage('');
-      })
-      .catch((error: unknown) =>
-        setMessage(error instanceof Error ? error.message : 'Không thể tải hồ sơ'),
-      );
+      })().catch((error: unknown) => {
+        if (live) setMessage(error instanceof Error ? error.message : 'Không thể tải hồ sơ');
+      });
+    refresh();
+    const unsubscribe = onAuthChanged(refresh);
+    return () => {
+      live = false;
+      unsubscribe();
+    };
   }, []);
   return (
     <div className="narrow">
@@ -65,25 +79,7 @@ export default function ProfilePage() {
           <p className="muted">Chưa có trận hoàn tất.</p>
         )}
       </Card>
-      <p className="small muted">
-        Token khách được lưu trên trình duyệt hiện tại. Xóa phiên sẽ mất khả năng truy cập hồ sơ từ
-        trình duyệt này; chưa có cơ chế khôi phục.
-      </p>
-      <Button
-        variant="ghost"
-        onClick={() => {
-          if (
-            window.confirm(
-              'Xóa phiên khách trên trình duyệt? Bạn sẽ không thể khôi phục hồ sơ cũ trong bản nền tảng này.',
-            )
-          ) {
-            localStorage.removeItem(identityKey);
-            window.location.assign('/');
-          }
-        }}
-      >
-        Xóa phiên khách trên máy này
-      </Button>
+      {identity && <AccountSettings identity={identity} />}
     </div>
   );
 }

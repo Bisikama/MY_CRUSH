@@ -14,16 +14,19 @@ export default defineConfig({
   },
   webServer: [
     {
-      command: 'pnpm --filter @duoquest/api start',
+      command:
+        process.env.RUN_AUTH_E2E === '1'
+          ? 'pnpm --filter @duoquest/api exec tsx --tsconfig tsconfig.json test/browser-api.ts'
+          : 'pnpm --filter @duoquest/api start',
       url: 'http://127.0.0.1:4000/api/health/ready',
       reuseExistingServer: false,
-      timeout: 30_000,
+      timeout: 60_000,
     },
     {
       command: 'pnpm --filter @duoquest/web start',
       url: 'http://127.0.0.1:3000',
       reuseExistingServer: false,
-      timeout: 30_000,
+      timeout: 60_000,
     },
   ],
 });

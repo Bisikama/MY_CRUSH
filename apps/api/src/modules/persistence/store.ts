@@ -10,7 +10,7 @@ import type { RewardGrant } from '../rewards/rewards.service';
 export interface PlayerRecord {
   id: string;
   nickname: string;
-  tokenHash: string;
+  tokenHash: string | null;
 }
 export interface PackRecord {
   id: string;

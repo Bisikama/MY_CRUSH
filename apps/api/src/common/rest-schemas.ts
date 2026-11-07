@@ -11,7 +11,9 @@ export const purchaseRequestSchema = equipRequestSchema
 export const guestResponseSchema = z.object({
   playerId: z.string().uuid(),
   nickname: z.string(),
-  token: z.string(),
+  kind: z.literal('guest'),
+  role: z.null(),
+  email: z.null(),
 });
 export const profileResponseSchema = z
   .object({

@@ -9,7 +9,7 @@
   "include": [
     "scripts/**/*.ts",
     "e2e/**/*.ts",
-    "prisma/seed.ts",
+    "prisma/*.ts",
     "playwright.config.ts",
     "vitest.config.ts"
   ]

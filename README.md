@@ -20,15 +20,30 @@ Mở http://localhost:3000. API: http://localhost:4000/api/health; readiness: `/
 
 API yêu cầu database/migration sẵn sàng trước khi khởi động. Không tự rơi về database giả khi PostgreSQL lỗi. `db:deploy` áp dụng migration đã commit; khi sửa schema, dùng `pnpm db:migrate --name <ten-thay-doi>` rồi review SQL. `db:seed` có thể chạy lại mà không ghi đè phiên bản bộ đề cũ.
 
+## Auth và phân quyền
+
+Dừng dev server cũ. Chọn đúng database trong `.env`, sau đó chạy từ root:
+
+```powershell
+pnpm install
+pnpm db:generate
+pnpm db:deploy
+pnpm dev
+```
+
+Docker Compose hiện publish PostgreSQL ở `127.0.0.1:55432`. Nếu lấy cấu hình từ `.env.example` và dùng Compose, đổi cổng trong `DATABASE_URL` cho khớp.
+
+Mở http://localhost:3000/register để đăng ký theo ba bước email → mã sáu số → nickname và mật khẩu. Trang Chơi vẫn cho tạo guest. Có thể nâng cấp guest trên localhost để giữ tiến trình. Rời phòng đang mở trước khi nâng cấp hoặc chuyển danh tính.
+
+Điền `AUTH_SECRET` và nhóm `SMTP_*`/`MAIL_FROM` theo `.env.example` để gửi OTP thật. Secret gồm ít nhất 32 byte ngẫu nhiên mã hóa base64url. API development có thể sinh secret theo process nếu thiếu cấu hình, nên restart sẽ làm mất hiệu lực flow xác minh đang mở. Dùng cùng hostname localhost giữa web và API.
+
+Role mặc định là `PLAYER`. Cấp hoặc gỡ Admin qua `pnpm auth:role <email> ADMIN` hoặc `pnpm auth:role <email> PLAYER`. Xem [đặc tả Auth và phân quyền](docs/13-AUTH-PHAN-QUYEN.md).
+
 ## Swagger REST API
 
 Sau khi chạy `pnpm dev`, mở http://localhost:4000/api/docs. OpenAPI JSON: http://localhost:4000/api/docs-json.
 
-1. Mở `POST /api/players/guest`, bấm **Try it out**, nhập nickname rồi **Execute**.
-2. Sao chép `token` trong response, bấm **Authorize**, dán token nguyên bản (không thêm `Bearer`) rồi xác nhận.
-3. Thử `GET /api/players/me` hoặc các endpoint có biểu tượng khóa. Các thao tác mua/trang bị/lưu bộ đề thực sự thay đổi dữ liệu; retry mua hàng phải giữ cùng `requestId` UUID.
-
-Swagger phục vụ REST; Socket.IO vẫn được mô tả trong `docs/10-CONTRACTS.md`. Trang docs dùng cùng host/cổng API, dùng được qua LAN tin cậy. Token không được lưu qua reload trang Swagger.
+Tạo guest hoặc đăng nhập qua **Try it out** để browser nhận cookie phiên. Swagger lấy CSRF token trước request ghi. Các thao tác mua/trang bị/lưu bộ đề thay đổi dữ liệu thật. Retry mua hàng phải giữ cùng `requestId` UUID. Xem [contract Socket.IO](docs/10-CONTRACTS.md).
 
 ## Chơi qua LAN
 
@@ -86,6 +101,8 @@ pnpm test:e2e
 Unit/orchestration tests chạy không cần DB. Socket integration mở Nest + Socket.IO thật và hai client, nhưng dùng store trong RAM **chỉ trong test**. Database integration là một nhóm riêng, chạy trên DB test dùng một lần; xem hướng dẫn trong `docs/08-ROADMAP-QUALITY.md`. Hai thiết bị LAN thật vẫn cần nghiệm thu thủ công.
 
 Browser e2e cần DB đã migrate/seed, production build và Chrome có sẵn (hoặc cấu hình Chromium theo tài liệu chất lượng). CI mẫu ở `.github/workflows/ci.yml`. Kết quả kiểm chứng khi dựng source được lưu trong `docs/11-VERIFICATION.md`.
+
+Để chạy riêng browser E2E cho Auth, dùng database có tên kết thúc `_test`, migrate/seed/build trước rồi đặt `$env:RUN_AUTH_E2E='1'` và chạy `pnpm test:e2e e2e/auth.spec.ts`. Fixture chỉ lắng nghe trên loopback và dùng SMTP giả. Sau khi chạy, bỏ biến bằng `Remove-Item Env:RUN_AUTH_E2E`.
 
 ## Hướng đọc cho agent
 

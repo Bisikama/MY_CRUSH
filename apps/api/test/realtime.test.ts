@@ -12,6 +12,10 @@ import type {
   ServerToClientEvents,
 } from '@duoquest/shared-types';
 import { randomUUID } from 'node:crypto';
+import { EventEmitter } from 'node:events';
+import { createHash } from 'node:crypto';
+import { AuthSessions } from '../src/modules/auth/auth-session.service';
+import { AuthService } from '../src/modules/auth/auth.service';
 import { PlatformStore } from '../src/modules/persistence/store';
 import { PlayersModule } from '../src/modules/players/players.module';
 import { PlayersService } from '../src/modules/players/players.service';
@@ -29,7 +33,33 @@ class TestRoot {}
 // Make persistence visible in imported modules while keeping real transport/controllers/services.
 import { Global } from '@nestjs/common';
 @Global()
-@Module({ providers: [{ provide: PlatformStore, useValue: store }], exports: [PlatformStore] })
+@Module({
+  providers: [
+    { provide: PlatformStore, useValue: store },
+    { provide: AuthService, useValue: {} },
+    {
+      provide: AuthSessions,
+      useValue: {
+        events: new EventEmitter(),
+        resolve: async (value: string) => {
+          const player = await store.findPlayer(createHash('sha256').update(value).digest('hex'));
+          return (
+            player && {
+              playerId: player.id,
+              nickname: player.nickname,
+              sessionId: player.id,
+              accountId: null,
+              role: null,
+              email: null,
+              validUntil: Date.now() + 60_000,
+            }
+          );
+        },
+      },
+    },
+  ],
+  exports: [PlatformStore, AuthSessions, AuthService],
+})
 class TestPersistence {}
 @Module({ imports: [TestPersistence, TestRoot] })
 class TestApp {}
@@ -56,7 +86,7 @@ describe('real Socket.IO transport with two authenticated clients', () => {
   const clients: Client[] = [];
   async function connect(token: string) {
     const client: Client = io(origin, {
-      auth: { token },
+      extraHeaders: { Cookie: 'dq_session=' + token, Origin: 'http://localhost:3000' },
       transports: ['websocket'],
       forceNew: true,
       reconnection: false,
@@ -71,7 +101,7 @@ describe('real Socket.IO transport with two authenticated clients', () => {
     return client;
   }
   beforeAll(async () => {
-    app = await NestFactory.create(TestApp, { logger: false });
+    app = await NestFactory.create(TestApp, { logger: false, abortOnError: false });
     await app.listen(0, '127.0.0.1');
     origin = `http://127.0.0.1:${(app.getHttpServer().address() as AddressInfo).port}`;
     const players = app.get(PlayersService);

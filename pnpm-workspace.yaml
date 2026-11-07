@@ -10,3 +10,4 @@ allowBuilds:
   '@nestjs/core': false
   sharp: false
   unrs-resolver: false
+  argon2: false

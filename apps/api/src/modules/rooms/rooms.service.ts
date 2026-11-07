@@ -68,6 +68,21 @@ export class RoomsService implements OnModuleInit, OnModuleDestroy {
     clearInterval(this.timer);
     this.events.removeAllListeners();
   }
+  withoutOpenRoom<T>(playerId: string | undefined, task: () => Promise<T>) {
+    return this.queue.run('__membership__', () => {
+      assertDomain(
+        !playerId ||
+          ![...this.rooms.values()].some(
+            (room) =>
+              room.status !== 'CANCELLED' &&
+              room.players.some((slot) => slot.controllerId === playerId),
+          ),
+        'CONFLICT',
+        'Hãy rời phòng hiện tại trước khi chuyển danh tính',
+      );
+      return task();
+    });
+  }
   async connect(playerId: string, socketId: string) {
     const sockets = this.connections.get(playerId) ?? new Set<string>();
     sockets.add(socketId);
@@ -104,8 +119,10 @@ export class RoomsService implements OnModuleInit, OnModuleDestroy {
   async create(
     player: PlayerRecord,
     input: { mode: GameMode; layout: GameLayout; packVersionId: string; secondNickname?: string },
+    check?: () => Promise<void>,
   ) {
     return this.queue.run('__membership__', async () => {
+      await check?.();
       assertDomain(
         this.rooms.size < ROOM_POLICY.maxRooms,
         'RATE_LIMITED',
@@ -163,9 +180,10 @@ export class RoomsService implements OnModuleInit, OnModuleDestroy {
       return this.view(room, player.id);
     });
   }
-  async join(code: string, player: PlayerRecord) {
+  async join(code: string, player: PlayerRecord, check?: () => Promise<void>) {
     return this.queue.run('__membership__', () =>
-      this.queue.run(code, () => {
+      this.queue.run(code, async () => {
+        await check?.();
         const room = this.find(code);
         if (room.players.some((p) => p.controllerId === player.id))
           return this.view(room, player.id);
@@ -200,8 +218,9 @@ export class RoomsService implements OnModuleInit, OnModuleDestroy {
       }),
     );
   }
-  ready(code: string, playerId: string) {
-    return this.queue.run(code, () => {
+  ready(code: string, playerId: string, check?: () => Promise<void>) {
+    return this.queue.run(code, async () => {
+      await check?.();
       const room = this.authorize(code, playerId);
       assertDomain(
         room.status === 'WAITING' || room.status === 'READY',
@@ -222,8 +241,9 @@ export class RoomsService implements OnModuleInit, OnModuleDestroy {
       return this.view(room, playerId);
     });
   }
-  start(code: string, playerId: string) {
+  start(code: string, playerId: string, check?: () => Promise<void>) {
     return this.queue.run(code, async () => {
+      await check?.();
       const room = this.authorize(code, playerId);
       assertDomain(room.hostPlayerId === playerId, 'FORBIDDEN', 'Chỉ host được bắt đầu');
       assertDomain(
@@ -235,11 +255,15 @@ export class RoomsService implements OnModuleInit, OnModuleDestroy {
       return this.view(room, playerId);
     });
   }
-  sync(code: string, playerId: string) {
-    return this.queue.run(code, () => this.view(this.authorize(code, playerId), playerId));
+  sync(code: string, playerId: string, check?: () => Promise<void>) {
+    return this.queue.run(code, async () => {
+      await check?.();
+      return this.view(this.authorize(code, playerId), playerId);
+    });
   }
-  action(command: GameActionCommand, controllerId: string) {
+  action(command: GameActionCommand, controllerId: string, check?: () => Promise<void>) {
     return this.queue.run(command.code, async () => {
+      await check?.();
       const room = this.authorize(command.code, controllerId);
       assertDomain(
         room.players.some(
@@ -258,8 +282,9 @@ export class RoomsService implements OnModuleInit, OnModuleDestroy {
       return receipt;
     });
   }
-  rematch(code: string, playerId: string) {
+  rematch(code: string, playerId: string, check?: () => Promise<void>) {
     return this.queue.run(code, async () => {
+      await check?.();
       const room = this.authorize(code, playerId);
       assertDomain(
         room.status === 'FINISHED' && room.players.every((p) => p.connected),
@@ -273,8 +298,9 @@ export class RoomsService implements OnModuleInit, OnModuleDestroy {
       return this.view(room, playerId);
     });
   }
-  leave(code: string, playerId: string) {
+  leave(code: string, playerId: string, check?: () => Promise<void>) {
     return this.queue.run(code, async () => {
+      await check?.();
       const room = this.authorize(code, playerId);
       if (room.session && room.status === 'IN_PROGRESS') await this.sessions.cancel(room.session);
       room.status = 'CANCELLED';

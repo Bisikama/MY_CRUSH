@@ -1,7 +1,7 @@
 'use client';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Card } from '@duoquest/ui';
-import { actionId, api, readIdentity } from '../../lib/client';
+import { actionId, api, loadIdentity } from '../../lib/client';
 interface Item {
   id: string;
   name: string;
@@ -20,12 +20,12 @@ export default function ShopPage() {
   const [busy, setBusy] = useState(false);
   const requestIds = useRef(new Map<string, string>());
   const refresh = useCallback(async () => {
-    const guest = readIdentity();
+    const guest = await loadIdentity();
     if (!guest) throw new Error('Hãy tạo hồ sơ khách ở trang Chơi trước.');
     const [catalog, inventory, profile] = await Promise.all([
       api<Item[]>('/shop/items'),
-      api<Owned>('/shop/inventory', guest.token),
-      api<{ wallet: { balance: number } }>('/players/me', guest.token),
+      api<Owned>('/shop/inventory'),
+      api<{ wallet: { balance: number } }>('/players/me'),
     ]);
     setItems(catalog);
     setOwned(inventory);
@@ -42,7 +42,7 @@ export default function ShopPage() {
     const requestId = requestIds.current.get(itemId) ?? actionId();
     requestIds.current.set(itemId, requestId);
     try {
-      await api('/shop/purchases', readIdentity()?.token, { itemId, requestId });
+      await api('/shop/purchases', { itemId, requestId });
       requestIds.current.delete(itemId);
       await refresh();
       setMessage('Vật phẩm đã vào kho của bạn.');
@@ -55,7 +55,7 @@ export default function ShopPage() {
   async function equip(itemId: string) {
     setBusy(true);
     try {
-      await api('/shop/equip', readIdentity()?.token, { itemId });
+      await api('/shop/equip', { itemId });
       await refresh();
       setMessage('Đã lưu vật phẩm vào loadout. Phần hiển thị skin trong trận còn ở backlog.');
     } catch (error) {

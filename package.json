@@ -18,6 +18,7 @@
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
     "db:seed": "tsx --env-file=.env prisma/seed.ts",
+    "auth:role": "tsx --env-file=.env prisma/account-role.ts",
     "db:up": "docker compose --env-file .env -f infra/compose.yaml up -d",
     "db:down": "docker compose --env-file .env -f infra/compose.yaml down",
     "format": "prettier --write .",

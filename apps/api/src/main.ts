@@ -11,7 +11,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bodyParser: false });
   app.use(json({ limit: '1mb' }));
   app.setGlobalPrefix('api');
-  app.enableCors({ origin: webOrigins });
+  app.enableCors({ origin: webOrigins, credentials: true });
   app.useGlobalFilters(new HttpErrorFilter());
   app.enableShutdownHooks();
   setupSwagger(app);

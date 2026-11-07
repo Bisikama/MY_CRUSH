@@ -1,8 +1,8 @@
 # Hợp đồng giao tiếp
 
-Nguồn chuẩn: `packages/shared-types/src/index.ts`. Socket namespace mặc định, path `/socket.io`; REST prefix `/api`. Kết nối socket dùng `{ auth: { token } }`; REST bảo vệ dùng `Authorization: Bearer <token>`.
+Nguồn chuẩn: `packages/shared-types/src/index.ts`. Socket namespace mặc định, path `/socket.io`; REST prefix `/api`. REST và Socket.IO xác thực qua cookie phiên dq_session. Request REST ghi dữ liệu cần Origin hợp lệ và X-CSRF-Token lấy từ GET /api/auth/csrf.
 
-REST Swagger UI: `/api/docs`; OpenAPI JSON: `/api/docs-json`. Tạo guest tại `POST /api/players/guest`, dán token vào **Authorize** (không thêm `Bearer`). UI mô tả request/response, status và lỗi cho 12 endpoint REST; các POST hiện trả 201. Health, danh sách shop và tạo guest là public; các REST còn lại yêu cầu guest token. Request schema dùng chung với runtime Zod; các ràng buộc `superRefine` của QuestionPack vẫn do server kiểm tra. Socket.IO không được thử qua Swagger.
+REST Swagger UI ở /api/docs, OpenAPI JSON ở /api/docs-json. Tạo guest hoặc đăng nhập để browser nhận cookie. Swagger tự lấy CSRF token cho request ghi. Xem [đặc tả Auth và phân quyền](13-AUTH-PHAN-QUYEN.md).
 
 ACK: `{ ok:true, data:T }` hoặc `{ ok:false, error:{code,message} }`. Error codes: INVALID_INPUT, UNAUTHORIZED, FORBIDDEN, NOT_FOUND, CONFLICT, TOO_LATE, RATE_LIMITED, INTERNAL. Không trả stack/database details cho browser.
 

@@ -10,6 +10,7 @@ export function SiteHeader() {
         <Link href="/packs">Bộ câu hỏi</Link>
         <Link href="/shop">Shop</Link>
         <Link href="/profile">Hồ sơ</Link>
+        <Link href="/login">Tài khoản</Link>
       </nav>
       <span className="lan-badge">
         <i /> LOCAL / LAN

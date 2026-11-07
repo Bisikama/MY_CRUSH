@@ -30,10 +30,14 @@ export class HttpErrorFilter implements ExceptionFilter {
         .status(statuses[error.code])
         .json({ code: error.code, message: error.message });
     }
-    if (error instanceof HttpException)
+    if (error instanceof HttpException) {
+      const body = error.getResponse();
+      if (typeof body === 'object' && 'code' in body && 'message' in body)
+        return response.status(error.getStatus()).json(body);
       return response
         .status(error.getStatus())
         .json({ code: 'INVALID_INPUT', message: error.message });
+    }
     this.logger.error(error);
     return response.status(500).json({
       code: 'INTERNAL',

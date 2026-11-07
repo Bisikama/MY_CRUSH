@@ -1,9 +1,10 @@
 'use client';
 import type { ReactNode } from 'react';
 import { Button, Card } from '@duoquest/ui';
-import type { GameMode, GameLayout, GuestIdentity, PackSummary } from '@duoquest/shared-types';
+import type { GameMode, GameLayout, PackSummary } from '@duoquest/shared-types';
+import type { GameIdentity } from '../../lib/client';
 interface Props {
-  identity: GuestIdentity;
+  identity: GameIdentity;
   resumeCode: string | null;
   mode: GameMode;
   setMode: (value: GameMode) => void;

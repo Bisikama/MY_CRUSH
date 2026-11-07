@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { Button, Card } from '@duoquest/ui';
 import { questionPackSchema, type QuestionPack } from '@duoquest/shared-types';
-import { api, readIdentity } from '../../lib/client';
+import { api, loadIdentity } from '../../lib/client';
 
 export default function PacksPage() {
   const [raw, setRaw] = useState('');
@@ -14,12 +14,11 @@ export default function PacksPage() {
     setMessage('');
     setPreview(null);
     try {
-      const identity = readIdentity();
+      const identity = await loadIdentity();
       if (!identity) throw new Error('Hãy tạo hồ sơ khách tại trang Chơi trước.');
       const pack = questionPackSchema.parse(JSON.parse(raw));
       const data = await api<{ pack: QuestionPack; warning: string }>(
         '/question-packs/preview',
-        identity.token,
         pack,
       );
       setPreview(data.pack);
@@ -34,7 +33,7 @@ export default function PacksPage() {
     if (!preview) return;
     setBusy(true);
     try {
-      await api('/question-packs', readIdentity()?.token, preview);
+      await api('/question-packs', preview);
       setMessage('Đã lưu phiên bản bộ đề. Bạn có thể chọn bộ đề này khi tạo phòng.');
       setPreview(null);
     } catch (error) {
