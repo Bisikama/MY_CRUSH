@@ -12,6 +12,8 @@ import { digest } from '../src/modules/auth/auth-security';
 import { MailService } from '../src/modules/auth/mail.service';
 import { PlatformStore } from '../src/modules/persistence/store';
 import { PrismaService } from '../src/modules/persistence/prisma.service';
+import { questionPackSchema } from '@duoquest/shared-types';
+import starter from '../../../examples/question-pack.json';
 
 @Controller('test-admin')
 class AdminFixture {
@@ -105,6 +107,7 @@ describe.skipIf(process.env.RUN_DB_TESTS !== '1')('Auth with PostgreSQL and Sock
     if (db) {
       const ids = [...players];
       await db.emailChallenge.deleteMany({ where: { email: { in: [...testEmails] } } });
+      await db.quizQuestionPack.deleteMany({ where: { ownerId: { in: ids } } });
       await db.authSession.deleteMany({ where: { playerId: { in: ids } } });
       await db.account.deleteMany({ where: { playerId: { in: ids } } });
       await db.wallet.deleteMany({ where: { playerId: { in: ids } } });
@@ -221,26 +224,27 @@ describe.skipIf(process.env.RUN_DB_TESTS !== '1')('Auth with PostgreSQL and Sock
     // Block logout / logout-all and identity switch while controlling an open room
     const rooms = app.get((await import('../src/modules/rooms/rooms.service')).RoomsService);
     const activePlayer = await db.player.findUniqueOrThrow({ where: { id: player.id } });
-    const pack = await app
+    const savedPack = await app
       .get(PlatformStore)
-      .getPack((await app.get(PlatformStore).listPacks(player.id))[0]!.id, player.id);
-    if (pack) {
-      const openRoom = await rooms.create(activePlayer, {
-        mode: 'SOLO',
-        layout: 'MULTI_DEVICE',
-        packVersionId: pack.id,
-      });
-      const currentRes = await other.request('/rooms/current');
-      expect(currentRes.status).toBe(200);
-      expect(currentRes.headers.get('cache-control')).toBe('no-store');
-      expect(await currentRes.json()).toEqual({
-        room: { code: openRoom.code, gameId: 'quiz', status: 'WAITING' },
-      });
-      expect((await other.request('/auth/logout', {})).status).toBe(409);
-      expect((await other.request('/auth/logout-all', {})).status).toBe(409);
-      await rooms.leave(openRoom.code, player.id);
-      expect(await (await other.request('/rooms/current')).json()).toEqual({ room: null });
-    }
+      .savePack(
+        { ...questionPackSchema.parse(starter), packId: `auth-test-${randomUUID()}` },
+        player.id,
+      );
+    const openRoom = await rooms.create(activePlayer, {
+      mode: 'SOLO',
+      layout: 'MULTI_DEVICE',
+      packVersionId: savedPack.id,
+    });
+    const currentRes = await other.request('/rooms/current');
+    expect(currentRes.status).toBe(200);
+    expect(currentRes.headers.get('cache-control')).toBe('no-store');
+    expect(await currentRes.json()).toEqual({
+      room: { code: openRoom.code, gameId: 'quiz', status: 'WAITING' },
+    });
+    expect((await other.request('/auth/logout', {})).status).toBe(409);
+    expect((await other.request('/auth/logout-all', {})).status).toBe(409);
+    await rooms.leave(openRoom.code, player.id);
+    expect(await (await other.request('/rooms/current')).json()).toEqual({ room: null });
 
     // Guest switching to existing account does not merge guest balance into account
     const tempGuest = new Browser(base);

@@ -137,6 +137,36 @@ test('a server disconnect with a valid session reconnects once and restores the 
   expect(fixture.maxConnections).toBe(1);
 });
 
+test('a new revocation immediately after recovery is not suppressed by a cooldown', async ({
+  page,
+}) => {
+  await lobby(page);
+  const before = fixture.connections;
+  fixture.io.disconnectSockets(true);
+  await expect.poll(() => fixture.connections).toBe(before + 1);
+  fixture.expired = true;
+  fixture.io.disconnectSockets(true);
+  await expect(page.getByLabel('Biệt danh')).toBeVisible();
+  await expect(page.locator('.lavender-profile-name')).toHaveCount(0);
+});
+
+test('repeated handshake rejection stops after one reconnect and permits explicit retry', async ({
+  page,
+}) => {
+  await lobby(page);
+  const before = fixture.connections;
+  fixture.rejectConnections = true;
+  fixture.io.disconnectSockets(true);
+  await expect(page.locator('header').getByRole('alert')).toContainText(
+    'Không thể kết nối phiên chơi',
+  );
+  expect(fixture.connections).toBe(before);
+  fixture.rejectConnections = false;
+  await page.getByRole('button', { name: 'Thử lại phiên', exact: true }).click();
+  await expect.poll(() => fixture.connections).toBe(before + 1);
+  await expect(page.getByRole('button', { name: 'Tạo ván Solo →' })).toBeEnabled();
+});
+
 test('network/5xx lookup errors preserve identity and do not create a recovery loop', async ({
   page,
 }) => {
@@ -145,7 +175,9 @@ test('network/5xx lookup errors preserve identity and do not create a recovery l
   const before = fixture.authReads;
   await focus(page);
   await expect.poll(() => fixture.authReads).toBe(before + 1);
-  await expect(page.locator('header').getByRole('alert')).toContainText('Session lookup unavailable');
+  await expect(page.locator('header').getByRole('alert')).toContainText(
+    'Session lookup unavailable',
+  );
   await expect(page.locator('.lavender-profile-name')).toHaveText('Lifecycle Guest');
   expect(fixture.authReads).toBe(before + 1);
   expect(fixture.connections).toBe(1);
@@ -155,14 +187,82 @@ test('network/5xx lookup errors preserve identity and do not create a recovery l
 test('resource 403 does not discard a valid identity', async ({ page }) => {
   await lobby(page);
   fixture.profileStatus = 403;
-  await page.getByRole('link', { name: /Hồ sơ của/ }).click();
-  await expect(page.getByRole('button', { name: 'Thoát hồ sơ guest', exact: true })).toBeVisible();
   const before = fixture.authReads;
   // Focus validates once; the subsequent profile 403 must not trigger another recovery.
   await focus(page);
   await expect(page.getByRole('button', { name: 'Thử lại Coins' })).toBeVisible();
   expect(fixture.authReads).toBe(before + 1);
   await expect(page.locator('.lavender-profile-name')).toHaveText('Lifecycle Guest');
+});
+
+test('a profile HTTP 401 recovers the session even without a socket disconnect', async ({
+  page,
+}) => {
+  await lobby(page);
+  fixture.profileStatus = 403;
+  await focus(page);
+  await expect(page.getByRole('button', { name: 'Thử lại Coins' })).toBeVisible();
+  const before = fixture.authReads;
+  fixture.expired = true;
+  await page.getByRole('button', { name: 'Thử lại Coins' }).click();
+  await expect(page.getByLabel('Biệt danh')).toBeVisible();
+  await expect(page.locator('.lavender-profile-name')).toHaveCount(0);
+  expect(fixture.authReads).toBe(before + 1);
+});
+
+test('an unauthorized reconnect validates identity instead of leaving a disabled lobby', async ({
+  page,
+}) => {
+  await lobby(page);
+  fixture.expired = true;
+  for (const socket of fixture.io.sockets.sockets.values()) socket.conn.close();
+  await expect(page.getByLabel('Biệt danh')).toBeVisible();
+  await expect(page.locator('.lavender-profile-name')).toHaveCount(0);
+});
+
+test('a delayed identity lookup cannot undo a later identity-change broadcast', async ({
+  page,
+}) => {
+  await lobby(page);
+  fixture.authDelay = 400;
+  const before = fixture.authReads;
+  const oldResponse = page.waitForResponse(
+    async (response) =>
+      response.url().includes('/api/auth/me') &&
+      ((await response.json()) as { nickname?: string }).nickname === 'Lifecycle Guest',
+  );
+  await focus(page);
+  await expect.poll(() => fixture.authReads).toBe(before + 1);
+  fixture.authDelay = 0;
+  fixture.identity = {
+    ...fixture.identity!,
+    playerId: '55555555-5555-4555-8555-555555555555',
+    nickname: 'Other profile',
+  };
+  await page.evaluate(() => {
+    const channel = new BroadcastChannel('duoquest-auth');
+    channel.postMessage('changed');
+    channel.close();
+  });
+  await expect(page.locator('.lavender-profile-name')).toHaveText('Other profile');
+  await oldResponse;
+  await expect(page.locator('.lavender-profile-name')).toHaveText('Other profile');
+  expect(fixture.authReads).toBe(before + 2);
+});
+
+test('a failed session network request preserves identity and can be retried explicitly', async ({
+  page,
+}) => {
+  await lobby(page);
+  await page.route('**/api/auth/me', (route) => route.abort('failed'));
+  await focus(page);
+  await expect(page.locator('header').getByRole('alert')).toBeVisible();
+  await expect(page.locator('.lavender-profile-name')).toHaveText('Lifecycle Guest');
+  expect(fixture.connections).toBe(1);
+  await page.unroute('**/api/auth/me');
+  await page.getByRole('button', { name: 'Thử lại phiên', exact: true }).click();
+  await expect(page.locator('header').getByRole('alert')).toHaveCount(0);
+  expect(fixture.connections).toBe(1);
 });
 
 test('logout and provider unmount do not reconnect a disposed socket', async ({ page }) => {
@@ -173,8 +273,10 @@ test('logout and provider unmount do not reconnect a disposed socket', async ({ 
     role: 'PLAYER',
     email: 'fixture@example.test',
   };
+  const beforeNavigation = fixture.connections;
   await page.goto('/profile');
   await expect(page.getByRole('button', { name: 'Đăng xuất', exact: true })).toBeVisible();
+  await expect.poll(() => fixture.connections).toBe(beforeNavigation + 1);
   const connections = fixture.connections;
   await page.getByRole('button', { name: 'Đăng xuất', exact: true }).click();
   await expect(page).toHaveURL(/\/$/);

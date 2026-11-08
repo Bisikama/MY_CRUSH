@@ -3,8 +3,38 @@
 > **Mục đích:** Bằng chứng kiểm chứng theo từng mốc, không chứng nhận source mới nhất.
 > **Đối tượng:** Chủ dự án, lập trình viên và QA.
 > **Trạng thái:** `historical`.
-> **Cập nhật:** 2026-11-07 (sắp xếp tài liệu; các mốc kiểm chứng trong nội dung giữ nguyên).
+> **Cập nhật:** 2026-11-08 (bổ sung kiểm chứng lifecycle; giữ nguyên các mốc lịch sử).
 > **Liên quan:** [Mục lục](../README.md), [Nguồn tham khảo](../project/roadmap-quality.md).
+
+## Sửa lifecycle Game Hub ngày 2026-11-08
+
+Đã tái hiện hai lỗi trên web production bằng Chrome và HTTP/Socket.IO fixture: response `/rooms/current` ghi nhận chưa có phòng nhưng đến sau create/start làm mất snapshot và bỏ qua xác nhận rời trận; phiên bị server thu hồi làm tab mắc kẹt ở danh tính cũ, phải reload mới tiếp tục được.
+
+Phần sửa giữ nguyên backend/contracts/schema, quyền guest và chính sách thưởng:
+
+- Room reads chỉ được áp dụng khi sequence danh tính, generation phòng và ID lượt đọc còn hiện hành; các lệnh phòng đang chờ ACK chặn read commit. Snapshot realtime hoặc thao tác phòng mới vô hiệu hóa response cũ. Timeout lệnh dẫn tới đọc lại phòng từ server, không kết luận lệnh thất bại chỉ vì mất ACK.
+- Room store áp dụng summary và snapshot nhất quán, giữ kiểm tra version trong cùng session. Callback cũ không cập nhật store hoặc điều hướng sau đổi socket/danh tính.
+- HTTP 401, socket `UNAUTHORIZED` và `io server disconnect` xác minh lại phiên qua một request đang chạy dùng chung. Anonymous dọn state, giữ URL/link mời; 403, lỗi mạng và 5xx không tự xóa danh tính. Focus kiểm tra phiên trước khi tải lại dữ liệu. Mỗi socket chỉ có một lượt reconnect chủ động sau handshake lỗi, có nút thử lại; một lần thu hồi phiên mới không bị chặn bởi cooldown thời gian.
+- Provider dùng lượt `/auth/me` mới khi xác minh, tránh tái sử dụng request được gửi với cookie trước đó; request cũ kết thúc không được xóa cache của request mới. Header có lỗi và nút thử lại phiên khi vẫn giữ danh tính.
+
+### Cách chạy kiểm chứng cô lập
+
+```powershell
+pnpm --filter @duoquest/web build
+pnpm exec playwright test --config e2e/platform-lifecycle.config.ts
+```
+
+[Config lifecycle](../../e2e/platform-lifecycle.config.ts) chạy web production ở loopback cổng riêng `3177`, không reuse hoặc dừng dev server ở `3000`/`4000`. [Fixture HTTP/Socket.IO](../../apps/api/test/platform-browser-fixture.ts) mở cổng ngẫu nhiên trên loopback, Playwright proxy request browser tới fixture, đóng kết nối/server sau test. Fixture không import Prisma, không ghi database, không gửi mail. Nếu cổng `3177` bị chiếm, bộ test dừng thay vì can thiệp tiến trình khác.
+
+[Browser suite](../../e2e/platform-lifecycle.spec.ts) dùng provider thật và kiểm tra: response null trễ; Cancel/Confirm rời trận và chờ ACK; create đã xảy ra nhưng mất ACK; thu hồi phiên và tạo guest mới tại link mời; gộp 401/disconnect; reconnect phiên hợp lệ; thu hồi phiên liên tiếp; chặn handshake retry lặp; 5xx; 403; HTTP 401 không có disconnect; connect_error unauthorized; lookup danh tính cũ đến sau broadcast; lỗi mạng và thử lại; logout/unmount không reconnect ngoài ý muốn.
+
+### Kết quả và giới hạn
+
+- `pnpm test`: **91 tests pass**, 11 files pass, 8 DB tests skip có chủ đích. Con số bao gồm các test hiện có trong workspace tại thời điểm chạy, không chỉ test bổ sung của task này.
+- Lint và typecheck đã pass; build API/web đã pass ngoài sandbox. Các lần chạy trong sandbox gặp `EACCES` cho loopback hoặc `EPERM` tạo thư mục `.next`; chạy lại ngoài sandbox đã loại trừ lỗi môi trường này.
+- `pnpm exec playwright test --config e2e/platform-lifecycle.config.ts`: **14/14 tests pass** trên Chrome headless, tổng thời gian suite 32.1s. Hai kịch bản lỗi ban đầu và các trường hợp thu hồi phiên liên tiếp, handshake bị từ chối, request danh tính đến chậm đều pass. Web production được build lại từ source cuối trước lần chạy này.
+- Prettier check các file thuộc task và kiểm tra liên kết nội bộ trong tài liệu này đều pass. Các lần đầu viết browser suite có selector không duy nhất và thời điểm đo kết nối chưa ổn định; đã sửa fixture/test và chạy lại toàn bộ suite thành công.
+- Chưa chạy lại PostgreSQL integration, toàn bộ Quiz/Auth E2E với DB/SMTP fixture, hoặc LAN hai thiết bị thật. Suite lifecycle không thay thế các bước đó, không chứng minh việc cộng thưởng hay gửi OTP trên dịch vụ thật.
 
 ## Bổ sung Auth ngày 06/11/2026
 

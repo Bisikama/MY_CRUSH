@@ -73,9 +73,9 @@ export async function api<T>(path: string, body?: unknown): Promise<T> {
 
 const identityKey = 'duoquest.guest.v1';
 let identityRequest: Promise<GameIdentity | null> | undefined;
-export function loadIdentity() {
-  if (!identityRequest)
-    identityRequest = (async () => {
+export function loadIdentity({ fresh = false }: { fresh?: boolean } = {}) {
+  if (!identityRequest || fresh) {
+    const pending: Promise<GameIdentity | null> = (async () => {
       const current = await api<GameIdentity | { kind: 'anonymous' }>('/auth/me');
       if (current.kind !== 'anonymous') return current;
       let legacy: string | undefined;
@@ -99,8 +99,10 @@ export function loadIdentity() {
       localStorage.removeItem(identityKey);
       return next;
     })().finally(() => {
-      identityRequest = undefined;
+      if (identityRequest === pending) identityRequest = undefined;
     });
+    identityRequest = pending;
+  }
   return identityRequest;
 }
 

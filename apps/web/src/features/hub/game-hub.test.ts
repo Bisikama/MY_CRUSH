@@ -235,10 +235,13 @@ describe('Game Hub banner, navigation guard & room store', () => {
       tone: 'coop',
     });
 
-    const now = new Date('2026-11-08T15:30:00+07:00');
-    expect(formatProfileMatchTime('2026-11-08T14:20:00+07:00', now)).toBe('Hôm nay, 14:20');
-    expect(formatProfileMatchTime('2026-11-07T20:15:00+07:00', now)).toBe('Hôm qua, 20:15');
-    expect(formatProfileMatchTime('2026-10-12T09:05:00+07:00', now)).toBe('12/10/2026, 09:05');
+    const now = new Date(2026, 10, 8, 15, 30, 0);
+    const todayMatch = new Date(2026, 10, 8, 14, 20, 0).toISOString();
+    const yesterdayMatch = new Date(2026, 10, 7, 20, 15, 0).toISOString();
+    const olderMatch = new Date(2026, 9, 12, 9, 5, 0).toISOString();
+    expect(formatProfileMatchTime(todayMatch, now)).toBe('Hôm nay, 14:20');
+    expect(formatProfileMatchTime(yesterdayMatch, now)).toBe('Hôm qua, 20:15');
+    expect(formatProfileMatchTime(olderMatch, now)).toBe('12/10/2026, 09:05');
     expect(formatProfileMatchTime(null, now)).toBe('Vừa hoàn tất');
   });
 });

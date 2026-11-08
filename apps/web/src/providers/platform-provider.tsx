@@ -142,7 +142,7 @@ export function PlatformProvider({ children }: { children: ReactNode }) {
   const lastFocusRefreshRef = useRef(0);
   const sessionCheckRef = useRef<Promise<void> | null>(null);
   const recoveryRef = useRef<(refreshData?: boolean) => Promise<void>>(async () => {});
-  const lastAutomaticRecoveryRef = useRef(-Infinity);
+  const reconnectAttemptedRef = useRef(new WeakSet<GameSocket>());
 
   const stopSocket = useCallback(() => {
     const socket = socketRef.current;
@@ -163,9 +163,7 @@ export function PlatformProvider({ children }: { children: ReactNode }) {
   const recoverSession = useCallback(() => {
     if (!mountedRef.current) return;
     if (sessionCheckRef.current) return;
-    // Coalesce a burst of 401/disconnect signals; never schedule a retry loop.
-    if (Date.now() - lastAutomaticRecoveryRef.current < 3000) return;
-    lastAutomaticRecoveryRef.current = Date.now();
+    // Coalesce only in-flight validation: a later revocation must never be throttled away.
     void recoveryRef.current(false);
   }, []);
 
@@ -275,7 +273,14 @@ export function PlatformProvider({ children }: { children: ReactNode }) {
       const existing = socketRef.current;
       if (existing && socketPlayerIdRef.current === playerId) {
         // Server disconnects disable Socket.IO's automatic reconnection.
-        if (!existing.connected && !existing.active) existing.connect();
+        if (!existing.connected && !existing.active) {
+          if (reconnectAttemptedRef.current.has(existing)) {
+            setIdentityError('Không thể kết nối phiên chơi. Hãy thử lại.');
+          } else {
+            reconnectAttemptedRef.current.add(existing);
+            existing.connect();
+          }
+        }
         return;
       }
       stopSocket();
@@ -293,6 +298,7 @@ export function PlatformProvider({ children }: { children: ReactNode }) {
       socket.on('connect', () => {
         if (!isCurrentSocket(socket, token)) return;
         setConnected(true);
+        reconnectAttemptedRef.current.delete(socket);
         setIdentityError('');
         void fetchProfileForToken(token);
         void fetchCurrentRoomForToken(token, playerId).then((serverRoom) => {
@@ -335,7 +341,8 @@ export function PlatformProvider({ children }: { children: ReactNode }) {
       const token = seqGuardRef.current.value();
       const check = (async () => {
         try {
-          const nextIdentity = await loadIdentity();
+          // Recovery/auth changes must not reuse a lookup started with an older cookie.
+          const nextIdentity = await loadIdentity({ fresh: true });
           if (!mountedRef.current || !seqGuardRef.current.isCurrent(token)) return;
           const previous = identityRef.current;
           const changed =
@@ -389,7 +396,6 @@ export function PlatformProvider({ children }: { children: ReactNode }) {
       seqGuardRef.current.next();
       roomGuardRef.current.reset();
       sessionCheckRef.current = null;
-      lastAutomaticRecoveryRef.current = -Infinity;
       stopSocket();
       void loadSessionAndData();
     });
@@ -421,7 +427,7 @@ export function PlatformProvider({ children }: { children: ReactNode }) {
       const now = Date.now();
       if (now - lastFocusRefreshRef.current < 3000) return;
       lastFocusRefreshRef.current = now;
-      lastAutomaticRecoveryRef.current = -Infinity;
+      if (socketRef.current) reconnectAttemptedRef.current.delete(socketRef.current);
       void loadSessionAndData();
     };
     window.addEventListener('focus', onResume);
@@ -446,6 +452,7 @@ export function PlatformProvider({ children }: { children: ReactNode }) {
   }, [effectiveStatus]);
 
   const retryIdentity = useCallback(async () => {
+    if (socketRef.current) reconnectAttemptedRef.current.delete(socketRef.current);
     await loadSessionAndData();
   }, [loadSessionAndData]);
 
@@ -460,7 +467,16 @@ export function PlatformProvider({ children }: { children: ReactNode }) {
 
   const createGuest = useCallback(
     async (nickname: string) => {
-      const guest = await api<GameIdentity>('/players/guest', { nickname });
+      const previousToken = seqGuardRef.current.value();
+      let guest: GameIdentity;
+      try {
+        guest = await api<GameIdentity>('/players/guest', { nickname });
+      } catch (cause) {
+        if (seqGuardRef.current.isCurrent(previousToken)) handleUnauthorized(cause);
+        throw cause;
+      }
+      if (!mountedRef.current || !seqGuardRef.current.isCurrent(previousToken))
+        throw new Error('Phiên chơi đã thay đổi. Hãy thử lại.');
       const token = seqGuardRef.current.next();
       roomGuardRef.current.reset();
       stopSocket();
@@ -475,7 +491,14 @@ export function PlatformProvider({ children }: { children: ReactNode }) {
       void fetchCurrentRoomForToken(token, guest.playerId);
       return guest;
     },
-    [ensureSocket, fetchCurrentRoomForToken, fetchProfileForToken, resetRoomState, stopSocket],
+    [
+      ensureSocket,
+      fetchCurrentRoomForToken,
+      fetchProfileForToken,
+      handleUnauthorized,
+      resetRoomState,
+      stopSocket,
+    ],
   );
 
   const runRoomMutation = useCallback(
@@ -667,7 +690,12 @@ export function PlatformProvider({ children }: { children: ReactNode }) {
       if (currentRoom) {
         throw new Error('Hãy rời phòng hiện tại trước khi đăng xuất hoặc chuyển danh tính.');
       }
-      await api(all ? '/auth/logout-all' : '/auth/logout', {});
+      try {
+        await api(all ? '/auth/logout-all' : '/auth/logout', {});
+      } catch (cause) {
+        handleUnauthorized(cause);
+        throw cause;
+      }
       const token = seqGuardRef.current.next();
       roomGuardRef.current.reset();
       sessionCheckRef.current = null;
@@ -683,7 +711,7 @@ export function PlatformProvider({ children }: { children: ReactNode }) {
         router.replace('/');
       }
     },
-    [currentRoom, resetRoomState, router, stopSocket],
+    [currentRoom, handleUnauthorized, resetRoomState, router, stopSocket],
   );
 
   const value = useMemo<PlatformContextValue>(

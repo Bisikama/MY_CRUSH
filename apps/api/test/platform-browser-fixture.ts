@@ -20,6 +20,7 @@ export class PlatformBrowserFixture {
   };
   room: RoomView | null = null;
   expired = false;
+  rejectConnections = false;
   authStatus = 200;
   authDelay = 0;
   profileStatus = 200;
@@ -125,7 +126,7 @@ export class PlatformBrowserFixture {
 
   constructor() {
     this.io.use((_socket, next) => {
-      if (this.expired || !this.identity) next(new Error('UNAUTHORIZED'));
+      if (this.expired || !this.identity || this.rejectConnections) next(new Error('UNAUTHORIZED'));
       else next();
     });
     this.io.on('connection', (socket) => {

@@ -36,4 +36,3 @@ export function formatProfileMatchTime(
 
   return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()}, ${timePart}`;
 }
-
