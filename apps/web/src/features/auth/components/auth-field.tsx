@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, type InputHTMLAttributes, type ReactNode } from 'react';
+import { evaluatePasswordQuality } from '../auth-api';
 
 export function AuthField({
   id,
@@ -42,16 +43,21 @@ export function PasswordField({
   label,
   labelExtra,
   hint,
+  showQualityMeter = false,
   toggleAriaLabel = 'Hiện hoặc ẩn mật khẩu',
+  value,
   ...props
 }: {
   id: string;
   label: string;
   labelExtra?: ReactNode;
   hint?: string;
+  showQualityMeter?: boolean;
   toggleAriaLabel?: string;
 } & Omit<InputHTMLAttributes<HTMLInputElement>, 'type'>) {
   const [visible, setVisible] = useState(false);
+  const stringValue = typeof value === 'string' ? value : '';
+  const quality = showQualityMeter ? evaluatePasswordQuality(stringValue) : null;
 
   return (
     <div className="auth-field-group">
@@ -66,6 +72,7 @@ export function PasswordField({
           id={id}
           type={visible ? 'text' : 'password'}
           className="auth-input auth-input-password"
+          value={value}
           {...props}
         />
         <button
@@ -107,7 +114,74 @@ export function PasswordField({
           )}
         </button>
       </div>
-      {hint && <p className="auth-field-hint">{hint}</p>}
+
+      {quality ? (
+        <div className="auth-pwd-meter">
+          <div className="auth-pwd-meter-header">
+            <span className="auth-pwd-meter-title">Chất lượng mật khẩu</span>
+            <span className={`auth-pwd-meter-badge auth-pwd-meter-badge--${quality.tone}`}>
+              {quality.levelLabel}
+            </span>
+          </div>
+
+          <div
+            className="auth-pwd-meter-track"
+            role="progressbar"
+            aria-label="Chất lượng mật khẩu"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={quality.percent}
+          >
+            {[1, 2, 3].map((step) => (
+              <span
+                key={step}
+                className={`auth-pwd-segment ${
+                  step <= quality.activeSegments
+                    ? `auth-pwd-segment--active auth-pwd-segment--${quality.tone}`
+                    : ''
+                }`}
+              />
+            ))}
+          </div>
+
+          <ul className="auth-pwd-checklist" aria-label="Tiêu chí mật khẩu">
+            <li
+              className={`auth-pwd-check-item ${
+                quality.lengthOk
+                  ? 'auth-pwd-check-item--met'
+                  : quality.tooLong
+                    ? 'auth-pwd-check-item--warn'
+                    : ''
+              }`}
+            >
+              <span className="auth-pwd-check-icon" aria-hidden="true">
+                {quality.lengthOk ? '✓' : quality.tooLong ? '!' : '○'}
+              </span>
+              <span>
+                {quality.tooLong
+                  ? `Tối đa 128 ký tự (${quality.length}/128)`
+                  : `Độ dài 9–128 ký tự (${quality.length}/9+)`}
+              </span>
+            </li>
+            <li
+              className={`auth-pwd-check-item ${
+                quality.specialOk ? 'auth-pwd-check-item--met' : ''
+              }`}
+            >
+              <span className="auth-pwd-check-icon" aria-hidden="true">
+                {quality.specialOk ? '✓' : '○'}
+              </span>
+              <span>Có ít nhất 1 ký tự đặc biệt (!, @, #, $...)</span>
+            </li>
+          </ul>
+
+          <p className={`auth-pwd-guidance auth-pwd-guidance--${quality.tone}`} aria-live="polite">
+            {quality.guidance}
+          </p>
+        </div>
+      ) : (
+        hint && <p className="auth-field-hint">{hint}</p>
+      )}
     </div>
   );
 }

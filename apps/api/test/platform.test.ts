@@ -168,4 +168,83 @@ describe('Room/session orchestration', () => {
     expect(store.results.size).toBe(1);
     expect(store.grants).toHaveLength(0);
   });
+  it('returns current room by controller membership across lifecycle without mutating presence or idle TTL', async () => {
+    const hostIdentity = await players.create('Host');
+    const host = await players.authenticate(hostIdentity.token);
+    const joinerIdentity = await players.create('Joiner');
+    const joiner = await players.authenticate(joinerIdentity.token);
+    const outsiderIdentity = await players.create('Outsider');
+    const outsider = await players.authenticate(outsiderIdentity.token);
+
+    expect(await rooms.currentFor(host.id)).toBeNull();
+    const created = await rooms.create(host, {
+      mode: 'DUEL',
+      layout: 'MULTI_DEVICE',
+      packVersionId: store.pack.id,
+    });
+    expect(await rooms.currentFor(host.id)).toEqual({
+      code: created.code,
+      gameId: 'quiz',
+      status: 'WAITING',
+    });
+    expect(await rooms.currentFor(joiner.id)).toBeNull();
+    expect(await rooms.currentFor(outsider.id)).toBeNull();
+
+    await rooms.join(created.code, joiner);
+    expect(await rooms.currentFor(joiner.id)).toEqual({
+      code: created.code,
+      gameId: 'quiz',
+      status: 'WAITING',
+    });
+
+    await rooms.ready(created.code, host.id);
+    await rooms.ready(created.code, joiner.id);
+    expect(await rooms.currentFor(host.id)).toEqual({
+      code: created.code,
+      gameId: 'quiz',
+      status: 'READY',
+    });
+
+    // Disconnect joiner, verify currentFor does not flip connected back to true or extend idle TTL
+    await rooms.connect(joiner.id, 'sock-j');
+    await rooms.disconnect(joiner.id, 'sock-j');
+    expect((await rooms.sync(created.code, host.id)).players[1]!.connected).toBe(false);
+    expect(await rooms.currentFor(joiner.id)).toEqual({
+      code: created.code,
+      gameId: 'quiz',
+      status: 'READY',
+    });
+    expect((await rooms.sync(created.code, host.id)).players[1]!.connected).toBe(false);
+
+    // Reconnect and start match -> IN_PROGRESS -> FINISHED
+    await rooms.connect(joiner.id, 'sock-j2');
+    const started = await rooms.start(created.code, host.id);
+    expect(await rooms.currentFor(host.id)).toEqual({
+      code: created.code,
+      gameId: 'quiz',
+      status: 'IN_PROGRESS',
+    });
+
+    await rooms.action(action(started, host.id), host.id);
+    await rooms.action(action(started, joiner.id), joiner.id);
+    await rooms.tick(Date.now() + 4000);
+    expect(await rooms.currentFor(host.id)).toEqual({
+      code: created.code,
+      gameId: 'quiz',
+      status: 'FINISHED',
+    });
+    expect(await rooms.currentFor(joiner.id)).toEqual({
+      code: created.code,
+      gameId: 'quiz',
+      status: 'FINISHED',
+    });
+    expect(await rooms.currentFor(outsider.id)).toBeNull();
+
+    // Verify reading currentFor does not extend idle TTL when room is idle
+    const beforeIdleExpiry = Date.now() + 14 * 60_000;
+    await rooms.currentFor(host.id);
+    await rooms.tick(beforeIdleExpiry + 2 * 60_000);
+    expect(await rooms.currentFor(host.id)).toBeNull();
+    expect(await rooms.currentFor(joiner.id)).toBeNull();
+  });
 });

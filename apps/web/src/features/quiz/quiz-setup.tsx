@@ -170,6 +170,10 @@ export function QuizSetup({
                 minLength={2}
                 maxLength={30}
               />
+              <p className="small muted" style={{ marginTop: -8, marginBottom: 14 }}>
+                Người chơi 2 là slot khách tạm của phòng này; tiến trình và thưởng chỉ lưu cho chủ
+                phòng.
+              </p>
             </>
           )}
           <Button onClick={() => void createRoom()} disabled={busy || !connected || !packId}>

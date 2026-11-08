@@ -12,7 +12,7 @@ Shared screen: host nhận hai slot server tạo, một identity điều khiển
 
 Một principal chỉ ở một room còn sống. Rematch cần tất cả controller đồng ý, tạo session UUID mới và giữ nguyên lịch sử cũ. Leave đóng cả phòng V1, không chuyển host. Phòng không hoạt động hết hạn sau 15 phút; tối đa 128 phòng. Action, Start, Sync, Rematch, disconnect và timer cùng hàng xử lý theo room.
 
-Browser lưu mã phòng theo guest identity để trang Home có thể đồng bộ và đưa người chơi quay lại/rời phòng sau khi xem profile hoặc reload. Con trỏ local này không cấp quyền, phải được server xác nhận. Clipboard có fallback cho HTTP LAN vì Clipboard API yêu cầu secure context.
+`PlatformProvider` trong layout `(main)` giữ một kết nối Socket.IO cho mỗi tab có phiên, đồng thời gọi `GET /api/rooms/current` để phát hiện phòng hiện tại theo controller membership trên server. `localStorage` chỉ giữ vai trò cache phụ. Khi có phòng đang mở (`WAITING`, `READY`, `IN_PROGRESS`, `FINISHED`), thanh thông báo phòng hiện tại xuất hiện trên các trang ngoài màn phòng đó; đóng thông báo chỉ ẩn tạm thời trong lần xem hiện tại mà không gọi `room:leave`. Khi trận đang `IN_PROGRESS`, mọi thao tác điều hướng nội bộ rời màn trận (`/play/[code]`) đều mở hộp thoại xác nhận nêu rõ rời phòng sẽ hủy trận cho cả hai người và không được thưởng, chỉ chuyển trang sau khi nhận ACK `room:leave`. Clipboard có fallback cho HTTP LAN vì Clipboard API yêu cầu secure context.
 
 Reconnect policy **PROPOSAL**: đồng hồ tiếp tục, xin snapshot mới qua `room:sync`. Grace 30 giây từ socket cuối cùng của controller ngắt kết nối; quá grace hủy trận không thưởng. Một tab ngắt không làm slot offline nếu còn tab đã auth. API restart hủy session dang dở trong DB trước khi nhận client; room RAM không được khôi phục.
 

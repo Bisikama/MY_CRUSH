@@ -7,7 +7,17 @@ export const layoutSchema = z.enum(['SHARED_SCREEN', 'MULTI_DEVICE']);
 export type GameMode = z.infer<typeof modeSchema>;
 export type GameLayout = z.infer<typeof layoutSchema>;
 export type RoomStatus = 'WAITING' | 'READY' | 'IN_PROGRESS' | 'FINISHED' | 'CANCELLED';
+export type ActiveRoomStatus = Exclude<RoomStatus, 'CANCELLED'>;
 export type Phase = 'QUESTION' | 'REVEAL' | 'FINISHED';
+
+export interface CurrentRoomSummary {
+  code: string;
+  gameId: 'quiz';
+  status: ActiveRoomStatus;
+}
+export interface CurrentRoomResponse {
+  room: CurrentRoomSummary | null;
+}
 
 export const nicknameSchema = z.string().trim().min(2).max(30);
 export const passwordRequirementsMessage =

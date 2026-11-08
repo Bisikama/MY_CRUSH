@@ -237,20 +237,32 @@ export class AuthController {
   }
 
   @AllowGuest()
-  @ApiEndpoint({ summary: 'Đăng xuất phiên hiện tại', auth: true, response: ok, status: 201 })
+  @ApiEndpoint({
+    summary: 'Đăng xuất phiên hiện tại',
+    auth: true,
+    response: ok,
+    status: 201,
+    errors: [409],
+  })
   @Post('logout')
   async logout(@Req() request: AuthRequest, @Res({ passthrough: true }) response: Response) {
-    await this.sessions.revoke({ sessionId: request.principal!.sessionId });
+    await this.auth.logout(request.principal!, false);
     sessionCookie(response);
     clearFlow(response);
     return { ok: true };
   }
 
   @LocalAccount()
-  @ApiEndpoint({ summary: 'Đăng xuất mọi phiên tài khoản', auth: true, response: ok, status: 201 })
+  @ApiEndpoint({
+    summary: 'Đăng xuất mọi phiên tài khoản',
+    auth: true,
+    response: ok,
+    status: 201,
+    errors: [409],
+  })
   @Post('logout-all')
   async logoutAll(@Req() request: AuthRequest, @Res({ passthrough: true }) response: Response) {
-    await this.sessions.revoke({ accountId: request.principal!.accountId! });
+    await this.auth.logout(request.principal!, true);
     sessionCookie(response);
     clearFlow(response);
     return { ok: true };

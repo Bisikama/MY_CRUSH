@@ -19,7 +19,7 @@ test('guest upgrades via email OTP, can sign in again, confirm guest switch moda
     expect(message.ok()).toBe(true);
     return ((await message.json()) as { code: string }).code;
   };
-  await page.goto('/');
+  await page.goto('/play');
   await page.getByLabel('Biệt danh').fill('Guest OTP');
   await page.getByRole('button', { name: 'Vào sân chơi →' }).click();
   await expect(page.getByText('● Đã kết nối máy chủ', { exact: false })).toBeVisible();
@@ -57,7 +57,9 @@ test('guest upgrades via email OTP, can sign in again, confirm guest switch moda
 
   await page.getByLabel('Xác nhận mật khẩu', { exact: true }).fill(initialPassword);
   await page.getByRole('button', { name: 'Tạo tài khoản' }).click();
-  await expect(page.getByText('● Đã kết nối máy chủ', { exact: false })).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: 'Hôm nay, bạn muốn chơi gì?', exact: true }),
+  ).toBeVisible();
 
   const account = (await page.evaluate(() =>
     fetch('http://127.0.0.1:4000/api/auth/me', { credentials: 'include' }).then((response) =>
@@ -67,9 +69,12 @@ test('guest upgrades via email OTP, can sign in again, confirm guest switch moda
   expect(account).toMatchObject({ kind: 'account', playerId: guest.playerId });
   await page.goto('/profile');
   await page.getByRole('button', { name: 'Đăng xuất', exact: true }).click();
-  await expect(page.getByLabel('Biệt danh')).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: 'Hôm nay, bạn muốn chơi gì?', exact: true }),
+  ).toBeVisible();
 
-  // Create a second guest to test IdentitySwitchDialog on /login
+  // Create a second guest on /play to test IdentitySwitchDialog on /login
+  await page.goto('/play');
   await page.getByLabel('Biệt danh').fill('Temp Guest');
   await page.getByRole('button', { name: 'Vào sân chơi →' }).click();
   await expect(page.getByText('● Đã kết nối máy chủ', { exact: false })).toBeVisible();
@@ -94,6 +99,9 @@ test('guest upgrades via email OTP, can sign in again, confirm guest switch moda
   // IdentitySwitchDialog should appear because current session is a guest
   const dialog = page.getByRole('dialog');
   await expect(dialog).toBeVisible();
+  await expect(dialog).toContainText(
+    'Coins, XP và vật phẩm của hồ sơ khách không tự cộng vào tài khoản này.',
+  );
   await page.getByRole('button', { name: 'Ở lại' }).click();
   await expect(dialog).toHaveCount(0);
 
@@ -101,5 +109,7 @@ test('guest upgrades via email OTP, can sign in again, confirm guest switch moda
   await page.getByRole('button', { name: 'Đăng nhập', exact: true }).click();
   await expect(dialog).toBeVisible();
   await page.getByRole('button', { name: 'Tiếp tục đăng nhập' }).click();
-  await expect(page.getByText('● Đã kết nối máy chủ', { exact: false })).toBeVisible();
+  await expect(
+    page.getByRole('heading', { name: 'Hôm nay, bạn muốn chơi gì?', exact: true }),
+  ).toBeVisible();
 });

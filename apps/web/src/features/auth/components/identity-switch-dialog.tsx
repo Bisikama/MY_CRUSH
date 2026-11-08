@@ -77,8 +77,9 @@ export function IdentitySwitchDialog({
           Tách biệt túi đồ
         </h2>
         <p id="identity-switch-desc" className="auth-modal-desc">
-          Đăng nhập sẽ thoát hồ sơ khách{guestNickname ? ` (${guestNickname})` : ''} hiện tại. Tiến
-          trình khách không tự chuyển sang tài khoản này.
+          Đăng nhập sẽ chuyển sang hồ sơ của tài khoản đã có và thoát hồ sơ khách
+          {guestNickname ? ` (${guestNickname})` : ''}. Coins, XP và vật phẩm của hồ sơ khách không
+          tự cộng vào tài khoản này.
         </p>
         <div className="auth-modal-actions">
           <button

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { validatePassword } from './auth-api';
+import { evaluatePasswordQuality, validatePassword } from './auth-api';
 import { sanitizeOtpCode } from './components/otp-input';
 import { createEmailChallengeStore, deriveStepFromFlow } from './hooks/use-email-challenge';
 import { computeRemainingSeconds } from './hooks/use-resend-countdown';
@@ -37,6 +37,83 @@ describe('auth UI helpers & state machine', () => {
     ]) {
       expect(validatePassword(password), password).toBe(false);
     }
+  });
+
+  it('evaluates password quality progress and actionable guidance accurately', () => {
+    expect(evaluatePasswordQuality('')).toMatchObject({
+      length: 0,
+      lengthOk: false,
+      specialOk: false,
+      valid: false,
+      activeSegments: 0,
+      tone: 'idle',
+      levelLabel: 'Chưa nhập',
+    });
+
+    const missingBoth = evaluatePasswordQuality('abc123');
+    expect(missingBoth).toMatchObject({
+      length: 6,
+      lengthOk: false,
+      specialOk: false,
+      valid: false,
+      activeSegments: 1,
+      tone: 'weak',
+    });
+    expect(missingBoth.guidance).toContain('3 ký tự nữa');
+    expect(missingBoth.guidance).toContain('ký tự đặc biệt');
+
+    const missingSpecial = evaluatePasswordQuality('abcdefghi');
+    expect(missingSpecial).toMatchObject({
+      length: 9,
+      lengthOk: true,
+      specialOk: false,
+      valid: false,
+      activeSegments: 2,
+      tone: 'fair',
+    });
+    expect(missingSpecial.guidance).toContain('Độ dài đã đạt');
+
+    const missingLength = evaluatePasswordQuality('abc!');
+    expect(missingLength).toMatchObject({
+      length: 4,
+      lengthOk: false,
+      specialOk: true,
+      valid: false,
+      activeSegments: 2,
+      tone: 'fair',
+    });
+    expect(missingLength.guidance).toContain('Đã có ký tự đặc biệt');
+    expect(missingLength.guidance).toContain('5 ký tự nữa');
+
+    const validGood = evaluatePasswordQuality('abcdefgh!');
+    expect(validGood).toMatchObject({
+      length: 9,
+      lengthOk: true,
+      specialOk: true,
+      valid: true,
+      activeSegments: 3,
+      tone: 'good',
+    });
+
+    const validStrong = evaluatePasswordQuality('DuoQuest2026!');
+    expect(validStrong).toMatchObject({
+      length: 13,
+      lengthOk: true,
+      specialOk: true,
+      valid: true,
+      activeSegments: 3,
+      tone: 'strong',
+    });
+
+    const tooLong = evaluatePasswordQuality('a'.repeat(129) + '!');
+    expect(tooLong).toMatchObject({
+      length: 130,
+      lengthOk: false,
+      tooLong: true,
+      valid: false,
+      activeSegments: 1,
+      tone: 'weak',
+    });
   });
 
   it('sanitizes OTP input preserving leading zeros and stripping non-digits', () => {

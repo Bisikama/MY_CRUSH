@@ -56,7 +56,7 @@ function LoginFlowView() {
     return (
       <GuardView title="Đăng nhập" variant="login">
         <p className="auth-status-text">
-          Đăng nhập tài khoản hiện dùng trên localhost. <Link href="/">Chơi dưới dạng khách</Link>{' '}
+          Đăng nhập tài khoản hiện dùng trên localhost. <Link href="/play">Chơi với tên khách</Link>{' '}
           trên máy này.
         </p>
       </GuardView>
@@ -132,7 +132,7 @@ function ChallengeFlowView({ purpose }: { purpose: 'register' | 'reset' }) {
     return (
       <GuardView title={pageTitle} variant={variant}>
         <p className="auth-status-text">
-          Đăng nhập tài khoản hiện dùng trên localhost. <Link href="/">Chơi dưới dạng khách</Link>{' '}
+          Đăng nhập tài khoản hiện dùng trên localhost. <Link href="/play">Chơi với tên khách</Link>{' '}
           trên máy này.
         </p>
       </GuardView>

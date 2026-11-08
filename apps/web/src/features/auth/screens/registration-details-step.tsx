@@ -77,7 +77,7 @@ export function RegistrationDetailsStep({
           autoComplete="new-password"
           maxLength={256}
           placeholder="Tối thiểu 9 ký tự, có ký tự đặc biệt"
-          hint="Dùng 9–128 ký tự, có ít nhất 1 ký tự đặc biệt như !, @, #."
+          showQualityMeter
           value={password}
           onChange={(event) => onPasswordChange(event.target.value)}
           required

@@ -9,6 +9,7 @@ import { randomInt } from 'node:crypto';
 import { EventEmitter } from 'node:events';
 import { assertDomain, KeyedQueue } from '@duoquest/game-core';
 import type {
+  CurrentRoomSummary,
   GameActionCommand,
   GameLayout,
   GameMode,
@@ -312,6 +313,30 @@ export class RoomsService implements OnModuleInit, OnModuleDestroy {
   }
   viewFor(code: string, playerId: string) {
     return this.view(this.authorize(code, playerId), playerId);
+  }
+  currentFor(playerId: string): Promise<CurrentRoomSummary | null> {
+    return this.queue.run('__membership__', async () => {
+      const target = [...this.rooms.values()].find(
+        (room) =>
+          room.status !== 'CANCELLED' &&
+          room.players.some((slot) => slot.controllerId === playerId),
+      );
+      if (!target) return null;
+      return this.queue.run(target.code, () => {
+        const fresh = this.rooms.get(target.code);
+        if (
+          !fresh ||
+          fresh.status === 'CANCELLED' ||
+          !fresh.players.some((slot) => slot.controllerId === playerId)
+        )
+          return null;
+        return {
+          code: fresh.code,
+          gameId: 'quiz' as const,
+          status: fresh.status,
+        };
+      });
+    });
   }
   async tick(now: number) {
     for (const code of this.rooms.keys())

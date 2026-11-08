@@ -217,6 +217,43 @@ describe.skipIf(process.env.RUN_DB_TESTS !== '1')('Auth with PostgreSQL and Sock
     ).toBe(201);
     expect((await browser.request('/players/me')).status).toBe(401);
     expect((await other.request('/auth/login', { email, password })).status).toBe(201);
+
+    // Block logout / logout-all and identity switch while controlling an open room
+    const rooms = app.get((await import('../src/modules/rooms/rooms.service')).RoomsService);
+    const activePlayer = await db.player.findUniqueOrThrow({ where: { id: player.id } });
+    const pack = await app
+      .get(PlatformStore)
+      .getPack((await app.get(PlatformStore).listPacks(player.id))[0]!.id, player.id);
+    if (pack) {
+      const openRoom = await rooms.create(activePlayer, {
+        mode: 'SOLO',
+        layout: 'MULTI_DEVICE',
+        packVersionId: pack.id,
+      });
+      const currentRes = await other.request('/rooms/current');
+      expect(currentRes.status).toBe(200);
+      expect(currentRes.headers.get('cache-control')).toBe('no-store');
+      expect(await currentRes.json()).toEqual({
+        room: { code: openRoom.code, gameId: 'quiz', status: 'WAITING' },
+      });
+      expect((await other.request('/auth/logout', {})).status).toBe(409);
+      expect((await other.request('/auth/logout-all', {})).status).toBe(409);
+      await rooms.leave(openRoom.code, player.id);
+      expect(await (await other.request('/rooms/current')).json()).toEqual({ room: null });
+    }
+
+    // Guest switching to existing account does not merge guest balance into account
+    const tempGuest = new Browser(base);
+    expect((await tempGuest.request('/players/guest', { nickname: 'TempGuest' })).status).toBe(201);
+    const tempMe = (await (await tempGuest.request('/auth/me')).json()) as { playerId: string };
+    players.add(tempMe.playerId);
+    await db.wallet.update({ where: { playerId: tempMe.playerId }, data: { balance: 999 } });
+    expect((await tempGuest.request('/auth/login', { email, password })).status).toBe(201);
+    expect(await (await tempGuest.request('/players/me')).json()).toMatchObject({
+      id: player.id,
+      wallet: { balance: 120 },
+    });
+
     expect((await other.request('/auth/logout-all', {})).status).toBe(201);
     expect((await other.request('/players/me')).status).toBe(401);
   }, 30_000);

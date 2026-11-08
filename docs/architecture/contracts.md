@@ -27,6 +27,8 @@ Action payload chỉ `BUZZ` hoặc `ANSWER { optionId }`. Server xác minh contr
 
 Server hiện phát **room:state** chứa RoomView và filtered QuizView cho từng socket. Cả lobby/game/result đi trong snapshot này, client bỏ snapshot có game version thấp hơn cùng session. `game:state`/`match:result` giữ type cho adapter mở rộng nhưng chưa được emit; không viết client phụ thuộc các event đó. Nếu contract được đổi, cập nhật types/docs/tests cùng lúc.
 
-REST: `POST /players/guest`, `GET /players/me`, `GET /players/me/history`, `GET /question-packs`, `POST /question-packs/preview`, `POST /question-packs`; `GET /shop/items`, `GET /shop/inventory`, `POST /shop/purchases {itemId,requestId}`, `POST /shop/equip {itemId}`; health/live và readiness.
+REST: `POST /players/guest`, `GET /players/me`, `GET /players/me/history`, `GET /rooms/current`, `GET /question-packs`, `POST /question-packs/preview`, `POST /question-packs`; `GET /shop/items`, `GET /shop/inventory`, `POST /shop/purchases {itemId,requestId}`, `POST /shop/equip {itemId}`; health/live và readiness.
+
+`GET /api/rooms/current` dùng `@AllowGuest()`, xác định người chơi từ cookie phiên (bỏ qua mọi `playerId` từ query), trả `{ room: null | { code, gameId: 'quiz', status } }` với `status` thuộc `WAITING | READY | IN_PROGRESS | FINISHED` và `Cache-Control: no-store`. Endpoint chỉ đọc qua hàng xử lý membership/room, không join phòng, không cập nhật presence và không gia hạn idle TTL. Các thao tác `POST /api/auth/register/complete`, `POST /api/auth/login`, `POST /api/auth/logout` và `POST /api/auth/logout-all` trả `409 CONFLICT` nếu người chơi còn phòng đang mở.
 
 Result snapshot không chứa grant amount: client đọc lại profile để thấy Coins/XP đã commit. History chỉ trả kết quả, không trả questionSnapshot bí mật. Browser timeout không chứng minh server chưa commit; purchase retry phải dùng cùng requestId, game action retry dùng cùng actionId hoặc Sync trước thao tác mới.

@@ -2,6 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, Card } from '@duoquest/ui';
 import { actionId, api, loadIdentity } from '../../../lib/client';
+import { usePlatform } from '../../../providers/platform-provider';
 interface Item {
   id: string;
   name: string;
@@ -13,6 +14,7 @@ interface Owned {
   loadout: { itemId: string; slot: string }[];
 }
 export default function ShopPage() {
+  const { refreshProfile } = usePlatform();
   const [items, setItems] = useState<Item[]>([]);
   const [owned, setOwned] = useState<Owned>({ items: [], loadout: [] });
   const [balance, setBalance] = useState(0);
@@ -44,7 +46,7 @@ export default function ShopPage() {
     try {
       await api('/shop/purchases', { itemId, requestId });
       requestIds.current.delete(itemId);
-      await refresh();
+      await Promise.all([refresh(), refreshProfile()]);
       setMessage('Vật phẩm đã vào kho của bạn.');
     } catch (error) {
       setMessage(error instanceof Error ? error.message : 'Không mua được');

@@ -26,6 +26,7 @@
 - Auth xác minh email bằng mã sáu số trước khi tạo tài khoản. Role cố định PLAYER/ADMIN. Auth tài khoản dùng localhost, guest hỗ trợ LAN. Xem [đặc tả Auth và phân quyền](../features/auth.md).
 
 - Yêu cầu mật khẩu mới (2026-11-07, theo yêu cầu chủ dự án): tối thiểu 9 ký tự và ít nhất 1 ký tự đặc biệt; giữ tối đa 128 ký tự Unicode. Xem [đặc tả Auth](../features/auth.md) để biết phạm vi áp dụng.
+- Game Hub & quản lý phiên/phòng dùng chung (2026-11-08): `/` là Game Hub chọn trò chơi (Pastel Lavender, screen `7d9066eeafb84b979a3266c355b4f90e`), `/play` là sảnh Quiz Battle, `/play/[code]` là màn phòng/trận. `PlatformProvider` trong `(main)` giữ một kết nối Socket.IO cho mỗi tab có phiên, đọc `GET /api/rooms/current` theo controller membership từ cookie phiên mà không thay đổi presence hoặc idle TTL. Guest tiếp tục chơi đầy đủ 3 mode và 2 layout; điều hướng nội bộ rời màn trận đang `IN_PROGRESS` phải qua hộp thoại xác nhận hủy trận không thưởng.
 
 ## OPEN cần quyết định trước module liên quan
 

@@ -1,43 +1,38 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
+import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { io, type Socket } from 'socket.io-client';
 import { Button, Card } from '@duoquest/ui';
-import type {
-  ActionReceipt,
-  ClientToServerEvents,
-  GameLayout,
-  GameMode,
-  PackSummary,
-  QuizAction,
-  RoomView,
-  ServerToClientEvents,
-} from '@duoquest/shared-types';
-import {
-  actionId,
-  api,
-  apiOrigin,
-  copyText,
-  loadIdentity,
-  onAuthChanged,
-  authChanged,
-  type GameIdentity,
-  request,
-  roomStorageKey,
-} from '../../lib/client';
+import type { GameLayout, GameMode, PackSummary, QuizAction } from '@duoquest/shared-types';
+import { actionId, api, copyText } from '../../lib/client';
+import { usePlatform } from '../../providers/platform-provider';
+import { useRoomStore } from '../../stores/room.store';
 import { QuizSetup } from './quiz-setup';
 import { QuizStage } from './quiz-stage';
-import { useRoomStore } from '../../stores/room.store';
 
-type GameSocket = Socket<ServerToClientEvents, ClientToServerEvents>;
 const errorText = (error: unknown) => (error instanceof Error ? error.message : 'Có lỗi xảy ra');
 
 export function QuizClient({ code }: { code?: string }) {
   const router = useRouter();
-  const { room, connected, setRoom, setConnected } = useRoomStore();
-  const [identity, setIdentity] = useState<GameIdentity | null>(null);
-  const [hydrated, setHydrated] = useState(false);
+  const {
+    hydrated,
+    localHost,
+    identity,
+    identityError,
+    room,
+    currentRoom,
+    connected,
+    clockOffset,
+    createGuest,
+    createRoom: platformCreateRoom,
+    joinRoom: platformJoinRoom,
+    roomCommand: platformRoomCommand,
+    requestLeaveRoom,
+    sendGameAction,
+    clearLocalRoomAndGoPlay,
+  } = usePlatform();
+
   const [nickname, setNickname] = useState('');
   const [secondNickname, setSecondNickname] = useState('Người chơi 2');
   const [mode, setMode] = useState<GameMode>('SOLO');
@@ -48,61 +43,14 @@ export function QuizClient({ code }: { code?: string }) {
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const [now, setNow] = useState(0);
-  const [clockOffset, setClockOffset] = useState(0);
-  const [resumeCode, setResumeCode] = useState<string | null>(null);
-  const socketRef = useRef<GameSocket | null>(null);
+
   const activeRoom = room && room.code === code ? room : null;
-
-  const acceptRoom = useCallback(
-    (view: RoomView) => {
-      if (view.game) setClockOffset(view.game.serverNow - Date.now());
-      if (identity) {
-        if (view.status === 'CANCELLED') localStorage.removeItem(roomStorageKey(identity.playerId));
-        else localStorage.setItem(roomStorageKey(identity.playerId), view.code);
-      }
-      setResumeCode(view.status === 'CANCELLED' ? null : view.code);
-      setRoom(view);
-    },
-    [identity, setRoom],
-  );
-
-  function clearRoom() {
-    if (identity) localStorage.removeItem(roomStorageKey(identity.playerId));
-    setResumeCode(null);
-    setRoom(null);
-    router.push('/');
-  }
-
-  async function leaveRoom(targetCode: string) {
-    const socket = socketRef.current;
-    if (socket)
-      await run(async () => {
-        await request<null>((ack) => socket.emit('room:leave', { code: targetCode }, ack));
-        clearRoom();
-      });
-  }
+  const resumeCode = currentRoom?.code ?? null;
 
   useEffect(() => {
-    let live = true;
-    const refresh = () => {
-      void loadIdentity()
-        .then((value) => {
-          if (live) setIdentity(value);
-        })
-        .catch(() => {
-          if (live) setError('Không thể tải phiên chơi. Hãy kiểm tra API và tải lại trang.');
-        })
-        .finally(() => {
-          if (live) setHydrated(true);
-        });
-    };
-    refresh();
-    const unsubscribe = onAuthChanged(refresh);
-    return () => {
-      live = false;
-      unsubscribe();
-    };
-  }, []);
+    if (code) setJoinCode(code);
+  }, [code]);
+
   const run = useCallback(async (fn: () => Promise<void>) => {
     setBusy(true);
     setError('');
@@ -114,6 +62,7 @@ export function QuizClient({ code }: { code?: string }) {
       setBusy(false);
     }
   }, []);
+
   useEffect(() => {
     if (!identity) return;
     let cancelled = false;
@@ -127,49 +76,11 @@ export function QuizClient({ code }: { code?: string }) {
       .catch((cause: unknown) => {
         if (!cancelled) setError(errorText(cause));
       });
-    const socket: GameSocket = io(apiOrigin(), {
-      withCredentials: true,
-      autoConnect: false,
-    });
-    socketRef.current = socket;
-    const accept = acceptRoom;
-    socket.on('room:state', accept);
-    socket.on('connect', () => {
-      setConnected(true);
-      setError('');
-      if (code)
-        void request<RoomView>((ack) => socket.emit('room:sync', { code }, ack))
-          .then(accept)
-          .catch((cause: unknown) => setError(errorText(cause)));
-      else {
-        const savedCode = localStorage.getItem(roomStorageKey(identity.playerId));
-        if (savedCode)
-          socket.emit('room:sync', { code: savedCode }, (result) => {
-            if (result.ok) accept(result.data);
-            else if (result.error.code === 'NOT_FOUND' || result.error.code === 'FORBIDDEN') {
-              localStorage.removeItem(roomStorageKey(identity.playerId));
-              setResumeCode(null);
-            }
-          });
-      }
-    });
-    socket.on('disconnect', () => setConnected(false));
-    socket.on('connect_error', (cause) => {
-      setConnected(false);
-      setError(
-        cause.message === 'UNAUTHORIZED'
-          ? 'Phiên chơi không hợp lệ. Hãy đăng nhập hoặc tạo guest mới.'
-          : 'Không kết nối được API. Kiểm tra host, cổng 4000 và WEB_ORIGINS.',
-      );
-    });
-    socket.connect();
     return () => {
       cancelled = true;
-      socket.disconnect();
-      socketRef.current = null;
-      setConnected(false);
     };
-  }, [identity, code, acceptRoom, setConnected]);
+  }, [identity]);
+
   useEffect(() => {
     const timer = setInterval(() => setNow(Date.now()), 100);
     return () => clearInterval(timer);
@@ -177,29 +88,23 @@ export function QuizClient({ code }: { code?: string }) {
 
   const sendAction = useCallback(
     async (playerId: string, payload: QuizAction) => {
-      const socket = socketRef.current;
-      const currentRoom = useRoomStore.getState().room;
-      if (!socket?.connected || !currentRoom?.game || !code) return;
-      const game = currentRoom.game;
+      const currentRoomView = useRoomStore.getState().room;
+      if (!connected || !currentRoomView?.game || !code) return;
+      const game = currentRoomView.game;
       await run(async () => {
-        await request<ActionReceipt>((ack) =>
-          socket.emit(
-            'game:action',
-            {
-              code,
-              sessionId: game.sessionId,
-              roundId: game.roundId,
-              actionId: actionId(),
-              playerId,
-              payload,
-            },
-            ack,
-          ),
-        );
+        await sendGameAction({
+          code,
+          sessionId: game.sessionId,
+          roundId: game.roundId,
+          actionId: actionId(),
+          playerId,
+          payload,
+        });
       });
     },
-    [code, run],
+    [code, connected, run, sendGameAction],
   );
+
   useEffect(() => {
     if (!activeRoom || activeRoom.mode !== 'DUEL' || activeRoom.layout !== 'SHARED_SCREEN') return;
     const onKey = (event: KeyboardEvent) => {
@@ -229,48 +134,41 @@ export function QuizClient({ code }: { code?: string }) {
 
   async function createIdentity() {
     await run(async () => {
-      const guest = await api<GameIdentity>('/players/guest', { nickname });
-      authChanged();
-      setIdentity(guest);
+      await createGuest(nickname);
     });
   }
-  async function createRoom() {
-    const socket = socketRef.current;
-    if (!socket?.connected) return;
+
+  async function handleCreateRoom() {
     await run(async () => {
-      const view = await request<RoomView>((ack) =>
-        socket.emit(
-          'room:create',
-          {
-            mode,
-            layout,
-            packVersionId: packId,
-            ...(layout === 'SHARED_SCREEN' && mode !== 'SOLO' ? { secondNickname } : {}),
-          },
-          ack,
-        ),
-      );
-      acceptRoom(view);
+      const view = await platformCreateRoom({
+        mode,
+        layout,
+        packVersionId: packId,
+        ...(layout === 'SHARED_SCREEN' && mode !== 'SOLO' ? { secondNickname } : {}),
+      });
       router.push(`/play/${view.code}`);
     });
   }
-  async function joinRoom() {
-    const socket = socketRef.current;
-    if (!socket?.connected) return;
+
+  async function handleJoinRoom() {
     await run(async () => {
-      const view = await request<RoomView>((ack) =>
-        socket.emit('room:join', { code: joinCode.trim().toUpperCase() }, ack),
-      );
-      acceptRoom(view);
+      const view = await platformJoinRoom(joinCode);
       router.push(`/play/${view.code}`);
     });
   }
-  async function roomCommand(event: 'room:ready' | 'match:start' | 'room:rematch' | 'room:sync') {
-    const socket = socketRef.current;
-    if (!socket?.connected || !code) return;
+
+  async function handleRoomCommand(
+    event: 'room:ready' | 'match:start' | 'room:rematch' | 'room:sync',
+  ) {
+    if (!code) return;
     await run(async () => {
-      const view = await request<RoomView>((ack) => socket.emit(event, { code }, ack));
-      acceptRoom(view);
+      await platformRoomCommand(code, event);
+    });
+  }
+
+  async function handleLeaveRoom(targetCode: string) {
+    await run(async () => {
+      await requestLeaveRoom(targetCode, '/play');
     });
   }
 
@@ -280,11 +178,14 @@ export function QuizClient({ code }: { code?: string }) {
         Đang chuẩn bị sân chơi…
       </div>
     );
-  const notice = error && (
+
+  const combinedError = error || identityError;
+  const notice = combinedError && (
     <div className="notice" role="alert">
-      {error}
+      {combinedError}
     </div>
   );
+
   if (!identity)
     return (
       <div className="welcome-grid">
@@ -308,7 +209,11 @@ export function QuizClient({ code }: { code?: string }) {
         <Card className="guest-card">
           <span className="tag">CHÀO NGƯỜI CHƠI MỚI</span>
           <h2>Bạn muốn được gọi là gì?</h2>
-          <p>Tạo hồ sơ khách trên máy này để chơi và lưu kết quả.</p>
+          <p>
+            {code
+              ? `Tạo hồ sơ khách để tiếp tục vào phòng mời ${code}.`
+              : 'Tạo hồ sơ khách trên máy này để chơi Solo, Duel, Co-op và lưu kết quả.'}
+          </p>
           <form
             onSubmit={(event) => {
               event.preventDefault();
@@ -330,8 +235,20 @@ export function QuizClient({ code }: { code?: string }) {
             </Button>
           </form>
           {notice}
+          {localHost && (
+            <div className="guest-auth-links">
+              <Link href="/register" className="guest-auth-primary-link">
+                Tạo tài khoản để giữ tiến trình
+              </Link>
+              <span>·</span>
+              <Link href="/login" className="guest-auth-secondary-link">
+                Đăng nhập
+              </Link>
+            </div>
+          )}
           <p className="small muted">
-            Hồ sơ khách gắn với trình duyệt. Chưa hỗ trợ đăng nhập hoặc khôi phục tài khoản.
+            Hồ sơ khách gắn với trình duyệt hiện tại. Trên localhost, bạn có thể tạo tài khoản để
+            giữ tiến trình; không hỗ trợ khôi phục khách nếu đã xóa cookie.
           </p>
         </Card>
       </div>
@@ -356,9 +273,9 @@ export function QuizClient({ code }: { code?: string }) {
         busy={busy}
         connected={connected}
         notice={notice}
-        createRoom={createRoom}
-        joinRoom={joinRoom}
-        leaveRoom={leaveRoom}
+        createRoom={handleCreateRoom}
+        joinRoom={handleJoinRoom}
+        leaveRoom={handleLeaveRoom}
       />
     );
 
@@ -370,17 +287,17 @@ export function QuizClient({ code }: { code?: string }) {
         <p>Đồng bộ phòng đã tham gia hoặc nhận chỗ trong phòng qua mã mời.</p>
         {notice}
         <div className="actions">
-          <Button disabled={busy || !connected} onClick={() => void joinRoom()}>
+          <Button disabled={busy || !connected} onClick={() => void handleJoinRoom()}>
             Tham gia phòng
           </Button>
           <Button
             variant="outline"
             disabled={busy || !connected}
-            onClick={() => void roomCommand('room:sync')}
+            onClick={() => void handleRoomCommand('room:sync')}
           >
             Đồng bộ lại
           </Button>
-          <Button variant="ghost" onClick={clearRoom}>
+          <Button variant="ghost" onClick={clearLocalRoomAndGoPlay}>
             Về sân chơi
           </Button>
         </div>
@@ -397,9 +314,9 @@ export function QuizClient({ code }: { code?: string }) {
       identityPlayerId={identity.playerId}
       notice={notice}
       onCopy={() => run(() => copyText(`${window.location.origin}/play/${code}`))}
-      onLeave={() => leaveRoom(code)}
-      onHome={clearRoom}
-      onCommand={roomCommand}
+      onLeave={() => handleLeaveRoom(code)}
+      onHome={clearLocalRoomAndGoPlay}
+      onCommand={handleRoomCommand}
       onAction={sendAction}
     />
   );

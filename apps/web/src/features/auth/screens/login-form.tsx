@@ -84,9 +84,9 @@ export function LoginForm({
 
       <div className="auth-footer-links">
         <Link href="/register" className="auth-secondary-link">
-          Tạo tài khoản
+          {guestNickname ? 'Tạo tài khoản để giữ tiến trình' : 'Tạo tài khoản'}
         </Link>
-        <Link href="/" className="auth-guest-pill">
+        <Link href="/play" className="auth-guest-pill">
           Chơi dưới dạng khách ⚡
         </Link>
       </div>

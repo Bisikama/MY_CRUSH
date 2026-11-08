@@ -1,4 +1,5 @@
-import { QuizClient } from '../../features/quiz/quiz-client';
+import { GameHub } from '../../features/hub/game-hub';
+
 export default function Home() {
-  return <QuizClient />;
+  return <GameHub />;
 }

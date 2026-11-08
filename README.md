@@ -35,7 +35,7 @@ pnpm dev
 
 Docker Compose hiện publish PostgreSQL ở `127.0.0.1:55432`. Nếu lấy cấu hình từ `.env.example` và dùng Compose, đổi cổng trong `DATABASE_URL` cho khớp.
 
-Mở http://localhost:3000/register để đăng ký theo ba bước email → mã sáu số → nickname và mật khẩu. Trang Chơi vẫn cho tạo guest. Có thể nâng cấp guest trên localhost để giữ tiến trình. Rời phòng đang mở trước khi nâng cấp hoặc chuyển danh tính.
+Mở http://localhost:3000/register để đăng ký theo ba bước email → mã sáu số → nickname và mật khẩu. Trang gốc `/` là Game Hub chọn trò chơi; trang `/play` là sảnh Quiz Battle cho phép tạo guest hoặc vào phòng chơi. Có thể tạo tài khoản từ phiên guest trên localhost để giữ tiến trình. Rời phòng đang mở trước khi đăng xuất, nâng cấp hoặc chuyển danh tính.
 
 Điền `AUTH_SECRET` và nhóm `SMTP_*`/`MAIL_FROM` theo `.env.example` để gửi OTP thật. Secret gồm ít nhất 32 byte ngẫu nhiên mã hóa base64url. API development có thể sinh secret theo process nếu thiếu cấu hình, nên restart sẽ làm mất hiệu lực flow xác minh đang mở. Dùng cùng hostname localhost giữa web và API.
 
@@ -67,7 +67,7 @@ Browser tự lấy hostname trang web rồi gọi API cùng hostname, cổng 400
 - Room Ready/Start/Sync/Rematch/Leave; snapshot khi reconnect; hàng xử lý chung cho action/timer/disconnect.
 - Prisma schema, migration đầu tiên, pack JSON mẫu/JSON Schema, seed; snapshot câu hỏi bất biến theo session.
 - Lưu câu trả lời, kết quả/lịch sử; kết quả và thưởng cùng transaction; cosmetic purchase/equip API.
-- Web: chọn mode/layout, phòng chờ, chơi Quiz, kết quả/tái đấu, JSON preview/import, hồ sơ/lịch sử, shop tối thiểu.
+- Web: Game Hub chọn trò chơi (`/`), sảnh Quiz Battle (`/play`), chọn mode/layout, phòng chờ và trận đấu (`/play/[code]`), kết quả/tái đấu, JSON preview/import, hồ sơ/lịch sử, shop tối thiểu.
 
 Đây là **codebase nền tảng có luồng Quiz thực**, chưa phải V1 hoàn thiện. Gift/reaction, power-up gameplay, ôn câu sai có màn hình riêng, âm thanh và khôi phục guest chưa được triển khai. Xem `docs/project/roadmap-quality.md` để nhận task tiếp theo.
 

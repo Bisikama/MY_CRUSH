@@ -227,6 +227,16 @@ export class AuthService {
     return value;
   }
 
+  logout(principal: Principal, all = false) {
+    return this.rooms.withoutOpenRoom(principal.playerId, async () => {
+      await this.sessions.revoke(
+        all && principal.accountId
+          ? { accountId: principal.accountId }
+          : { sessionId: principal.sessionId },
+      );
+    });
+  }
+
   private notifyPasswordChanged(email: string) {
     const message = passwordChangedEmail();
     void this.mail.send(email, message.subject, message.text, message.html).catch(() => {});

@@ -1,8 +1,17 @@
-import { nicknameSchema, modeSchema } from '@duoquest/shared-types';
+import { nicknameSchema, modeSchema, roomCodeSchema } from '@duoquest/shared-types';
 import { z } from 'zod';
 
 // Shared by runtime validation and OpenAPI request documentation.
 export const guestRequestSchema = z.object({ nickname: nicknameSchema }).strict();
+export const currentRoomResponseSchema = z.object({
+  room: z
+    .object({
+      code: roomCodeSchema,
+      gameId: z.literal('quiz'),
+      status: z.enum(['WAITING', 'READY', 'IN_PROGRESS', 'FINISHED']),
+    })
+    .nullable(),
+});
 export const equipRequestSchema = z.object({ itemId: z.string().min(1).max(100) }).strict();
 export const purchaseRequestSchema = equipRequestSchema
   .extend({ requestId: z.string().uuid() })
