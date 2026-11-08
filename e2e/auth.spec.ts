@@ -29,15 +29,17 @@ test('guest upgrades via email OTP, can sign in again, confirm guest switch moda
     ),
   )) as { playerId: string };
 
+  const typoEmail = 'typo-' + email;
   await page.goto('/register');
   await expect(page.getByLabel('Mật khẩu', { exact: true })).toHaveCount(0);
-  await page.getByLabel('Email', { exact: true }).fill(email);
+  await page.getByLabel('Email', { exact: true }).fill(typoEmail);
   await page.getByRole('button', { name: 'Gửi mã', exact: true }).click();
   await expect(page.getByLabel('Mã xác minh 6 số')).toBeVisible();
 
   // Test Đổi email then start again
   await page.getByRole('button', { name: 'Đổi email' }).click();
-  await expect(page.getByLabel('Email', { exact: true })).toHaveValue(email);
+  await expect(page.getByLabel('Email', { exact: true })).toHaveValue(typoEmail);
+  await page.getByLabel('Email', { exact: true }).fill(email);
   await page.getByRole('button', { name: 'Gửi mã', exact: true }).click();
   await expect(page.getByLabel('Mã xác minh 6 số')).toBeVisible();
 
@@ -52,7 +54,7 @@ test('guest upgrades via email OTP, can sign in again, confirm guest switch moda
   const passwordInput = page.getByLabel('Mật khẩu', { exact: true });
   await passwordInput.fill(initialPassword);
   await expect(passwordInput).toHaveAttribute('type', 'password');
-  await page.getByRole('button', { name: 'Hiện hoặc ẩn mật khẩu' }).click();
+  await page.getByRole('button', { name: 'Hiện hoặc ẩn mật khẩu', exact: true }).click();
   await expect(passwordInput).toHaveAttribute('type', 'text');
 
   await page.getByLabel('Xác nhận mật khẩu', { exact: true }).fill(initialPassword);
