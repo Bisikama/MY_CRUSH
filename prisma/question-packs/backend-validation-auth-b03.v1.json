@@ -1,0 +1,350 @@
+{
+  "schemaVersion": 1,
+  "packId": "backend-validation-auth-b03",
+  "title": "Backend B03 — Validation, Authentication và lỗi API",
+  "language": "vi",
+  "knowledgeType": "academic",
+  "category": "Backend",
+  "questions": [
+    {
+      "id": "b03-001",
+      "type": "single_choice",
+      "topic": "Validation, Auth và lỗi API",
+      "difficulty": "easy",
+      "prompt": "Một DTO TypeScript khai báo `age: number`. Client vẫn có thể gửi JSON `{\"age\":\"abc\"}`. Kết luận nào đúng?",
+      "options": [
+        {
+          "id": "A",
+          "text": "TypeScript tự kiểm tra mọi HTTP body ở runtime."
+        },
+        {
+          "id": "B",
+          "text": "Trình duyệt sẽ tự chuyển mọi chuỗi thành số hợp lệ."
+        },
+        {
+          "id": "C",
+          "text": "Chỉ cần thêm comment cho DTO."
+        },
+        {
+          "id": "D",
+          "text": "Cần validation runtime trên dữ liệu vào; TypeScript type không tự chặn JSON sai kiểu."
+        }
+      ],
+      "correctOptionId": "D",
+      "explanation": "TypeScript kiểm tra kiểu chủ yếu khi phát triển/biên dịch; dữ liệu HTTP là dữ liệu runtime không đáng tin. API cần dùng ValidationPipe + cơ chế validator hoặc Zod schema/pipe tương ứng để kiểm tra trước khi xử lý.",
+      "hints": [
+        "TypeScript type có còn tồn tại đầy đủ khi JSON đi qua mạng không?",
+        "Đầu vào API đến từ client bên ngoài.",
+        "Hãy nghĩ về runtime validation."
+      ],
+      "tags": ["validation", "typescript", "dto"],
+      "timeLimitSeconds": 35
+    },
+    {
+      "id": "b03-002",
+      "type": "single_choice",
+      "topic": "Validation, Auth và lỗi API",
+      "difficulty": "easy",
+      "prompt": "Người dùng chưa xác thực gọi endpoint yêu cầu đăng nhập. Mã HTTP phù hợp thường là gì?",
+      "options": [
+        {
+          "id": "A",
+          "text": "201"
+        },
+        {
+          "id": "B",
+          "text": "401"
+        },
+        {
+          "id": "C",
+          "text": "409"
+        },
+        {
+          "id": "D",
+          "text": "503"
+        }
+      ],
+      "correctOptionId": "B",
+      "explanation": "401 phản ánh yêu cầu thiếu thông tin xác thực hợp lệ; nhiều scheme yêu cầu response phù hợp với WWW-Authenticate. Nếu đã xác thực nhưng không có quyền, 403 thường phù hợp hơn.",
+      "hints": [
+        "Phân biệt thiếu danh tính với thiếu quyền.",
+        "Đây chưa phải lỗi hệ thống nội bộ.",
+        "Hãy chọn mã dành cho authentication."
+      ],
+      "tags": ["authentication", "http", "status"],
+      "timeLimitSeconds": 25
+    },
+    {
+      "id": "b03-003",
+      "type": "single_choice",
+      "topic": "Validation, Auth và lỗi API",
+      "difficulty": "easy",
+      "prompt": "Một API NestJS dùng class-validator cùng `ValidationPipe({ whitelist: true })`. Trường không có decorator validation được xử lý như thế nào, theo cấu hình này?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Mặc định bị loại khỏi object đã được validation."
+        },
+        {
+          "id": "B",
+          "text": "Tự động được lưu DB."
+        },
+        {
+          "id": "C",
+          "text": "Luôn khiến server trả 500."
+        },
+        {
+          "id": "D",
+          "text": "Được đổi thành token đăng nhập."
+        }
+      ],
+      "correctOptionId": "A",
+      "explanation": "Với ValidationPipe và class-validator trong cấu hình được mô tả, `whitelist: true` loại bỏ các property không có decorator validation. Nếu bật thêm `forbidNonWhitelisted`, thay vì bỏ qua server có thể báo lỗi với các trường lạ.",
+      "hints": [
+        "Tên `whitelist` nói tới những trường được phép.",
+        "Lưu ý decorator validation quyết định trường hợp lệ.",
+        "Phân biệt xóa trường lạ và từ chối request."
+      ],
+      "tags": ["nestjs", "validation-pipe", "whitelist"],
+      "timeLimitSeconds": 40
+    },
+    {
+      "id": "b03-004",
+      "type": "single_choice",
+      "topic": "Validation, Auth và lỗi API",
+      "difficulty": "medium",
+      "prompt": "API lưu bộ câu hỏi từ client. Vì sao server vẫn phải validate dù frontend đã validate bằng Zod?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Frontend validation làm server không cần kiểm tra."
+        },
+        {
+          "id": "B",
+          "text": "Zod không bao giờ chạy được ở backend."
+        },
+        {
+          "id": "C",
+          "text": "Client có thể bỏ qua hoặc sửa request; server phải tự bảo vệ ranh giới tin cậy."
+        },
+        {
+          "id": "D",
+          "text": "Mọi dữ liệu gửi từ browser đều đáng tin."
+        }
+      ],
+      "correctOptionId": "C",
+      "explanation": "Validation ở frontend cải thiện UX nhưng không tạo ranh giới bảo mật. Backend phải validate theo schema/business rules để từ chối nội dung thiếu, sai kiểu hoặc vi phạm bất biến, kể cả khi request không đi qua giao diện chính thức.",
+      "hints": [
+        "HTTP request có thể đến ngoài giao diện của bạn.",
+        "Client là phía người dùng kiểm soát.",
+        "Quy tắc bắt buộc nên nằm ở server."
+      ],
+      "tags": ["validation", "api", "trust-boundary", "duoquest"],
+      "timeLimitSeconds": 40
+    },
+    {
+      "id": "b03-005",
+      "type": "single_choice",
+      "topic": "Validation, Auth và lỗi API",
+      "difficulty": "medium",
+      "prompt": "Một ứng dụng dùng Bearer token cho REST API. Vị trí HTTP thường dùng để gửi token tới backend là gì?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Trong URL query `?token=...` mặc định."
+        },
+        {
+          "id": "B",
+          "text": "Trong header `Authorization: Bearer <token>`."
+        },
+        {
+          "id": "C",
+          "text": "Trong tên file CSS."
+        },
+        {
+          "id": "D",
+          "text": "Trong trường status của response."
+        }
+      ],
+      "correctOptionId": "B",
+      "explanation": "Bearer token trong Authorization header là cách sử dụng thông dụng. Không nên mặc định đặt token ở URL vì URL dễ xuất hiện trong log, lịch sử hoặc nơi chia sẻ liên kết. Hệ thống vẫn phải kiểm tra chữ ký/hiệu lực/identity theo thiết kế của nó.",
+      "hints": [
+        "Hãy tìm header dành cho thông tin xác thực.",
+        "Cần tách token khỏi đường dẫn chia sẻ.",
+        "Bearer là scheme của Authorization header."
+      ],
+      "tags": ["authentication", "bearer", "headers"],
+      "timeLimitSeconds": 35
+    },
+    {
+      "id": "b03-006",
+      "type": "single_choice",
+      "topic": "Validation, Auth và lỗi API",
+      "difficulty": "medium",
+      "prompt": "Một user có token hợp lệ nhưng gửi `POST /shop/purchases` với JSON tự đặt `balance=999999`. Backend nên làm gì?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Tin balance do client gửi."
+        },
+        {
+          "id": "B",
+          "text": "Cộng thêm 999999 Coins vì token hợp lệ."
+        },
+        {
+          "id": "C",
+          "text": "Chỉ kiểm tra độ dài chuỗi balance là đủ."
+        },
+        {
+          "id": "D",
+          "text": "Dùng balance phía server/DB và tự tính điều kiện mua; bỏ qua hoặc từ chối field balance của client."
+        }
+      ],
+      "correctOptionId": "D",
+      "explanation": "Xác thực người dùng không khiến dữ liệu họ gửi thành đáng tin. Số dư và giá phải do backend đọc/áp dụng từ trạng thái có thẩm quyền; transaction giữ nhất quán khi mua và cấp item.",
+      "hints": [
+        "Token hợp lệ chỉ chứng minh danh tính.",
+        "Số dư là trạng thái của hệ thống.",
+        "Client không thể tự quyết định tiền trong ví."
+      ],
+      "tags": ["authorization", "validation", "coins", "duoquest"],
+      "timeLimitSeconds": 45
+    },
+    {
+      "id": "b03-007",
+      "type": "single_choice",
+      "topic": "Validation, Auth và lỗi API",
+      "difficulty": "medium",
+      "prompt": "Client gửi `timeLimitSeconds: -5` cho bộ câu hỏi, trong khi schema yêu cầu 5–120. Loại phản hồi nào hợp lý nhất trong API validation?",
+      "options": [
+        {
+          "id": "A",
+          "text": "400 Bad Request kèm lỗi dữ liệu đầu vào an toàn."
+        },
+        {
+          "id": "B",
+          "text": "201 Created và tự thưởng Coins."
+        },
+        {
+          "id": "C",
+          "text": "500 Internal Server Error vì client nhập sai."
+        },
+        {
+          "id": "D",
+          "text": "101 Switching Protocols."
+        }
+      ],
+      "correctOptionId": "A",
+      "explanation": "Đây là dữ liệu request không hợp lệ so với contract nên có thể trả 400 và một thông báo validation rõ ràng, không lộ stack trace. DuoQuest hiện có business/Zod validation và giới hạn timer 5–120 giây.",
+      "hints": [
+        "Dữ liệu sai do phía nào gửi?",
+        "Đây không phải lỗi chưa xử lý của server.",
+        "Chọn lỗi client 4xx tương ứng validation."
+      ],
+      "tags": ["http", "bad-request", "validation", "duoquest"],
+      "timeLimitSeconds": 35
+    },
+    {
+      "id": "b03-008",
+      "type": "single_choice",
+      "topic": "Validation, Auth và lỗi API",
+      "difficulty": "hard",
+      "prompt": "Player A có token hợp lệ nhưng thử xem `GET /players/B/private-history`. Cách kiểm quyền đúng nhất là gì?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Cho phép vì A đã đăng nhập."
+        },
+        {
+          "id": "B",
+          "text": "Kiểm tra A có quyền đối với lịch sử của B ở backend; không chỉ kiểm token."
+        },
+        {
+          "id": "C",
+          "text": "Cho phép nếu frontend ẩn nút này."
+        },
+        {
+          "id": "D",
+          "text": "Cho phép nếu A đoán được ID của B."
+        }
+      ],
+      "correctOptionId": "B",
+      "explanation": "Authentication chứng minh A là ai; authorization còn phải kiểm A có được phép truy cập đúng đối tượng B hay không. Quy tắc ownership/role nên được thực thi ở server theo mỗi request liên quan đến tài nguyên nhạy cảm.",
+      "hints": [
+        "Tài nguyên thuộc về ai?",
+        "Danh tính và quyền trên tài nguyên là hai lớp khác nhau.",
+        "Một ID biết được không phải giấy phép đọc dữ liệu."
+      ],
+      "tags": ["authorization", "object-level", "ownership"],
+      "timeLimitSeconds": 50
+    },
+    {
+      "id": "b03-009",
+      "type": "single_choice",
+      "topic": "Validation, Auth và lỗi API",
+      "difficulty": "hard",
+      "prompt": "Một endpoint quản trị chỉ cho role ADMIN sửa nội dung. Người dùng đã xác thực nhưng role MEMBER. Lựa chọn nào an toàn và đúng tầng trách nhiệm?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Cho phép request rồi kiểm trên frontend."
+        },
+        {
+          "id": "B",
+          "text": "Chỉ đổi màu nút trên giao diện."
+        },
+        {
+          "id": "C",
+          "text": "Guard/policy ở backend từ chối trước khi thực thi sửa nội dung."
+        },
+        {
+          "id": "D",
+          "text": "Để Prisma tự suy ra role từ tên bảng."
+        }
+      ],
+      "correctOptionId": "C",
+      "explanation": "NestJS Guards hoặc policy layer có thể quyết định khả năng truy cập route dựa trên metadata và principal. Việc từ chối phải diễn ra trước các mutation có tác dụng phụ; phân quyền không thể chỉ dựa trên trạng thái UI.",
+      "hints": [
+        "Hành động gây thay đổi dữ liệu.",
+        "Ai chịu trách nhiệm thực thi quyền: client hay server?",
+        "Guard chạy trước controller handler."
+      ],
+      "tags": ["nestjs", "guard", "rbac", "authorization"],
+      "timeLimitSeconds": 45
+    },
+    {
+      "id": "b03-010",
+      "type": "single_choice",
+      "topic": "Validation, Auth và lỗi API",
+      "difficulty": "hard",
+      "prompt": "Service phát sinh lỗi database không mong đợi. API nên xử lý thông báo trả về client theo cách nào?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Lưu thông tin chi tiết qua log nội bộ có kiểm soát; trả lỗi an toàn, không lộ dữ liệu nhạy cảm."
+        },
+        {
+          "id": "B",
+          "text": "Trả nguyên stack trace, SQL query và secret cho dễ debug."
+        },
+        {
+          "id": "C",
+          "text": "Luôn trả 200 để không ai biết lỗi."
+        },
+        {
+          "id": "D",
+          "text": "Đưa mật khẩu DB vào explanation JSON."
+        }
+      ],
+      "correctOptionId": "A",
+      "explanation": "Exception handling nên tách thông tin debug phục vụ vận hành khỏi thông điệp cho client. NestJS exception filters và error filter của DuoQuest có thể chuẩn hóa lỗi mà không tiết lộ internals; vẫn cần logging và correlation phù hợp.",
+      "hints": [
+        "Ai được đọc log chi tiết?",
+        "Stack trace có thể chứa thông tin cấu hình.",
+        "Response cho client cần đủ hiểu mà không làm lộ hệ thống."
+      ],
+      "tags": ["exceptions", "logging", "security", "duoquest"],
+      "timeLimitSeconds": 50
+    }
+  ]
+}

@@ -20,6 +20,7 @@ model Player {
   packs       QuizQuestionPack[]
   account     Account?
   authSessions AuthSession[]
+  questionHistory QuizQuestionHistory[]
 }
 
 enum AccountRole {
@@ -99,15 +100,25 @@ model GameSession {
   mode         String
   layout       String
   status       String   @default("IN_PROGRESS")
-  packVersionId String  @db.Uuid
-  pack         QuizQuestionPack @relation(fields: [packVersionId], references: [id])
+  packVersionId String?  @db.Uuid
+  pack         QuizQuestionPack? @relation(fields: [packVersionId], references: [id], onDelete: Restrict)
   questionSnapshot Json
+  selectionSnapshot Json?
   startedAt    DateTime @default(now())
   finishedAt   DateTime?
   players      SessionPlayer[]
   result       MatchResult?
   answers      QuizPlayerAnswer[]
+  skillUses    QuizSkillUse[]
   @@index([status])
+}
+
+model QuizQuestionHistory {
+  hostPlayerId String @db.Uuid
+  host Player @relation(fields: [hostPlayerId], references: [id], onDelete: Cascade)
+  questionKey String @db.VarChar(64)
+  askedAt DateTime @default(now())
+  @@id([hostPlayerId, questionKey])
 }
 
 model SessionPlayer {
@@ -135,6 +146,17 @@ model QuizPlayerAnswer {
   correct   Boolean
   session   GameSession @relation(fields: [sessionId], references: [id])
   @@id([sessionId, roundId, playerId])
+}
+
+model QuizSkillUse {
+  sessionId String @db.Uuid
+  actionId  String @db.Uuid
+  roundId   String
+  playerId  String @db.Uuid
+  skill     String
+  remaining Int
+  session   GameSession @relation(fields: [sessionId], references: [id])
+  @@id([sessionId, actionId])
 }
 
 model Wallet {

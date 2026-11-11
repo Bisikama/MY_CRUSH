@@ -1,9 +1,28 @@
 'use client';
 import type { ReactNode } from 'react';
 import { Button, Card } from '@duoquest/ui';
-import type { GameMode, GameLayout, PackSummary } from '@duoquest/shared-types';
+import {
+  matchesQuestion,
+  knowledgeKey,
+  knowledgeTypeSchema,
+  type Difficulty,
+  type GameMode,
+  type GameLayout,
+  type PackSummary,
+  type QuestionFilter,
+  type QuizSelection,
+  type CasualCatalog,
+  type CasualCustomSelection,
+} from '@duoquest/shared-types';
 import type { GameIdentity } from '../../lib/client';
+import { knowledgeTypeLabels, type KnowledgeTypeFilter } from '../../lib/knowledge-type';
+import { CasualFilters } from './casual-filters';
 interface Props {
+  selectionType: QuizSelection['type'];
+  setSelectionType: (value: QuizSelection['type']) => void;
+  casualCatalog: CasualCatalog;
+  casualSelection: CasualCustomSelection;
+  setCasualSelection: (value: CasualCustomSelection) => void;
   identity: GameIdentity;
   resumeCode: string | null;
   mode: GameMode;
@@ -11,8 +30,13 @@ interface Props {
   layout: GameLayout;
   setLayout: (value: GameLayout) => void;
   packs: PackSummary[];
+  hasUnclassifiedPacks: boolean;
+  knowledgeType: KnowledgeTypeFilter;
+  setKnowledgeType: (value: KnowledgeTypeFilter) => void;
   packId: string;
   setPackId: (value: string) => void;
+  filter: QuestionFilter;
+  setFilter: (value: QuestionFilter) => void;
   secondNickname: string;
   setSecondNickname: (value: string) => void;
   joinCode: string;
@@ -36,18 +60,23 @@ const modeInfo = [
     id: 'DUEL' as const,
     icon: '02',
     title: 'Duel',
-    subtitle: 'Rủ bạn vào so tài',
-    description: 'Cùng câu hỏi, khác chiến thuật. Ai sẽ chớp thời cơ và dẫn đầu bảng điểm?',
+    subtitle: 'Một lời thách đấu dành cho người ấy',
+    description: 'Cùng trả lời một bộ câu hỏi. Ai sẽ nhanh tay và ghi nhiều điểm hơn?',
   },
   {
     id: 'COOP' as const,
     icon: '∞',
     title: 'Co-op',
-    subtitle: 'Hai cái đầu, một mục tiêu',
-    description: 'Luân phiên làm đội trưởng, cùng vượt các ải và giữ những mạng cuối cùng.',
+    subtitle: 'Cặp đôi tâm đầu ý hợp',
+    description: 'Thay nhau làm đội trưởng và xem hai bạn phối hợp ăn ý đến đâu qua từng ải.',
   },
 ];
 export function QuizSetup({
+  selectionType,
+  setSelectionType,
+  casualCatalog,
+  casualSelection,
+  setCasualSelection,
   identity,
   resumeCode,
   mode,
@@ -55,8 +84,13 @@ export function QuizSetup({
   layout,
   setLayout,
   packs,
+  hasUnclassifiedPacks,
+  knowledgeType,
+  setKnowledgeType,
   packId,
   setPackId,
+  filter,
+  setFilter,
   secondNickname,
   setSecondNickname,
   joinCode,
@@ -68,6 +102,27 @@ export function QuizSetup({
   joinRoom,
   leaveRoom,
 }: Props) {
+  const distinct = (values: string[]) =>
+    [...new Map(values.map((value) => [knowledgeKey(value), value])).values()].sort((a, b) =>
+      a.localeCompare(b, 'vi'),
+    );
+  const categories = distinct(packs.map((pack) => pack.category));
+  const topics = distinct(
+    packs
+      .filter(
+        (pack) => !filter.category || knowledgeKey(pack.category) === knowledgeKey(filter.category),
+      )
+      .flatMap((pack) => pack.groups.map((group) => group.topic)),
+  );
+  const choices = packs
+    .map((pack) => ({
+      pack,
+      count: pack.groups
+        .filter((group) => matchesQuestion(pack.category, group, filter))
+        .reduce((total, group) => total + group.count, 0),
+    }))
+    .filter(({ count }) => count > 0);
+  const selected = choices.find(({ pack }) => pack.id === packId);
   return (
     <>
       {resumeCode && (
@@ -96,7 +151,7 @@ export function QuizSetup({
             một cuộc <em>phiêu lưu.</em>
           </h1>
           <p className="lead">
-            Tự phá kỷ lục, thách đấu bạn bè hoặc cùng nhau vượt ải.
+            Tự phá kỷ lục, gửi người ấy một lời thách đấu hoặc cùng nhau vượt ải.
             <br />
             Chọn cách chơi của bạn hôm nay.
           </p>
@@ -139,27 +194,185 @@ export function QuizSetup({
           <h2>Thiết lập sân chơi</h2>
           <div className="form-grid">
             <div>
-              <label htmlFor="pack">Bộ câu hỏi</label>
-              <select id="pack" value={packId} onChange={(event) => setPackId(event.target.value)}>
-                {packs.map((pack) => (
-                  <option key={pack.id} value={pack.id}>
-                    {pack.title} · {pack.questionCount} câu
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label htmlFor="layout">Không gian chơi</label>
+              <label htmlFor="quiz-experience">Trải nghiệm</label>
               <select
-                id="layout"
-                value={layout}
-                onChange={(event) => setLayout(event.target.value as GameLayout)}
+                id="quiz-experience"
+                value={selectionType === 'STUDY' ? 'STUDY' : 'CASUAL'}
+                onChange={(event) =>
+                  setSelectionType(event.target.value === 'STUDY' ? 'STUDY' : 'CASUAL_RANDOM')
+                }
               >
-                <option value="MULTI_DEVICE">Mỗi người một thiết bị · LAN</option>
-                <option value="SHARED_SCREEN">Chung một màn hình</option>
+                <option value="CASUAL">Đố vui thử thách</option>
+                <option value="STUDY">Học luyện chuyên môn</option>
               </select>
             </div>
+            {mode !== 'SOLO' && (
+              <div>
+                <label htmlFor="layout">Không gian chơi</label>
+                <select
+                  id="layout"
+                  value={layout}
+                  onChange={(event) => setLayout(event.target.value as GameLayout)}
+                >
+                  <option value="MULTI_DEVICE">Mỗi người một thiết bị · LAN</option>
+                  <option value="SHARED_SCREEN">Chung một màn hình</option>
+                </select>
+              </div>
+            )}
+            {selectionType !== 'STUDY' && (
+              <div>
+                <label htmlFor="casual-method">Cách chọn đề</label>
+                <select
+                  id="casual-method"
+                  value={selectionType}
+                  onChange={(event) =>
+                    setSelectionType(event.target.value as QuizSelection['type'])
+                  }
+                >
+                  <option value="CASUAL_RANDOM">Ngẫu nhiên</option>
+                  <option value="CASUAL_CUSTOM">Tự chọn</option>
+                </select>
+              </div>
+            )}
+            {selectionType === 'CASUAL_CUSTOM' && (
+              <CasualFilters
+                catalog={casualCatalog}
+                selection={casualSelection}
+                onChange={setCasualSelection}
+              />
+            )}
+            {selectionType === 'STUDY' && (
+              <>
+                <div>
+                  <label htmlFor="pack-knowledge-type">Nhóm kiến thức</label>
+                  <select
+                    id="pack-knowledge-type"
+                    value={knowledgeType}
+                    onChange={(event) =>
+                      setKnowledgeType(event.target.value as KnowledgeTypeFilter)
+                    }
+                  >
+                    <option value="all">Tất cả</option>
+                    {knowledgeTypeSchema.options.map((value) => (
+                      <option key={value} value={value}>
+                        {knowledgeTypeLabels[value]}
+                      </option>
+                    ))}
+                    {hasUnclassifiedPacks && (
+                      <option value="unclassified">{knowledgeTypeLabels.unclassified}</option>
+                    )}
+                  </select>
+                </div>
+                <div>
+                  <label htmlFor="pack-category">Lĩnh vực</label>
+                  <select
+                    id="pack-category"
+                    value={filter.category ?? ''}
+                    onChange={(event) =>
+                      setFilter({
+                        ...filter,
+                        category: event.target.value || undefined,
+                        topic: undefined,
+                      })
+                    }
+                  >
+                    <option value="">Tất cả lĩnh vực</option>
+                    {categories.map((value) => (
+                      <option key={value}>{value}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label htmlFor="pack-topic">Đề tài</label>
+                  <select
+                    id="pack-topic"
+                    value={filter.topic ?? ''}
+                    onChange={(event) =>
+                      setFilter({ ...filter, topic: event.target.value || undefined })
+                    }
+                  >
+                    <option value="">Tất cả đề tài</option>
+                    {topics.map((value) => (
+                      <option key={value}>{value}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label htmlFor="pack-difficulty">Độ khó</label>
+                  <select
+                    id="pack-difficulty"
+                    value={filter.difficulty ?? ''}
+                    onChange={(event) =>
+                      setFilter({
+                        ...filter,
+                        difficulty: (event.target.value || undefined) as Difficulty | undefined,
+                      })
+                    }
+                  >
+                    <option value="">Mọi độ khó</option>
+                    <option value="easy">Dễ</option>
+                    <option value="medium">Trung bình</option>
+                    <option value="hard">Khó</option>
+                  </select>
+                </div>
+                <div>
+                  <label htmlFor="pack">Bộ câu hỏi</label>
+                  <select
+                    id="pack"
+                    value={selected?.pack.id ?? ''}
+                    onChange={(event) => setPackId(event.target.value)}
+                  >
+                    <option value="" disabled>
+                      Chọn bộ đề
+                    </option>
+                    {choices.map(({ pack, count }) => (
+                      <option key={pack.id} value={pack.id}>
+                        {pack.title} · {count} câu phù hợp
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </>
+            )}
           </div>
+          {selectionType !== 'STUDY' && (
+            <p className="small">
+              Tối đa 20 câu, ưu tiên câu bạn chưa gặp. Hết câu mới trong lựa chọn này sẽ bắt đầu
+              vòng mới.
+              {selectionType === 'CASUAL_CUSTOM' &&
+                ' Có thể chọn nhiều lĩnh vực, chủ đề. Để trống để lấy tất cả; giữ Ctrl hoặc Command khi chọn nhiều trên máy tính.'}
+            </p>
+          )}
+          {selectionType !== 'STUDY' && !casualCatalog.length && (
+            <p role="status">Chưa có câu đố vui trong thư viện.</p>
+          )}
+          {selectionType === 'STUDY' && !choices.length && (
+            <p role="status">Không có bộ đề phù hợp với bộ lọc.</p>
+          )}
+          {selectionType === 'STUDY' && selected && (
+            <p className="small">
+              {knowledgeTypeLabels[selected.pack.knowledgeType ?? 'unclassified']}
+            </p>
+          )}
+          {selectionType === 'STUDY' &&
+            selected?.pack.relatedKnowledge.map(({ category, topic, reason }, index) => {
+              const match = categories.find(
+                (value) => knowledgeKey(value) === knowledgeKey(category),
+              );
+              return (
+                <p className="small" key={index}>
+                  {match ? (
+                    <button type="button" onClick={() => setFilter({ category: match })}>
+                      {category}
+                    </button>
+                  ) : (
+                    category
+                  )}
+                  {' · '}
+                  {topic} — {reason}
+                </p>
+              );
+            })}
           {layout === 'SHARED_SCREEN' && mode !== 'SOLO' && (
             <>
               <label htmlFor="second">Tên người chơi 2</label>
@@ -176,7 +389,12 @@ export function QuizSetup({
               </p>
             </>
           )}
-          <Button onClick={() => void createRoom()} disabled={busy || !connected || !packId}>
+          <Button
+            onClick={() => void createRoom()}
+            disabled={
+              busy || !connected || (selectionType === 'STUDY' ? !selected : !casualCatalog.length)
+            }
+          >
             Tạo {mode === 'SOLO' ? 'ván Solo' : 'phòng chơi'} →
           </Button>
           <p className="small muted">

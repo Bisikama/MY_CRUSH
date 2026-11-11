@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { Button, Card } from '@duoquest/ui';
 import { questionPackSchema, type QuestionPack } from '@duoquest/shared-types';
 import { api, loadIdentity } from '../../../lib/client';
+import { knowledgeTypeLabels } from '../../../lib/knowledge-type';
+import { QuestionImages } from '../../../features/quiz/question-images';
 
 export default function PacksPage() {
   const [raw, setRaw] = useState('');
@@ -78,16 +80,46 @@ export default function PacksPage() {
         <Card>
           <h2>{preview.title}</h2>
           <p>
-            {preview.questions.length} câu · {preview.language} · {preview.category}
+            {preview.questions.length} câu · {preview.language} · {preview.category} ·{' '}
+            {knowledgeTypeLabels[preview.knowledgeType ?? 'unclassified']}
           </p>
+          {!!preview.relatedKnowledge?.length && (
+            <div>
+              <h3>Kiến thức bổ sung</h3>
+              <ul>
+                {preview.relatedKnowledge.map(({ category, topic, reason }, index) => (
+                  <li key={index}>
+                    <strong>
+                      {category} · {topic}
+                    </strong>{' '}
+                    — {reason}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
           {preview.questions.map((question, index) => (
             <details key={question.id}>
               <summary>
                 {index + 1}. {question.prompt}
               </summary>
+              <QuestionImages images={question.images} lazy />
               <p>
-                Đáp án {question.correctOptionId}: {question.explanation}
+                Đáp án {question.correctOptionId}:{' '}
+                {question.options.find((o) => o.id === question.correctOptionId)?.text}
               </p>
+              <p>{question.explanation}</p>
+              <p>
+                {question.topic} · {question.difficulty} · {question.hints.length} gợi ý
+              </p>
+              {!!question.hints.length && (
+                <ol>
+                  {question.hints.map((hint, i) => (
+                    <li key={i}>{hint}</li>
+                  ))}
+                </ol>
+              )}
+              {question.hints.length < 3 && <p>Chuẩn soạn đề mới khuyến nghị 3–5 gợi ý.</p>}
             </details>
           ))}
           <p className="small muted">

@@ -1,7 +1,13 @@
 'use client';
 import type { ReactNode } from 'react';
+import { QuestionImages } from './question-images';
 import { Button, Card } from '@duoquest/ui';
-import type { QuizAction, RoomView } from '@duoquest/shared-types';
+import {
+  allowedQuizSkills,
+  QUIZ_SKILLS,
+  type QuizAction,
+  type RoomView,
+} from '@duoquest/shared-types';
 interface Props {
   activeRoom: RoomView;
   connected: boolean;
@@ -43,6 +49,17 @@ export function QuizStage({
       : activeRoom.mode === 'DUEL' && activeRoom.layout === 'SHARED_SCREEN'
         ? controlled.find((id) => id === game.buzzerPlayerId)
         : controlled[0];
+  const serverTime = now + clockOffset;
+  const effect =
+    game?.interference && game.interference.until > serverTime ? game.interference.skill : null;
+  const activeSkills = allowedQuizSkills(activeRoom.mode, activeRoom.layout);
+  const setup = activeRoom.setup;
+  const custom = setup?.selection?.type === 'CASUAL_CUSTOM' ? setup.selection : null;
+  const setupDifficulty = custom?.difficulty ?? setup?.filter.difficulty ?? 'mixed';
+  const setupTopics = custom
+    ? custom.topics.map(({ category, topic }) => `${category} / ${topic}`).join(', ') ||
+      'Mọi chủ đề'
+    : (setup?.filter.topic ?? 'Mọi đề tài');
   const canAnswer =
     connected &&
     !busy &&
@@ -69,7 +86,7 @@ export function QuizStage({
               void onCopy();
             }}
           >
-            Copy lời mời
+            Sao chép lời mời
           </Button>
           <Button
             variant="outline"
@@ -130,6 +147,19 @@ export function QuizStage({
               chọn đáp án trên màn hình.
             </p>
           )}
+          {activeRoom.setup && (
+            <p>
+              {activeRoom.setup.title} · {activeRoom.setup.category} · {setupTopics} ·{' '}
+              {{ easy: 'Dễ', medium: 'Trung bình', hard: 'Khó', mixed: 'Hỗn hợp' }[setupDifficulty]}{' '}
+              · {activeRoom.setup.questionCount} câu
+            </p>
+          )}
+          <p className="small">
+            Skill: {activeSkills.map((skill) => QUIZ_SKILLS[skill].name).join(', ')}
+            {activeRoom.mode === 'COOP'
+              ? ' · Tối đa 3 lượt từ kho mỗi người'
+              : ' · 1 lượt miễn phí mỗi loại'}
+          </p>
           <div className="actions">
             <Button
               variant="outline"
@@ -166,7 +196,7 @@ export function QuizStage({
                 : activeRoom.mode === 'SOLO'
                   ? 'Thêm một hành trình mới!'
                   : activeRoom.mode === 'COOP'
-                    ? 'Cùng nhau vượt ải!'
+                    ? 'Hai bạn ăn ý thật đấy!'
                     : `${game.result?.winnerIds.map(playerName).join(', ')} chiến thắng!`}
           </h1>
           <p>Kết quả đã được lưu. Phần thưởng hợp lệ được server xử lý một lần.</p>
@@ -200,7 +230,71 @@ export function QuizStage({
               {playerName(game.captainId)} khóa đáp án
             </div>
           )}
-          <h1>{game.question.prompt}</h1>
+          <h1>{effect === 'COVER' ? 'Câu hỏi đang bị che' : game.question.prompt}</h1>
+          {effect !== 'COVER' && (
+            <QuestionImages key={game.roundId} images={game.question.images} />
+          )}
+          {effect && (
+            <p role="status">
+              {QUIZ_SKILLS[effect].name} đang có hiệu lực. Bạn vẫn có thể trả lời.
+            </p>
+          )}
+          {!!game.support?.hints.length && (
+            <ol className="explanation">
+              {game.support.hints.map((hint, index) => (
+                <li key={index}>{hint}</li>
+              ))}
+            </ol>
+          )}
+          {game.phase === 'QUESTION' &&
+            game.skillSlots?.map((slot) => {
+              if (activeRoom.mode !== 'COOP' && slot.playerId !== answerer) return null;
+              return (
+                <div className="actions" key={slot.playerId} aria-label="Skill">
+                  <span className="small">
+                    {playerName(slot.playerId)} · Còn {slot.remaining} lượt trong trận
+                  </span>
+                  {activeSkills.map((skill) => {
+                    const free = slot.free.includes(skill);
+                    const stock = slot.stock[skill] ?? 0;
+                    const supported = skill === 'HINT' || skill === 'FIFTY_FIFTY';
+                    const unavailable =
+                      skill === 'HINT'
+                        ? !game.hintRemaining
+                        : skill === 'FIFTY_FIFTY'
+                          ? !!game.support.hiddenOptions.length
+                          : slot.usedThisRound.includes(skill);
+                    const tooLate = game.deadline - serverTime <= (skill === 'COVER' ? 2000 : 3000);
+                    const tooEarly = !supported && serverTime < game.openedAt + 5000;
+                    return (
+                      <Button
+                        key={skill}
+                        variant="outline"
+                        disabled={
+                          !connected ||
+                          busy ||
+                          !slot.remaining ||
+                          (!free && !stock) ||
+                          unavailable ||
+                          (activeRoom.mode !== 'COOP' &&
+                            game.answeredPlayerIds.includes(slot.playerId)) ||
+                          tooLate ||
+                          tooEarly
+                        }
+                        onClick={() => void onAction(slot.playerId, { type: 'USE_SKILL', skill })}
+                      >
+                        {QUIZ_SKILLS[skill].name} ·{' '}
+                        {skill === 'HINT' && unavailable
+                          ? 'Hết gợi ý'
+                          : free
+                            ? 'Miễn phí'
+                            : stock + ' trong kho'}
+                      </Button>
+                    );
+                  })}
+                </div>
+              );
+            })}
           {activeRoom.mode === 'DUEL' &&
             activeRoom.layout === 'SHARED_SCREEN' &&
             game.phase === 'QUESTION' && (
@@ -228,14 +322,27 @@ export function QuizStage({
             {game.question.options.map((option) => (
               <button
                 key={option.id}
+                style={
+                  game.support?.hiddenOptions.includes(option.id)
+                    ? { visibility: 'hidden' }
+                    : undefined
+                }
                 className={`answer ${game.reveal?.correctOptionId === option.id ? 'correct' : ''} ${answerer && game.ownAnswers[answerer] === option.id ? 'chosen' : ''}`}
-                disabled={!canAnswer}
+                disabled={!canAnswer || game.support?.hiddenOptions.includes(option.id)}
                 onClick={() => {
                   if (answerer) void onAction(answerer, { type: 'ANSWER', optionId: option.id });
                 }}
               >
-                <span>{option.id}</span>
-                {option.text}
+                <span className="answer-letter">{option.id}</span>
+                <span
+                  className="answer-text"
+                  style={
+                    effect === 'BLUR' ? { filter: 'blur(7px)', userSelect: 'none' } : undefined
+                  }
+                  aria-hidden={effect === 'BLUR'}
+                >
+                  {option.text}
+                </span>
               </button>
             ))}
           </div>

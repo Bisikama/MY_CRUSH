@@ -1,0 +1,350 @@
+{
+  "schemaVersion": 1,
+  "packId": "backend-testing-security-b07",
+  "title": "Backend B07 — Testing, API Security và concurrency",
+  "language": "vi",
+  "knowledgeType": "academic",
+  "category": "Backend",
+  "questions": [
+    {
+      "id": "b07-001",
+      "type": "single_choice",
+      "topic": "Testing, Security và concurrency",
+      "difficulty": "easy",
+      "prompt": "Muốn test hàm thuần `calculateQuizScore(answer, timeLeft)` mà không mở DB hay server, loại kiểm thử nào phù hợp nhất?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Browser end-to-end test bắt buộc"
+        },
+        {
+          "id": "B",
+          "text": "Load test production"
+        },
+        {
+          "id": "C",
+          "text": "Unit test"
+        },
+        {
+          "id": "D",
+          "text": "Migration smoke test"
+        }
+      ],
+      "correctOptionId": "C",
+      "explanation": "Unit test phù hợp để kiểm tra logic nhỏ, thuần và độc lập, ví dụ scoring rule. Các dependency ngoại vi có thể được giả lập khi cần; nếu test đòi DB thật thì mục tiêu đã nghiêng về integration test.",
+      "hints": [
+        "Hàm không có I/O.",
+        "Chỉ cần truyền input và kiểm output.",
+        "Chọn cấp test có phạm vi hẹp nhất."
+      ],
+      "tags": ["testing", "unit", "quiz"],
+      "timeLimitSeconds": 25
+    },
+    {
+      "id": "b07-002",
+      "type": "single_choice",
+      "topic": "Testing, Security và concurrency",
+      "difficulty": "easy",
+      "prompt": "Để kiểm tra transaction mua item thực sự trừ Wallet và thêm Inventory trên PostgreSQL, nên ưu tiên cấp test nào?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Database integration test trên DB test riêng."
+        },
+        {
+          "id": "B",
+          "text": "Chỉ chụp screenshot UI tĩnh."
+        },
+        {
+          "id": "C",
+          "text": "Chỉ eslint."
+        },
+        {
+          "id": "D",
+          "text": "Chỉ đọc code bằng mắt."
+        }
+      ],
+      "correctOptionId": "A",
+      "explanation": "Integration test chạy với PostgreSQL test thực giúp kiểm chứng transaction, constraint và rollback. Fake repository trong RAM có thể test orchestration nhưng không chứng minh hành vi ACID thật trên database.",
+      "hints": [
+        "Có nhiều bảng và transaction DB thật.",
+        "Mock không mô phỏng đầy đủ ràng buộc database.",
+        "Dùng database _test riêng."
+      ],
+      "tags": ["testing", "integration", "postgresql"],
+      "timeLimitSeconds": 30
+    },
+    {
+      "id": "b07-003",
+      "type": "single_choice",
+      "topic": "Testing, Security và concurrency",
+      "difficulty": "easy",
+      "prompt": "Một bài kiểm thử mở hai browser context, tạo phòng, cho hai người Ready, chơi rồi kiểm kết quả UI. Đây phù hợp nhất với loại test nào?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Unit test cho phép cộng số."
+        },
+        {
+          "id": "B",
+          "text": "Prisma schema format check."
+        },
+        {
+          "id": "C",
+          "text": "Static type-only check."
+        },
+        {
+          "id": "D",
+          "text": "End-to-end/browser workflow test."
+        }
+      ],
+      "correctOptionId": "D",
+      "explanation": "E2E/browser test mô phỏng luồng người dùng qua các lớp web/API/realtime và xác nhận kết quả nhìn thấy được. Nó bổ sung, không thay thế unit/integration test cho logic và giao dịch.",
+      "hints": [
+        "Luồng đi qua cả web và backend.",
+        "Test hành vi như người dùng thật.",
+        "Hai browser context giúp mô phỏng hai identity."
+      ],
+      "tags": ["testing", "playwright", "e2e", "duoquest"],
+      "timeLimitSeconds": 35
+    },
+    {
+      "id": "b07-004",
+      "type": "single_choice",
+      "topic": "Testing, Security và concurrency",
+      "difficulty": "medium",
+      "prompt": "Trong Playwright, vì sao nên dùng browser context riêng cho mỗi người chơi khi test DuoQuest Duel?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Để hai người dùng tự động chia sẻ cookie và localStorage."
+        },
+        {
+          "id": "B",
+          "text": "Để cô lập cookie, localStorage, sessionStorage và identity giữa hai người chơi."
+        },
+        {
+          "id": "C",
+          "text": "Để bỏ qua xác thực backend."
+        },
+        {
+          "id": "D",
+          "text": "Để tăng Coins trong DB."
+        }
+      ],
+      "correctOptionId": "B",
+      "explanation": "BrowserContext là môi trường tách biệt giống các phiên ẩn danh; dùng hai context giúp test rõ quyền của hai identity và không chia sẻ state browser ngoài ý muốn. Đây là cách phù hợp để mô phỏng Duel multi-device.",
+      "hints": [
+        "Hai người phải có identity độc lập.",
+        "Storage/browser session có ảnh hưởng token.",
+        "Context cách ly state client giữa các test."
+      ],
+      "tags": ["playwright", "isolation", "duel"],
+      "timeLimitSeconds": 40
+    },
+    {
+      "id": "b07-005",
+      "type": "single_choice",
+      "topic": "Testing, Security và concurrency",
+      "difficulty": "medium",
+      "prompt": "UI cập nhật kết quả sau một socket event bất đồng bộ. Kiểm tra nào thường ổn định hơn trong Playwright?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Dùng web-first assertion như `await expect(locator).toHaveText(...)` có auto-retry."
+        },
+        {
+          "id": "B",
+          "text": "Cố định `waitForTimeout(5000)` rồi hy vọng đúng."
+        },
+        {
+          "id": "C",
+          "text": "Chỉ console.log."
+        },
+        {
+          "id": "D",
+          "text": "Bỏ qua assert nếu mạng chậm."
+        }
+      ],
+      "correctOptionId": "A",
+      "explanation": "Các web-specific async assertions của Playwright có cơ chế auto-retry đến khi điều kiện đúng hoặc timeout. Điều này thường giảm flaky test so với sleep cố định, nhưng vẫn cần điều kiện và timeout hợp lý.",
+      "hints": [
+        "Kết quả xuất hiện không đồng bộ.",
+        "Sleep cứng vừa chậm vừa có thể thiếu.",
+        "Sử dụng expect(locator) với auto retry."
+      ],
+      "tags": ["playwright", "assertions", "flaky-tests"],
+      "timeLimitSeconds": 40
+    },
+    {
+      "id": "b07-006",
+      "type": "single_choice",
+      "topic": "Testing, Security và concurrency",
+      "difficulty": "medium",
+      "prompt": "Một endpoint tra cứu người chơi dùng giá trị tên do client nhập để truy vấn SQL. Cách phòng tránh SQL injection phù hợp nhất?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Ghép trực tiếp chuỗi input vào SQL."
+        },
+        {
+          "id": "B",
+          "text": "Chỉ xóa dấu cách khỏi tên."
+        },
+        {
+          "id": "C",
+          "text": "Sử dụng parameterized query/prepared statement, thêm quyền DB tối thiểu và validation thích hợp."
+        },
+        {
+          "id": "D",
+          "text": "Tin rằng UI luôn gửi tên hợp lệ."
+        }
+      ],
+      "correctOptionId": "C",
+      "explanation": "Prepared statements tách cấu trúc SQL khỏi dữ liệu người dùng, giúp dữ liệu không bị diễn giải thành cú pháp truy vấn. Input validation và least privilege bổ sung khả năng bảo vệ nhưng không thay thế parameterization.",
+      "hints": [
+        "Dữ liệu đầu vào phải được tách khỏi code SQL.",
+        "Ghép string có thể thay đổi nghĩa query.",
+        "OWASP ưu tiên prepared statements."
+      ],
+      "tags": ["security", "sql-injection", "parameterization"],
+      "timeLimitSeconds": 45
+    },
+    {
+      "id": "b07-007",
+      "type": "single_choice",
+      "topic": "Testing, Security và concurrency",
+      "difficulty": "medium",
+      "prompt": "Một user đã đăng nhập thử sửa `itemId` của user khác bằng request tự gửi. Biện pháp backend quan trọng nhất là gì?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Ẩn endpoint khỏi menu."
+        },
+        {
+          "id": "B",
+          "text": "Kiểm tra quyền trên từng resource và owner trước khi mutation."
+        },
+        {
+          "id": "C",
+          "text": "Chỉ đổi màu nút của user khác."
+        },
+        {
+          "id": "D",
+          "text": "Dùng ID dài hơn và bỏ authorization."
+        }
+      ],
+      "correctOptionId": "B",
+      "explanation": "Mọi request thao tác tài nguyên nhạy cảm cần được xác thực và phân quyền đúng object, không chỉ dựa vào role hoặc sự hiện diện của nút UI. Owner/resource check phải nằm trên server và nên được kiểm thử với nhiều identity.",
+      "hints": [
+        "Người này đã xác thực nhưng có quyền với item nào?",
+        "Tài nguyên thuộc chủ sở hữu khác.",
+        "Authorization object-level phải kiểm tại backend."
+      ],
+      "tags": ["security", "authorization", "ownership"],
+      "timeLimitSeconds": 45
+    },
+    {
+      "id": "b07-008",
+      "type": "single_choice",
+      "topic": "Testing, Security và concurrency",
+      "difficulty": "hard",
+      "prompt": "Hai request mua cùng item đến gần như đồng thời, mỗi request có ID khác nhau và ví chỉ đủ tiền cho một. Test nào kiểm thử đúng rủi ro concurrency?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Gửi tuần tự từng request và chỉ kiểm status."
+        },
+        {
+          "id": "B",
+          "text": "Chỉ kiểm trang home mở được."
+        },
+        {
+          "id": "C",
+          "text": "Chạy code formatter."
+        },
+        {
+          "id": "D",
+          "text": "Khởi phát đồng thời hai yêu cầu trên DB test, kiểm số dư không âm, chỉ một giao dịch hợp lệ và inventory/ledger nhất quán."
+        }
+      ],
+      "correctOptionId": "D",
+      "explanation": "Concurrent purchase test cần chạy trên PostgreSQL test, quan sát constraint/transaction khi có race. Đồng thời khác với duplicate retry cùng requestId; cả hai trường hợp cần test riêng để tránh double spend và sai ledger.",
+      "hints": [
+        "Có hai request thật sự cạnh tranh một số dư.",
+        "Kiểm tra trạng thái cuối, không chỉ response.",
+        "Để test thấy xung đột, phải khởi phát đồng thời."
+      ],
+      "tags": ["testing", "concurrency", "wallet", "duoquest"],
+      "timeLimitSeconds": 60
+    },
+    {
+      "id": "b07-009",
+      "type": "single_choice",
+      "topic": "Testing, Security và concurrency",
+      "difficulty": "hard",
+      "prompt": "Client gửi lại cùng `(sessionId, roundId, actionId)` ba lần do mất ACK. Test backend nên khẳng định điều gì?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Tác động chấm điểm chỉ xảy ra một lần; retry không thay đổi kết quả/ thưởng ngoài quy tắc."
+        },
+        {
+          "id": "B",
+          "text": "Cả ba lần đều được cộng điểm."
+        },
+        {
+          "id": "C",
+          "text": "Cần tắt mọi Socket.IO event."
+        },
+        {
+          "id": "D",
+          "text": "Client tự sửa score mỗi lần timeout."
+        }
+      ],
+      "correctOptionId": "A",
+      "explanation": "Idempotency test mô phỏng duplicate delivery và kiểm số action được áp dụng cùng kết quả cuối. DuoQuest có action receipts, điều phối tuần tự và idempotent reward; test phải kiểm cả side effect chứ không chỉ status của ACK.",
+      "hints": [
+        "Nhận lại event không có nghĩa hành động mới.",
+        "actionId là mã định danh tác động.",
+        "Kiểm state và giao dịch sau nhiều lần gửi."
+      ],
+      "tags": ["testing", "idempotency", "socketio", "duoquest"],
+      "timeLimitSeconds": 55
+    },
+    {
+      "id": "b07-010",
+      "type": "single_choice",
+      "topic": "Testing, Security và concurrency",
+      "difficulty": "hard",
+      "prompt": "Một test Quiz Duel kiểm tra bí mật đáp án trước reveal. Tiêu chí pass nào đúng nhất?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Client thấy correctOptionId ngay khi bắt đầu câu."
+        },
+        {
+          "id": "B",
+          "text": "Trước reveal, public socket payload không chứa correctOptionId/explanation/câu tương lai; sau reveal mới có nội dung được phép."
+        },
+        {
+          "id": "C",
+          "text": "Chỉ cần che đáp án bằng CSS."
+        },
+        {
+          "id": "D",
+          "text": "Chỉ kiểm API trả HTTP 200."
+        }
+      ],
+      "correctOptionId": "B",
+      "explanation": "Bảo vệ đáp án cần thực thi ở lớp server serialization/public views, không phải chỉ ẩn bằng CSS; test hai identity/transport và kiểm payload thực gửi. DuoQuest đã mô tả filtered snapshot và withholding answer khi QUESTION phase.",
+      "hints": [
+        "DevTools có thể xem dữ liệu dù UI ẩn.",
+        "Bí mật nên không gửi từ server.",
+        "Chỉ reveal mới công bố đáp án đúng."
+      ],
+      "tags": ["security", "privacy", "game-state", "duoquest"],
+      "timeLimitSeconds": 60
+    }
+  ]
+}

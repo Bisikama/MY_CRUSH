@@ -1,5 +1,5 @@
-import { AllowGuest, CurrentPlayer, Public } from '../auth/auth-guard';
-import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
+import { AllowGuest, CurrentPlayer, Public, type AuthRequest } from '../auth/auth-guard';
+import { Body, Controller, Get, Inject, Post, Req } from '@nestjs/common';
 import { z } from 'zod';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiEndpoint } from '../../common/api-endpoint';
@@ -20,7 +20,7 @@ export class ShopController {
     @Inject(ShopService) private readonly shop: ShopService,
     @Inject(InventoryService) private readonly inventory: InventoryService,
   ) {}
-  @ApiEndpoint({ summary: 'Liệt kê cosmetic đang bán', response: z.array(itemSchema) })
+  @ApiEndpoint({ summary: 'Liệt kê cosmetic và Skill đang bán', response: z.array(itemSchema) })
   @Public()
   @Get('items')
   list() {
@@ -38,19 +38,28 @@ export class ShopController {
   }
   @AllowGuest()
   @ApiEndpoint({
-    summary: 'Mua cosmetic bằng Coins',
+    summary: 'Mua vật phẩm bằng Coins',
     description:
       'Tạo requestId UUID mới cho mỗi giao dịch; khi retry cùng giao dịch phải giữ nguyên requestId và itemId. Server trừ Coins và cấp vật phẩm trong một transaction.',
     auth: true,
     body: purchaseRequestSchema,
     response: purchaseResponseSchema,
     status: 201,
-    errors: [404, 409],
+    errors: [403, 404, 409],
   })
   @Post('purchases')
-  async purchase(@CurrentPlayer() playerId: string, @Body() body: unknown) {
+  async purchase(
+    @CurrentPlayer() playerId: string,
+    @Body() body: unknown,
+    @Req() request: AuthRequest,
+  ) {
     const data = purchaseRequestSchema.parse(body);
-    return this.shop.purchase(playerId, data.itemId, data.requestId);
+    return this.shop.purchase(
+      playerId,
+      data.itemId,
+      data.requestId,
+      !!request.principal?.accountId,
+    );
   }
   @AllowGuest()
   @ApiEndpoint({

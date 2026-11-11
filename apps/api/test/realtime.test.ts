@@ -6,6 +6,8 @@ import { io, type Socket } from 'socket.io-client';
 import type { AddressInfo } from 'node:net';
 import type {
   Ack,
+  GameMode,
+  GameLayout,
   ActionReceipt,
   ClientToServerEvents,
   RoomView,
@@ -209,4 +211,42 @@ describe('real Socket.IO transport with two authenticated clients', () => {
     expect(fresh.game!.sessionId).not.toBe(room.game!.sessionId);
     expect(store.results.size).toBe(1);
   });
+  it.each([
+    ['SOLO', 'MULTI_DEVICE'],
+    ['DUEL', 'MULTI_DEVICE'],
+    ['DUEL', 'SHARED_SCREEN'],
+    ['COOP', 'MULTI_DEVICE'],
+    ['COOP', 'SHARED_SCREEN'],
+  ] as [GameMode, GameLayout][])(
+    'prepares casual %s/%s through real socket commands',
+    async (mode, layout) => {
+      if (room) {
+        await ack<null>((cb) => a.emit('room:leave', { code: room.code }, cb));
+      }
+      room = await ack<RoomView>((cb) =>
+        a.emit(
+          'room:create',
+          {
+            mode,
+            layout,
+            selection: { type: 'CASUAL_RANDOM' },
+          },
+          cb,
+        ),
+      );
+      if (mode !== 'SOLO' && layout === 'MULTI_DEVICE') {
+        await ack<RoomView>((cb) => b.emit('room:join', { code: room.code }, cb));
+        await ack<RoomView>((cb) => b.emit('room:ready', { code: room.code }, cb));
+      }
+      await ack<RoomView>((cb) => a.emit('room:ready', { code: room.code }, cb));
+      const started = await ack<RoomView>((cb) => a.emit('match:start', { code: room.code }, cb));
+      expect(started.setup?.selection?.type).toBe('CASUAL_RANDOM');
+      expect(started.game?.questionCount).toBe(1);
+      expect(JSON.stringify(started)).not.toContain('correctOptionId');
+      if (mode !== 'SOLO' && layout === 'MULTI_DEVICE') {
+        const synced = await ack<RoomView>((cb) => b.emit('room:sync', { code: room.code }, cb));
+        expect(synced.game?.question).toEqual(started.game?.question);
+      }
+    },
+  );
 });

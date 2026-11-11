@@ -1,0 +1,350 @@
+{
+  "schemaVersion": 1,
+  "packId": "backend-nestjs-architecture-b02",
+  "title": "Backend B02 — NestJS: Controller, Service, Module và DI",
+  "language": "vi",
+  "knowledgeType": "academic",
+  "category": "Backend",
+  "questions": [
+    {
+      "id": "b02-001",
+      "type": "single_choice",
+      "topic": "NestJS và kiến trúc module",
+      "difficulty": "easy",
+      "prompt": "Trong ứng dụng NestJS, thành phần nào thường khai báo đường dẫn `GET /packs` và tiếp nhận HTTP request tương ứng?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Prisma migration"
+        },
+        {
+          "id": "B",
+          "text": "Database index"
+        },
+        {
+          "id": "C",
+          "text": "Controller"
+        },
+        {
+          "id": "D",
+          "text": "Docker volume"
+        }
+      ],
+      "correctOptionId": "C",
+      "explanation": "Controller tổ chức các route handler thông qua @Controller(), @Get() và các decorator liên quan. Nghiệp vụ nặng nên được giao cho service/provider để dễ kiểm thử và tái sử dụng.",
+      "hints": [
+        "Hãy tìm thành phần gần HTTP route nhất.",
+        "Decorator @Get() được dùng trong lớp nào?",
+        "Thành phần định tuyến không phải nơi lưu trữ database."
+      ],
+      "tags": ["nestjs", "controller", "routes"],
+      "timeLimitSeconds": 25
+    },
+    {
+      "id": "b02-002",
+      "type": "single_choice",
+      "topic": "NestJS và kiến trúc module",
+      "difficulty": "easy",
+      "prompt": "Trong NestJS, một `PacksService` cần được tiêm vào Controller. Nó thường được khai báo ở danh sách nào của @Module()?",
+      "options": [
+        {
+          "id": "A",
+          "text": "providers"
+        },
+        {
+          "id": "B",
+          "text": "imports"
+        },
+        {
+          "id": "C",
+          "text": "controllers"
+        },
+        {
+          "id": "D",
+          "text": "exports (chỉ cần exports là đủ)"
+        }
+      ],
+      "correctOptionId": "A",
+      "explanation": "`providers` đăng ký service với container dependency injection của module. `exports` dùng để công khai provider đã có trong module cho module khác import; chỉ đặt trong exports mà không đăng ký/chia sẻ hợp lệ thì không đủ.",
+      "hints": [
+        "Service là một provider.",
+        "Module quản lý nơi tạo và cung cấp đối tượng này.",
+        "Phân biệt đăng ký provider với xuất provider."
+      ],
+      "tags": ["nestjs", "provider", "module"],
+      "timeLimitSeconds": 30
+    },
+    {
+      "id": "b02-003",
+      "type": "single_choice",
+      "topic": "NestJS và kiến trúc module",
+      "difficulty": "easy",
+      "prompt": "Dòng `constructor(private readonly packsService: PacksService) {}` trong Controller chủ yếu thể hiện kỹ thuật gì?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Sửa schema database"
+        },
+        {
+          "id": "B",
+          "text": "Tạo HTTP socket"
+        },
+        {
+          "id": "C",
+          "text": "Tự sinh migration"
+        },
+        {
+          "id": "D",
+          "text": "Dependency injection qua constructor"
+        }
+      ],
+      "correctOptionId": "D",
+      "explanation": "NestJS có thể phân giải và cung cấp instance PacksService cho constructor khi provider đã được đăng ký và hiển thị trong phạm vi module. Đây là constructor injection, giúp Controller không tự khởi tạo service.",
+      "hints": [
+        "Constructor khai báo đối tượng cần sử dụng.",
+        "Bạn không thấy `new PacksService()` ở đây.",
+        "Container sẽ cấp dependency khi cấu hình hợp lệ."
+      ],
+      "tags": ["nestjs", "di", "constructor"],
+      "timeLimitSeconds": 30
+    },
+    {
+      "id": "b02-004",
+      "type": "single_choice",
+      "topic": "NestJS và kiến trúc module",
+      "difficulty": "medium",
+      "prompt": "`QuizModule` cung cấp `QuizService`. `RoomsModule` cần dùng `QuizService` nhưng đang báo không resolve dependency. Cấu hình hợp lý nhất là gì?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Chỉ đặt QuizService trong `controllers` của QuizModule."
+        },
+        {
+          "id": "B",
+          "text": "Cho QuizModule export QuizService, sau đó RoomsModule import QuizModule."
+        },
+        {
+          "id": "C",
+          "text": "Thêm `@Get()` vào QuizService."
+        },
+        {
+          "id": "D",
+          "text": "Chuyển QuizService thành một file JSON."
+        }
+      ],
+      "correctOptionId": "B",
+      "explanation": "Module mặc định đóng gói providers. Để RoomsModule dùng QuizService do QuizModule sở hữu, QuizModule export provider đó, còn RoomsModule import QuizModule; không nhất thiết đăng ký trùng service ở nhiều nơi.",
+      "hints": [
+        "Mỗi module có vùng provider riêng.",
+        "Muốn module khác nhìn thấy provider thì module gốc cần công khai nó.",
+        "Module sử dụng phải khai báo phụ thuộc module gốc."
+      ],
+      "tags": ["nestjs", "exports", "imports", "module-boundary"],
+      "timeLimitSeconds": 40
+    },
+    {
+      "id": "b02-005",
+      "type": "single_choice",
+      "topic": "NestJS và kiến trúc module",
+      "difficulty": "medium",
+      "prompt": "Giả sử `GET /packs/:id` cần đọc ID trong URL. Decorator nào phù hợp để lấy giá trị `id` ngay tại handler?",
+      "options": [
+        {
+          "id": "A",
+          "text": "@Param(\"id\")"
+        },
+        {
+          "id": "B",
+          "text": "@Body(\"id\")"
+        },
+        {
+          "id": "C",
+          "text": "@Headers(\"status\")"
+        },
+        {
+          "id": "D",
+          "text": "@Query(\"body\")"
+        }
+      ],
+      "correctOptionId": "A",
+      "explanation": "@Param(\"id\") lấy route parameter từ phần `:id` trong đường dẫn. @Query dùng cho query string sau dấu ?, còn @Body đọc request body; lựa chọn tùy dữ liệu thực tế gửi ở đâu.",
+      "hints": [
+        "Đường dẫn có dấu `/:id`.",
+        "Đây không phải dữ liệu sau dấu `?`.",
+        "NestJS có decorator riêng cho route parameters."
+      ],
+      "tags": ["nestjs", "param", "http"],
+      "timeLimitSeconds": 30
+    },
+    {
+      "id": "b02-006",
+      "type": "single_choice",
+      "topic": "NestJS và kiến trúc module",
+      "difficulty": "medium",
+      "prompt": "Một HTTP request vào NestJS đi qua Guard, Pipe và Controller handler. Theo vòng đời xử lý thông thường, thứ tự nào đúng?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Pipe → Guard → Handler"
+        },
+        {
+          "id": "B",
+          "text": "Handler → Guard → Pipe"
+        },
+        {
+          "id": "C",
+          "text": "Guard → Pipe → Handler"
+        },
+        {
+          "id": "D",
+          "text": "Handler → Pipe → Guard"
+        }
+      ],
+      "correctOptionId": "C",
+      "explanation": "Guards chạy trước pipes; pipes có thể kiểm tra/chuyển đổi tham số trước khi handler được gọi. Nếu có interceptor, phần trước của interceptor nằm giữa guard và pipe; câu này chỉ xét ba thành phần đã nêu.",
+      "hints": [
+        "Guard quyết định có được tiếp tục không.",
+        "Pipe xử lý dữ liệu đầu vào trước khi handler dùng nó.",
+        "Đối chiếu request lifecycle của NestJS."
+      ],
+      "tags": ["nestjs", "request-lifecycle", "guard", "pipe"],
+      "timeLimitSeconds": 40
+    },
+    {
+      "id": "b02-007",
+      "type": "single_choice",
+      "topic": "NestJS và kiến trúc module",
+      "difficulty": "medium",
+      "prompt": "Bạn muốn mọi response từ một nhóm route được bọc thành `{ data: ... }` sau khi handler trả kết quả. Thành phần NestJS nào phù hợp nhất?",
+      "options": [
+        {
+          "id": "A",
+          "text": "ValidationPipe"
+        },
+        {
+          "id": "B",
+          "text": "Response-mapping interceptor"
+        },
+        {
+          "id": "C",
+          "text": "Guard xác thực"
+        },
+        {
+          "id": "D",
+          "text": "Database trigger"
+        }
+      ],
+      "correctOptionId": "B",
+      "explanation": "Interceptor có thể bao quanh thực thi handler và biến đổi kết quả thông qua luồng trả về. Pipe kiểm dữ liệu vào, guard quyết định quyền truy cập; không nên gán trách nhiệm định dạng response cho guard.",
+      "hints": [
+        "Tác vụ nằm ở chiều phản hồi.",
+        "Thành phần có thể map kết quả từ handler.",
+        "Hãy phân biệt interceptor với pipe."
+      ],
+      "tags": ["nestjs", "interceptor", "response"],
+      "timeLimitSeconds": 35
+    },
+    {
+      "id": "b02-008",
+      "type": "single_choice",
+      "topic": "NestJS và kiến trúc module",
+      "difficulty": "hard",
+      "prompt": "Một service mặc định (singleton) lưu `currentPlayerId` vào thuộc tính của chính instance ở mỗi request. Vấn đề kiến trúc chính là gì?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Chỉ sử dụng thêm RAM nhưng không thể gây lỗi."
+        },
+        {
+          "id": "B",
+          "text": "Mọi singleton đều bị NestJS cấm."
+        },
+        {
+          "id": "C",
+          "text": "Thuộc tính sẽ tự reset khi HTTP response kết thúc."
+        },
+        {
+          "id": "D",
+          "text": "Dữ liệu theo request có thể bị dùng chung giữa các request; nên tránh state người dùng mutable trong singleton."
+        }
+      ],
+      "correctOptionId": "D",
+      "explanation": "Provider mặc định có scope singleton và được chia sẻ trong ứng dụng. Gắn mutable state riêng của request vào instance có thể dẫn đến truy cập chéo dữ liệu khi có nhiều request; nên truyền context qua tham số hoặc dùng cơ chế request scope phù hợp nếu thực sự cần.",
+      "hints": [
+        "Xem service được tạo một lần hay nhiều lần.",
+        "Hai người dùng có thể gọi cùng provider.",
+        "Dữ liệu riêng của từng request không nên giữ chung ở thuộc tính mutable."
+      ],
+      "tags": ["nestjs", "scope", "concurrency"],
+      "timeLimitSeconds": 50
+    },
+    {
+      "id": "b02-009",
+      "type": "single_choice",
+      "topic": "NestJS và kiến trúc module",
+      "difficulty": "hard",
+      "prompt": "Một route gọi Service ném `NotFoundException`. Trong NestJS, thành phần nào thường chịu trách nhiệm bắt exception và tạo HTTP error response theo quy tắc?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Exception layer / exception filter"
+        },
+        {
+          "id": "B",
+          "text": "Prisma seed"
+        },
+        {
+          "id": "C",
+          "text": "CSS middleware ở trình duyệt"
+        },
+        {
+          "id": "D",
+          "text": "Socket.IO room"
+        }
+      ],
+      "correctOptionId": "A",
+      "explanation": "NestJS có exception layer xử lý lỗi chưa được bắt trong application code; built-in filter hiểu HttpException và tạo HTTP response. Custom exception filter dùng để thay đổi cách biểu diễn hoặc xử lý lỗi theo phạm vi cấu hình.",
+      "hints": [
+        "Lỗi cần biến thành HTTP response.",
+        "Đây là đường xử lý ngoại lệ, không phải data validation.",
+        "NestJS có lớp cơ chế exception filters."
+      ],
+      "tags": ["nestjs", "exception", "http-error"],
+      "timeLimitSeconds": 45
+    },
+    {
+      "id": "b02-010",
+      "type": "single_choice",
+      "topic": "NestJS và kiến trúc module",
+      "difficulty": "hard",
+      "prompt": "Khi viết controller tạo phòng, cách phân chia nào tốt nhất cho khả năng test và tái sử dụng Shared Game Core?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Controller trực tiếp tính điểm, ghi ví và quản lý toàn bộ state."
+        },
+        {
+          "id": "B",
+          "text": "Controller nhận/chuẩn hóa request, chuyển tác vụ nghiệp vụ vào service/engine, rồi trả kết quả."
+        },
+        {
+          "id": "C",
+          "text": "Đưa tất cả luật game vào CSS."
+        },
+        {
+          "id": "D",
+          "text": "Mỗi controller tự tạo PrismaClient và sao chép quy tắc cộng xu."
+        }
+      ],
+      "correctOptionId": "B",
+      "explanation": "Controller nên làm nhiệm vụ giao tiếp HTTP, còn service/engine giữ logic độc lập transport; database/reward được điều phối ở các thành phần phù hợp. Đây là khuyến nghị kiến trúc áp dụng cho DuoQuest, không phải quy tắc bắt buộc của framework.",
+      "hints": [
+        "Một game có thể đi qua HTTP lẫn Socket.",
+        "Luật chơi nên được kiểm thử mà không cần chạy web server.",
+        "Giảm sự trùng lặp logic giữa các transport."
+      ],
+      "tags": ["nestjs", "separation", "duoquest", "design"],
+      "timeLimitSeconds": 55
+    }
+  ]
+}

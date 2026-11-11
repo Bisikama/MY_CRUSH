@@ -1,3 +1,8 @@
+import {
+  difficultySchema,
+  knowledgeTypeSchema,
+  relatedKnowledgeSchema,
+} from '@duoquest/shared-types';
 import { nicknameSchema, modeSchema, roomCodeSchema } from '@duoquest/shared-types';
 import { z } from 'zod';
 
@@ -57,6 +62,12 @@ export const packSummarySchema = z.object({
   title: z.string(),
   trusted: z.boolean(),
   questionCount: z.number().int(),
+  category: z.string(),
+  knowledgeType: knowledgeTypeSchema.optional(),
+  groups: z.array(
+    z.object({ topic: z.string(), difficulty: difficultySchema, count: z.number().int() }),
+  ),
+  relatedKnowledge: z.array(relatedKnowledgeSchema),
 });
 export const itemSchema = z.object({
   id: z.string(),

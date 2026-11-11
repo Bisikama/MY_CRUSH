@@ -1,0 +1,350 @@
+{
+  "schemaVersion": 1,
+  "packId": "backend-realtime-rooms-b06",
+  "title": "Backend B06 — Realtime: Socket.IO và Shared Game Core",
+  "language": "vi",
+  "knowledgeType": "academic",
+  "category": "Backend",
+  "questions": [
+    {
+      "id": "b06-001",
+      "type": "single_choice",
+      "topic": "Realtime và phòng chơi",
+      "difficulty": "easy",
+      "prompt": "Trong Socket.IO v4, room chủ yếu được dùng để làm gì?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Nhóm các socket để server gửi event cho một tập client được chọn."
+        },
+        {
+          "id": "B",
+          "text": "Là một table PostgreSQL tự động."
+        },
+        {
+          "id": "C",
+          "text": "Là một loại HTTP status code."
+        },
+        {
+          "id": "D",
+          "text": "Là trang web chỉ chạy offline."
+        }
+      ],
+      "correctOptionId": "A",
+      "explanation": "Room là channel do server quản lý để socket join/leave và broadcast. Client không trực tiếp có danh sách room nội bộ mà socket đã tham gia; quyền vào phòng game vẫn do ứng dụng tự kiểm tra.",
+      "hints": [
+        "Room tập hợp connection.",
+        "Server có thể gửi event đến cả nhóm.",
+        "Room không tương đương bảng persistent."
+      ],
+      "tags": ["socketio", "room", "broadcast"],
+      "timeLimitSeconds": 25
+    },
+    {
+      "id": "b06-002",
+      "type": "single_choice",
+      "topic": "Realtime và phòng chơi",
+      "difficulty": "easy",
+      "prompt": "Server Socket.IO cần gửi event `room:state` chỉ tới các socket thuộc phòng `ABC123`. Cách diễn đạt đúng ở mức ý tưởng là gì?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Gửi HTTP 404 cho mọi client."
+        },
+        {
+          "id": "B",
+          "text": "Broadcast bằng `io.to(\"ABC123\").emit(\"room:state\", data)`"
+        },
+        {
+          "id": "C",
+          "text": "Viết vào CSS trên máy người chơi."
+        },
+        {
+          "id": "D",
+          "text": "Dùng Prisma migrate cho mỗi event."
+        }
+      ],
+      "correctOptionId": "B",
+      "explanation": "`io.to(room).emit(event,data)` gửi event đến room tương ứng trên server. Nội dung data vẫn phải được lọc theo quyền người nhận; gửi một event tới room không có nghĩa được phép tiết lộ bí mật trong payload.",
+      "hints": [
+        "Socket đã được join một room.",
+        "Có API `.to(room)`.",
+        "Nhiệm vụ là broadcast có giới hạn nhóm."
+      ],
+      "tags": ["socketio", "emit", "room"],
+      "timeLimitSeconds": 30
+    },
+    {
+      "id": "b06-003",
+      "type": "single_choice",
+      "topic": "Realtime và phòng chơi",
+      "difficulty": "easy",
+      "prompt": "Trong Socket.IO, ACK (acknowledgement) giúp ích gì khi client gửi `room:join`?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Tự bảo đảm event được lưu vĩnh viễn trong PostgreSQL."
+        },
+        {
+          "id": "B",
+          "text": "Tự cấp quyền admin."
+        },
+        {
+          "id": "C",
+          "text": "Là hồi đáp xác nhận xử lý event với thông tin thành công/thất bại theo contract."
+        },
+        {
+          "id": "D",
+          "text": "Tự sửa mọi lỗi mất mạng."
+        }
+      ],
+      "correctOptionId": "C",
+      "explanation": "Acknowledgement là cơ chế callback/response cho một event, cho phép bên gửi biết bên nhận đã phản hồi kết quả xử lý. ACK không thay thế auth, persistence hoặc idempotency; callback có thể không tới khi mất kết nối, nên vẫn cần timeout/retry policy.",
+      "hints": [
+        "Client cần biết server đã xử lý yêu cầu join chưa.",
+        "Đây là lời đáp cho một event.",
+        "ACK không đồng nghĩa giao dịch luôn durable."
+      ],
+      "tags": ["socketio", "ack", "room"],
+      "timeLimitSeconds": 35
+    },
+    {
+      "id": "b06-004",
+      "type": "single_choice",
+      "topic": "Realtime và phòng chơi",
+      "difficulty": "medium",
+      "prompt": "Socket.IO v4 mặc định bảo đảm việc nhận event theo kiểu nào khi đường truyền đứt đúng lúc gửi?",
+      "options": [
+        {
+          "id": "A",
+          "text": "At-most-once; có thể mất event, không tự retry mọi trường hợp."
+        },
+        {
+          "id": "B",
+          "text": "Exactly-once trong mọi tình huống."
+        },
+        {
+          "id": "C",
+          "text": "At-least-once đã lưu DB."
+        },
+        {
+          "id": "D",
+          "text": "Không giữ thứ tự các event từng được nhận."
+        }
+      ],
+      "correctOptionId": "A",
+      "explanation": "Socket.IO bảo đảm thứ tự các event được chuyển đến, nhưng mặc định delivery là at-most-once: event có thể không tới khi mất kết nối và server không lưu phát lại vô điều kiện. Ứng dụng muốn bảo đảm mạnh hơn cần cơ chế ACK/retry, ID và persistence phù hợp.",
+      "hints": [
+        "Delivery và ordering là hai khái niệm khác nhau.",
+        "Không có database event log mặc định.",
+        "Đọc phần “Message arrival” trong delivery guarantees."
+      ],
+      "tags": ["socketio", "delivery", "reliability"],
+      "timeLimitSeconds": 45
+    },
+    {
+      "id": "b06-005",
+      "type": "single_choice",
+      "topic": "Realtime và phòng chơi",
+      "difficulty": "medium",
+      "prompt": "Sau reconnect, client còn `stateVersion=7` trong khi server đang ở version 11. Hành vi phù hợp nhất với Shared Game Core của DuoQuest là gì?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Client ghi đè server về version 7."
+        },
+        {
+          "id": "B",
+          "text": "Client tự cộng thêm 4 điểm."
+        },
+        {
+          "id": "C",
+          "text": "Bỏ qua mọi server event mới."
+        },
+        {
+          "id": "D",
+          "text": "Client xin snapshot hiện tại đã được lọc theo quyền, rồi cập nhật UI theo server."
+        }
+      ],
+      "correctOptionId": "D",
+      "explanation": "DuoQuest mô tả server lưu state chuẩn và cung cấp room:sync/snapshot đã lọc khi reconnect. StateVersion giúp phát hiện state cũ, nhưng không biến phiên client thành nguồn sự thật; client cần đồng bộ lại hợp lệ.",
+      "hints": [
+        "Ai là nguồn sự thật của game?",
+        "Version 7 đã cũ.",
+        "Snapshot server giúp dựng lại giao diện."
+      ],
+      "tags": ["duoquest", "reconnect", "snapshot", "state-version"],
+      "timeLimitSeconds": 45
+    },
+    {
+      "id": "b06-006",
+      "type": "single_choice",
+      "topic": "Realtime và phòng chơi",
+      "difficulty": "medium",
+      "prompt": "Ở trạng thái `QUESTION` của Quiz Duel multi-device, server nên gửi payload nào đến hai người chơi?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Toàn bộ correctOptionId và explanation trước khi cả hai trả lời."
+        },
+        {
+          "id": "B",
+          "text": "Nội dung câu hỏi + đáp án lựa chọn nhưng chưa lộ correctOptionId/explanation cho tới reveal."
+        },
+        {
+          "id": "C",
+          "text": "Mật khẩu database."
+        },
+        {
+          "id": "D",
+          "text": "Lịch sử riêng của người chơi khác."
+        }
+      ],
+      "correctOptionId": "B",
+      "explanation": "Theo luật DuoQuest, khi câu còn mở thì đáp án đúng, giải thích, hint và câu tương lai phải được giữ phía server. Public view chỉ gửi thông tin người chơi được phép thấy; reveal mới công bố đáp án và lời giải.",
+      "hints": [
+        "Câu đang mở hay đã reveal?",
+        "Chấm điểm công bằng cần giấu đáp án đúng.",
+        "Server có private game state và public filtered view."
+      ],
+      "tags": ["duoquest", "quiz", "privacy", "server-authoritative"],
+      "timeLimitSeconds": 45
+    },
+    {
+      "id": "b06-007",
+      "type": "single_choice",
+      "topic": "Realtime và phòng chơi",
+      "difficulty": "medium",
+      "prompt": "Một người gửi hai lần cùng `game:action` vì mạng chập chờn, cả hai có cùng `actionId`. Backend nên xử lý thế nào?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Dùng action receipt/ID để không xử lý hai lần, phản hồi an toàn theo trạng thái đã biết."
+        },
+        {
+          "id": "B",
+          "text": "Coi đó là hai câu trả lời hợp lệ."
+        },
+        {
+          "id": "C",
+          "text": "Nhân đôi điểm của người chơi."
+        },
+        {
+          "id": "D",
+          "text": "Yêu cầu frontend tự quyết thắng thua."
+        }
+      ],
+      "correctOptionId": "A",
+      "explanation": "Idempotency cho game action giúp retry không tạo hiệu ứng nghiệp vụ hai lần. Hiện trạng DuoQuest nêu action có sessionId/roundId/actionId và xử lý tuần tự theo room; server phải kiểm tra người gửi, deadline và duplicate trước khi sửa state.",
+      "hints": [
+        "Cùng ID biểu thị cùng ý định thao tác.",
+        "Retry không phải một lượt hành động mới.",
+        "Cơ chế xử lý trùng phải ở server."
+      ],
+      "tags": ["duoquest", "action-id", "idempotency"],
+      "timeLimitSeconds": 45
+    },
+    {
+      "id": "b06-008",
+      "type": "single_choice",
+      "topic": "Realtime và phòng chơi",
+      "difficulty": "hard",
+      "prompt": "Trong một trận, timer trên trình duyệt A chậm hơn trình duyệt B 1 giây. Bên nào cần quyết định việc nộp đáp án còn đúng hạn?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Timer của A."
+        },
+        {
+          "id": "B",
+          "text": "Timer của B."
+        },
+        {
+          "id": "C",
+          "text": "Server dựa trên deadline/nhận action hợp lệ theo luật đã chốt."
+        },
+        {
+          "id": "D",
+          "text": "Người đang thắng chọn."
+        }
+      ],
+      "correctOptionId": "C",
+      "explanation": "Client timer chỉ hiển thị. DuoQuest quy định server quản lý deadline và xác thực action, vì đồng hồ và độ trễ của các client khác nhau. Khi thiết kế luật chấm tốc độ cần quy định cơ chế đồng bộ và xử lý latency rõ ràng.",
+      "hints": [
+        "Hai client không đồng hồ tuyệt đối giống nhau.",
+        "Nếu client tự quyết có thể gian lận.",
+        "Game core server là nguồn sự thật."
+      ],
+      "tags": ["duoquest", "timer", "fairness"],
+      "timeLimitSeconds": 50
+    },
+    {
+      "id": "b06-009",
+      "type": "single_choice",
+      "topic": "Realtime và phòng chơi",
+      "difficulty": "hard",
+      "prompt": "Socket.IO có tính năng connection state recovery. Kết luận nào đúng nhất khi xây game có state quan trọng?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Bật tính năng này sẽ đảm bảo khôi phục được 100% mọi sự cố, kể cả restart tùy ý."
+        },
+        {
+          "id": "B",
+          "text": "Tính năng có điều kiện/giới hạn; ứng dụng vẫn cần chiến lược sync snapshot và state persistence phù hợp."
+        },
+        {
+          "id": "C",
+          "text": "Tính năng tự động tạo schema Prisma."
+        },
+        {
+          "id": "D",
+          "text": "Tính năng bảo đảm exactly-once cho mọi transaction database."
+        }
+      ],
+      "correctOptionId": "B",
+      "explanation": "Connection state recovery có thể khôi phục session và các packet trong một khoảng thời gian theo adapter/cấu hình hỗ trợ, nhưng không luôn thành công. Game vẫn phải thiết kế đồng bộ lại state và ứng xử với restart hoặc downtime dài.",
+      "hints": [
+        "Đọc chú ý “not always successful”.",
+        "Khôi phục connection khác với durable game state.",
+        "Một server restart có thể làm mất state RAM."
+      ],
+      "tags": ["socketio", "recovery", "durability"],
+      "timeLimitSeconds": 60
+    },
+    {
+      "id": "b06-010",
+      "type": "single_choice",
+      "topic": "Realtime và phòng chơi",
+      "difficulty": "hard",
+      "prompt": "Theo báo cáo hiện trạng DuoQuest 04/11/2026, API process restart khi một Quiz session đang diễn ra. Điều gì được ghi nhận?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Room và trận đang chạy chắc chắn được phục hồi từ DB."
+        },
+        {
+          "id": "B",
+          "text": "Tất cả Coins của mọi người dùng bị xóa."
+        },
+        {
+          "id": "C",
+          "text": "Socket.IO tự hồi sinh mọi phòng mà không cần persistence."
+        },
+        {
+          "id": "D",
+          "text": "Live room/session state trong RAM mất và trận đang chơi không resume; kết quả đã commit vẫn còn DB."
+        }
+      ],
+      "correctOptionId": "D",
+      "explanation": "Đây là quy tắc/trạng thái riêng của phiên DuoQuest được mô tả trong báo cáo 04/11/2026, không phải thuộc tính bắt buộc của Socket.IO. Live state và room ở RAM; restart khiến session dang dở bị hủy, trong khi kết quả đã commit bền vững trong PostgreSQL.",
+      "hints": [
+        "Đọc cách app lưu live state.",
+        "RAM khác với dữ liệu đã commit.",
+        "Phân biệt recovery đang có với mục tiêu tương lai."
+      ],
+      "tags": ["duoquest", "state", "restart", "architecture"],
+      "timeLimitSeconds": 60
+    }
+  ]
+}

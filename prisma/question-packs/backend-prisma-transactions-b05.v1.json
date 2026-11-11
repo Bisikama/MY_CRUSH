@@ -1,0 +1,350 @@
+{
+  "schemaVersion": 1,
+  "packId": "backend-prisma-transactions-b05",
+  "title": "Backend B05 — Prisma 6: Migration và transaction",
+  "language": "vi",
+  "knowledgeType": "academic",
+  "category": "Backend",
+  "questions": [
+    {
+      "id": "b05-001",
+      "type": "single_choice",
+      "topic": "Prisma và nhất quán dữ liệu",
+      "difficulty": "easy",
+      "prompt": "Trong dự án sử dụng Prisma ORM 6, file `prisma/schema.prisma` chủ yếu dùng để làm gì?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Chạy UI Next.js."
+        },
+        {
+          "id": "B",
+          "text": "Mô tả datasource, models, fields, relations và cấu hình generator."
+        },
+        {
+          "id": "C",
+          "text": "Lưu access token người chơi dạng plaintext."
+        },
+        {
+          "id": "D",
+          "text": "Thay thế file ảnh game."
+        }
+      ],
+      "correctOptionId": "B",
+      "explanation": "Prisma schema v6 mô tả các model và quan hệ trong database, datasource cùng generator. Nó là đầu vào cho Prisma Client và công cụ migration; schema không tự bảo đảm database đã được thay đổi cho đến khi áp dụng quy trình phù hợp.",
+      "hints": [
+        "Tên file chứa chữ schema.",
+        "Nó mô tả cấu trúc chứ không phải giao diện.",
+        "Prisma Client được sinh dựa vào model trong schema."
+      ],
+      "tags": ["prisma", "schema", "model"],
+      "timeLimitSeconds": 30
+    },
+    {
+      "id": "b05-002",
+      "type": "single_choice",
+      "topic": "Prisma và nhất quán dữ liệu",
+      "difficulty": "easy",
+      "prompt": "Trong Prisma ORM 6, lệnh `prisma generate` thực hiện tác vụ chính nào?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Áp migration lên database production."
+        },
+        {
+          "id": "B",
+          "text": "Tự động thêm bản ghi Player."
+        },
+        {
+          "id": "C",
+          "text": "Khởi chạy Socket.IO server."
+        },
+        {
+          "id": "D",
+          "text": "Sinh/cập nhật Prisma Client từ schema và generator."
+        }
+      ],
+      "correctOptionId": "D",
+      "explanation": "`prisma generate` sinh các artifact của generator, thường là Prisma Client, để code TypeScript dùng model đã khai báo. Lệnh này không tương đương với việc áp dụng schema lên database; vì vậy cần phân biệt generate và migrate.",
+      "hints": [
+        "Lệnh có từ generate, không phải migrate.",
+        "Câu hỏi nói về code mà app import.",
+        "Prisma Client thường được dùng trong service truy vấn DB."
+      ],
+      "tags": ["prisma", "generate", "client"],
+      "timeLimitSeconds": 30
+    },
+    {
+      "id": "b05-003",
+      "type": "single_choice",
+      "topic": "Prisma và nhất quán dữ liệu",
+      "difficulty": "easy",
+      "prompt": "Cần áp dụng các migration Prisma 6 đã được commit lên môi trường deploy mà không tạo migration mới. Lệnh nào phù hợp?",
+      "options": [
+        {
+          "id": "A",
+          "text": "prisma migrate deploy"
+        },
+        {
+          "id": "B",
+          "text": "prisma generate"
+        },
+        {
+          "id": "C",
+          "text": "prisma studio"
+        },
+        {
+          "id": "D",
+          "text": "prisma db seed"
+        }
+      ],
+      "correctOptionId": "A",
+      "explanation": "Prisma ORM v6 dùng `prisma migrate deploy` để áp các migration đã tồn tại trong môi trường deployment. `migrate dev` dành cho phát triển và có thể tạo migration mới; các lệnh nên dùng đúng mục đích để quản trị thay đổi schema.",
+      "hints": [
+        "Migration đã được tạo và commit từ trước.",
+        "Môi trường deploy không nên tự sinh migration mới.",
+        "Tìm lệnh chứa từ deploy."
+      ],
+      "tags": ["prisma", "migration", "deployment", "version6"],
+      "timeLimitSeconds": 35
+    },
+    {
+      "id": "b05-004",
+      "type": "single_choice",
+      "topic": "Prisma và nhất quán dữ liệu",
+      "difficulty": "medium",
+      "prompt": "Trong Prisma Client 6, cần tạo một `Order` và `OrderLine` có liên kết với Order mới, tất cả thành công hoặc thất bại cùng nhau. Cách nào phù hợp?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Thực hiện hai write độc lập không transaction."
+        },
+        {
+          "id": "B",
+          "text": "Dùng nested write có `create` quan hệ trong một lời gọi Prisma phù hợp."
+        },
+        {
+          "id": "C",
+          "text": "Chạy `prisma generate` hai lần."
+        },
+        {
+          "id": "D",
+          "text": "Ghi mỗi bản ghi vào một JSON localStorage."
+        }
+      ],
+      "correctOptionId": "B",
+      "explanation": "Nested writes cho phép tạo bản ghi liên quan trong một operation và được Prisma thực hiện theo transaction: một phần lỗi thì toàn bộ nested write thất bại. Cách này phù hợp với dependent writes cần ID của record mới.",
+      "hints": [
+        "Hai bản ghi liên quan và phụ thuộc nhau.",
+        "Nếu bước sau lỗi thì bước trước cũng cần hủy.",
+        "Prisma có cơ chế nested writes với quan hệ."
+      ],
+      "tags": ["prisma", "nested-write", "atomicity"],
+      "timeLimitSeconds": 40
+    },
+    {
+      "id": "b05-005",
+      "type": "single_choice",
+      "topic": "Prisma và nhất quán dữ liệu",
+      "difficulty": "medium",
+      "prompt": "Bạn muốn cập nhật Wallet và tạo CoinTransaction cùng một đơn vị nghiệp vụ. Prisma 6 cung cấp API nào cho một interactive transaction?",
+      "options": [
+        {
+          "id": "A",
+          "text": "prisma.generate(async () => {})"
+        },
+        {
+          "id": "B",
+          "text": "prisma.wallet.findMany() độc lập rồi trả success"
+        },
+        {
+          "id": "C",
+          "text": "prisma.$transaction(async (tx) => { /* DB operations through tx */ })"
+        },
+        {
+          "id": "D",
+          "text": "setTimeout(() => updateBalance())"
+        }
+      ],
+      "correctOptionId": "C",
+      "explanation": "Interactive `$transaction(async tx => ...)` thực hiện các truy vấn qua transaction client `tx`. Nếu callback ném lỗi trước commit thì thay đổi được rollback; trường hợp phát thưởng phải có thêm cơ chế idempotency/constraint để không cấp trùng qua retry.",
+      "hints": [
+        "Cần nhiều write phụ thuộc vào kết quả trước.",
+        "Tìm API có ký hiệu $transaction.",
+        "Bên trong callback sử dụng transaction client."
+      ],
+      "tags": ["prisma", "transaction", "wallet"],
+      "timeLimitSeconds": 45
+    },
+    {
+      "id": "b05-006",
+      "type": "single_choice",
+      "topic": "Prisma và nhất quán dữ liệu",
+      "difficulty": "medium",
+      "prompt": "Một interactive transaction Prisma cập nhật balance, sau đó service ném lỗi trước khi callback hoàn tất. Điều gì xảy ra với cập nhật DB trong transaction?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Prisma rollback transaction nếu callback lỗi và transaction không được commit."
+        },
+        {
+          "id": "B",
+          "text": "Nó luôn commit một phần."
+        },
+        {
+          "id": "C",
+          "text": "Prisma tự gửi response 201."
+        },
+        {
+          "id": "D",
+          "text": "Prisma tự tạo migration mới."
+        }
+      ],
+      "correctOptionId": "A",
+      "explanation": "Atomicity yêu cầu toàn bộ thao tác thuộc transaction thành công hoặc không. Khi callback lỗi, Prisma rollback transaction đó; thao tác bên ngoài transaction nếu đã chạy thì không được tự động rollback.",
+      "hints": [
+        "Chỉ xét thao tác thực hiện qua tx.",
+        "Callback bị lỗi trước commit.",
+        "Kết quả là rollback hay partial commit?"
+      ],
+      "tags": ["prisma", "rollback", "atomicity"],
+      "timeLimitSeconds": 40
+    },
+    {
+      "id": "b05-007",
+      "type": "single_choice",
+      "topic": "Prisma và nhất quán dữ liệu",
+      "difficulty": "medium",
+      "prompt": "Client gửi lại cùng `requestId` mua item do timeout mạng. Cơ chế nào giúp tránh trừ Coins và cấp item hai lần?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Luôn cộng Coins khi có retry."
+        },
+        {
+          "id": "B",
+          "text": "Tin client báo đã mua rồi."
+        },
+        {
+          "id": "C",
+          "text": "Chỉ ẩn nút Mua trên frontend."
+        },
+        {
+          "id": "D",
+          "text": "Lưu giao dịch với key duy nhất và trả kết quả cũ/đảm bảo một tác động cho cùng requestId."
+        }
+      ],
+      "correctOptionId": "D",
+      "explanation": "Idempotency theo requestId cần được thực thi ở server/database, thường nhờ unique constraint và transaction. Một request được thử lại không đồng nghĩa hai giao dịch hợp lệ; DuoQuest đã mô tả xử lý duplicate purchase idempotent.",
+      "hints": [
+        "Mất phản hồi không có nghĩa thao tác chưa thành công.",
+        "Cần dấu vết duy nhất ở database.",
+        "Retry cùng ID phải có cùng tác động."
+      ],
+      "tags": ["idempotency", "prisma", "shop", "duoquest"],
+      "timeLimitSeconds": 45
+    },
+    {
+      "id": "b05-008",
+      "type": "single_choice",
+      "topic": "Prisma và nhất quán dữ liệu",
+      "difficulty": "hard",
+      "prompt": "Hai request mua item cùng đọc Wallet có 100 Coins, mỗi món giá 80. Nếu cả hai đều kiểm số dư trước khi cập nhật mà không bảo vệ cạnh tranh, nguy cơ là gì?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Không có rủi ro vì Node.js chỉ có một thread."
+        },
+        {
+          "id": "B",
+          "text": "Cả hai đều có thể vượt qua kiểm tra, gây chi vượt mức; cần atomic conditional update/locking hoặc transaction isolation thích hợp."
+        },
+        {
+          "id": "C",
+          "text": "SQL sẽ luôn tự sắp xếp đúng dù thiếu constraint."
+        },
+        {
+          "id": "D",
+          "text": "Chỉ thay đổi CSS giải quyết được."
+        }
+      ],
+      "correctOptionId": "B",
+      "explanation": "Read-check-write không đồng bộ có thể gặp race condition khi hai transaction thấy cùng trạng thái cũ. Cần đưa kiểm tra và cập nhật vào chiến lược atomic ở DB, có constraints hợp lý; với Serializable có thể phải retry khi conflict. Transaction đơn thuần ở isolation mặc định chưa phải lời giải chung cho mọi race.",
+      "hints": [
+        "Hai luồng cùng nhìn thấy 100.",
+        "Mỗi luồng đều cho rằng đủ 80.",
+        "Kiểm tra và trừ phải có tính atomic/chống ghi đè."
+      ],
+      "tags": ["prisma", "race-condition", "balance", "transactions"],
+      "timeLimitSeconds": 60
+    },
+    {
+      "id": "b05-009",
+      "type": "single_choice",
+      "topic": "Prisma và nhất quán dữ liệu",
+      "difficulty": "hard",
+      "prompt": "Bạn gọi API bên thứ ba chậm 8 giây bên trong Prisma interactive transaction, trong khi timeout đang là 5 giây. Thiết kế nào nên chọn?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Thực hiện công việc chậm ngoài transaction ngắn, thiết kế trạng thái/idempotency phù hợp; hạn chế thời gian giữ transaction."
+        },
+        {
+          "id": "B",
+          "text": "Giữ transaction mở qua mọi network request cho tiện."
+        },
+        {
+          "id": "C",
+          "text": "Bỏ mọi transaction vĩnh viễn."
+        },
+        {
+          "id": "D",
+          "text": "Chạy prisma generate trước mỗi API call."
+        }
+      ],
+      "correctOptionId": "A",
+      "explanation": "Prisma khuyến cáo giữ interactive transaction ngắn và tránh network I/O chậm bên trong vì giữ kết nối/khóa và có thể timeout hoặc deadlock. Tách phần gọi ngoài, sau đó ghi DB ở transaction ngắn có kiểm tra điều kiện thích hợp; tùy nghiệp vụ có thể cần workflow bù trừ/outbox.",
+      "hints": [
+        "Transaction giữ tài nguyên DB trong thời gian chạy.",
+        "Network bên ngoài có thể chậm/không đáng tin.",
+        "Cố gắng giữ thời gian transaction ngắn."
+      ],
+      "tags": ["prisma", "timeout", "interactive-transaction", "design"],
+      "timeLimitSeconds": 60
+    },
+    {
+      "id": "b05-010",
+      "type": "single_choice",
+      "topic": "Prisma và nhất quán dữ liệu",
+      "difficulty": "hard",
+      "prompt": "Trong một interactive transaction Prisma, đặt nhiều truy vấn `tx` vào `Promise.all([...])` có mặc định làm chúng chạy song song trên nhiều kết nối DB không?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Có, Prisma luôn dùng một kết nối cho mỗi promise."
+        },
+        {
+          "id": "B",
+          "text": "Có, Promise.all tự tạo nhiều database."
+        },
+        {
+          "id": "C",
+          "text": "Không; các truy vấn trong một transaction dùng cùng kết nối nên được thực thi tuần tự ở kết nối đó."
+        },
+        {
+          "id": "D",
+          "text": "Không, vì Prisma không hỗ trợ Promise.all trong JavaScript."
+        }
+      ],
+      "correctOptionId": "C",
+      "explanation": "Một transaction dùng một database connection, và connection đó xử lý từng truy vấn tại một thời điểm. Vì vậy `Promise.all` bên trong interactive transaction không tạo song song DB queries theo nghĩa nhiều connection, dù cú pháp JS chứa nhiều promise.",
+      "hints": [
+        "Một transaction gắn với bao nhiêu connection?",
+        "Một connection có chạy đồng thời nhiều query không?",
+        "Phân biệt concurrency JavaScript và thực thi DB."
+      ],
+      "tags": ["prisma", "promise-all", "transaction"],
+      "timeLimitSeconds": 55
+    }
+  ]
+}

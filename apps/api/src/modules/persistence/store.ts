@@ -4,6 +4,8 @@ import type {
   MatchResult,
   PackSummary,
   QuestionPack,
+  QuizSelection,
+  QuizSkill,
 } from '@duoquest/shared-types';
 import type { RewardGrant } from '../rewards/rewards.service';
 
@@ -23,15 +25,31 @@ export interface SessionRecord {
   roomCode: string;
   mode: GameMode;
   layout: GameLayout;
-  packVersionId: string;
+  packVersionId: string | null;
+  selectionSnapshot?: SelectionSnapshot;
   questions: QuestionPack['questions'];
   playerIds: string[];
+}
+export interface SelectionSnapshot {
+  selection: QuizSelection;
+  hostPlayerId: string;
+  trusted: boolean;
+  sources: { packVersionId: string; questionId: string; questionKey: string }[];
+  resetKeys: string[];
+}
+export interface QuestionHistoryBatch {
+  hostPlayerId: string;
+  questionKeys: string[];
+  resetKeys: string[];
 }
 export abstract class PlatformStore {
   abstract createPlayer(nickname: string, tokenHash: string): Promise<PlayerRecord>;
   abstract findPlayer(tokenHash: string): Promise<PlayerRecord | null>;
   abstract listPacks(playerId: string): Promise<PackSummary[]>;
   abstract getPack(id: string, playerId: string): Promise<PackRecord | null>;
+  abstract latestTrustedPacks(): Promise<{ id: string; packId: string }[]>;
+  abstract readPacks(ids: string[]): Promise<PackRecord[]>;
+  abstract askedQuestionKeys(hostPlayerId: string, keys: string[]): Promise<string[]>;
   abstract savePack(pack: QuestionPack, ownerId: string): Promise<PackSummary>;
   abstract createSession(session: SessionRecord): Promise<void>;
   abstract saveAnswer(
@@ -41,8 +59,22 @@ export abstract class PlatformStore {
     optionId: string,
     correct: boolean,
   ): Promise<void>;
-  abstract finishSession(result: MatchResult, grants: RewardGrant[]): Promise<void>;
-  abstract cancelSession(sessionId: string): Promise<void>;
+  abstract skillStock(
+    playerIds: string[],
+  ): Promise<Record<string, Partial<Record<QuizSkill, number>>>>;
+  abstract consumeSkill(
+    sessionId: string,
+    actionId: string,
+    roundId: string,
+    playerId: string,
+    skill: QuizSkill,
+  ): Promise<number>;
+  abstract finishSession(
+    result: MatchResult,
+    grants: RewardGrant[],
+    history?: QuestionHistoryBatch,
+  ): Promise<void>;
+  abstract cancelSession(sessionId: string, history?: QuestionHistoryBatch): Promise<void>;
   abstract cancelInterruptedSessions(): Promise<void>;
   abstract history(playerId: string): Promise<unknown>;
   abstract profile(playerId: string): Promise<unknown>;

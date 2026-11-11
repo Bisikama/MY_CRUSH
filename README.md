@@ -20,7 +20,7 @@ pnpm dev
 
 Mở http://localhost:3000. API: http://localhost:4000/api/health; readiness: `/api/health/ready`. Chạy các lệnh từ thư mục gốc. Không chép đè `.env` đã cấu hình. Nếu dùng PostgreSQL có sẵn, sửa `DATABASE_URL` và bỏ `db:up`.
 
-API yêu cầu database/migration sẵn sàng trước khi khởi động. Không tự rơi về database giả khi PostgreSQL lỗi. `db:deploy` áp dụng migration đã commit; khi sửa schema, dùng `pnpm db:migrate --name <ten-thay-doi>` rồi review SQL. `db:seed` có thể chạy lại mà không ghi đè phiên bản bộ đề cũ.
+API yêu cầu database/migration sẵn sàng trước khi khởi động. Không tự rơi về database giả khi PostgreSQL lỗi. `db:deploy` áp dụng migration đã commit; khi sửa schema, dùng `pnpm db:migrate --name <ten-thay-doi>` rồi review SQL. Để thêm bộ đề vào thư viện chung, đặt JSON vào `prisma/question-packs/` rồi chạy lại `pnpm db:seed`. Lệnh bỏ qua các `packId` đã có. [Hướng dẫn seed bộ đề](docs/features/question-packs.md#nạp-vào-thư-viện-chung-bằng-seed)
 
 ## Auth và phân quyền
 
@@ -67,9 +67,11 @@ Browser tự lấy hostname trang web rồi gọi API cùng hostname, cổng 400
 - Room Ready/Start/Sync/Rematch/Leave; snapshot khi reconnect; hàng xử lý chung cho action/timer/disconnect.
 - Prisma schema, migration đầu tiên, pack JSON mẫu/JSON Schema, seed; snapshot câu hỏi bất biến theo session.
 - Lưu câu trả lời, kết quả/lịch sử; kết quả và thưởng cùng transaction; cosmetic purchase/equip API.
-- Web: Game Hub chọn trò chơi (`/`), sảnh Quiz Battle (`/play`), chọn mode/layout, phòng chờ và trận đấu (`/play/[code]`), kết quả/tái đấu, JSON preview/import, hồ sơ/lịch sử, shop tối thiểu.
+- Web: Game Hub chọn trò chơi (`/`), sảnh Quiz Battle (`/play`), chọn mode/layout, lọc bộ đề theo lĩnh vực/đề tài/độ khó, phòng chờ và trận đấu (`/play/[code]`), kết quả/tái đấu, JSON preview/import, hồ sơ/lịch sử, shop tối thiểu.
+- Quiz Skill: Hint, 50/50 và hai hiệu ứng đối kháng cho Duel LAN. Lượt mua lưu trong kho và lượt miễn phí tính theo từng trận.
+- Hai trải nghiệm Quiz cho cả ba mode. Đố vui ngẫu nhiên hoặc chọn nhiều lĩnh vực/chủ đề, tối đa 20 câu, tránh lặp theo lịch sử host và ghi batch khi kết thúc/hủy ván. Học luyện chọn một pack và bốc lại câu mỗi ván. Xem [quy tắc chọn câu](docs/features/question-packs.md).
 
-Đây là **codebase nền tảng có luồng Quiz thực**, chưa phải V1 hoàn thiện. Gift/reaction, power-up gameplay, ôn câu sai có màn hình riêng, âm thanh và khôi phục guest chưa được triển khai. Xem `docs/project/roadmap-quality.md` để nhận task tiếp theo.
+Đây là **codebase nền tảng có luồng Quiz thực**, chưa phải V1 hoàn thiện. Gift/reaction, ôn câu sai có màn hình riêng, âm thanh và khôi phục guest chưa được triển khai. Xem `docs/project/roadmap-quality.md` để nhận task tiếp theo.
 
 ## Ranh giới package
 

@@ -23,7 +23,7 @@ export function GameHub() {
               Hôm nay, bạn muốn chơi gì?
             </h1>
             <p className="hub-welcome-subtitle">
-              Chọn một trò chơi, bắt đầu cuộc vui cùng bạn bè hoặc khám phá thế giới câu đố diệu kỳ.
+              Chọn một trò chơi rồi rủ người ấy vào. Biết đâu hai bạn lại tâm đầu ý hợp!
             </p>
           </div>
 
@@ -31,7 +31,7 @@ export function GameHub() {
             <div className="hub-welcome-art-frame">
               <img
                 src="/images/hub/hero-mascots.jpg"
-                alt="Minh họa đất sét 3D đôi bạn linh vật Thỏ Lavender và Chim Xanh trước cánh cửa gỗ nhỏ"
+                alt="Minh họa đất sét 3D Thỏ Lavender và Chim Xanh trước cánh cửa gỗ nhỏ"
                 className="hub-welcome-art-img"
               />
             </div>
@@ -39,7 +39,7 @@ export function GameHub() {
               <span className="hub-sticker-star" aria-hidden="true">
                 ★
               </span>
-              <span>{identity ? `${identity.nickname} & Bạn` : 'Mây Nhỏ & Bạn'}</span>
+              <span>{identity ? `${identity.nickname} & Người ấy` : 'Dành cho hai người'}</span>
             </div>
           </div>
         </div>
@@ -82,7 +82,7 @@ export function GameHub() {
                 </div>
                 <h3 className="hub-card-title">Quiz Battle</h3>
                 <p className="hub-card-desc">
-                  Thử tài kiến thức, so tài tốc độ hoặc cùng bạn vượt qua các bộ câu hỏi hóc búa.
+                  Tự thử sức, so tài với người ấy hoặc xem hai bạn ăn ý đến đâu khi cùng vượt ải.
                 </p>
               </div>
 

@@ -12,6 +12,18 @@ describe('QuestionPack import validation', () => {
     pack.questions[1]!.id = pack.questions[0]!.id;
     expect(questionPackSchema.safeParse(pack).success).toBe(false);
   });
+  it.each(['academic', 'practical', 'discovery'])('accepts knowledge type %s', (knowledgeType) => {
+    expect(questionPackSchema.parse({ ...starter, knowledgeType }).knowledgeType).toBe(
+      knowledgeType,
+    );
+  });
+  it('accepts legacy packs and rejects unknown knowledge types', () => {
+    const { knowledgeType, ...legacy } = starter;
+    expect(questionPackSchema.parse(legacy)).not.toHaveProperty('knowledgeType');
+    expect(
+      questionPackSchema.safeParse({ ...legacy, knowledgeType: knowledgeType + '-other' }).success,
+    ).toBe(false);
+  });
   it('rejects repeated prompts including normalized whitespace', () => {
     const pack = structuredClone(starter);
     pack.questions[1]!.prompt = ` ${pack.questions[0]!.prompt.toUpperCase()} `;

@@ -53,7 +53,7 @@ describe('Swagger REST documentation and cookie workflow', () => {
     expect(await json.json()).toEqual(document);
   });
 
-  it('documents all 13 REST operations with correct auth, schemas and status codes', () => {
+  it('documents all 14 REST operations with correct auth, schemas and status codes', () => {
     const publicOperations = new Set([
       'post /api/players/guest',
       'get /api/shop/items',
@@ -76,7 +76,7 @@ describe('Swagger REST documentation and cookie workflow', () => {
           expect(operation.requestBody).toHaveProperty('content.application/json.schema');
       }
     }
-    expect(count).toBe(13);
+    expect(count).toBe(14);
     expect(document.paths['/api/rooms/current']?.get).toBeDefined();
     expect(document.components?.securitySchemes?.['session-cookie']).toMatchObject({
       type: 'apiKey',

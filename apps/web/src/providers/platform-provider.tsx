@@ -1,5 +1,7 @@
 'use client';
 
+import type { CreateRoomInput } from '@duoquest/shared-types';
+
 import {
   createContext,
   useCallback,
@@ -18,8 +20,6 @@ import type {
   CurrentRoomResponse,
   CurrentRoomSummary,
   GameActionCommand,
-  GameLayout,
-  GameMode,
   RoomView,
   ServerToClientEvents,
 } from '@duoquest/shared-types';
@@ -77,12 +77,7 @@ export interface PlatformContextValue {
   refreshProfile: () => Promise<void>;
   refreshCurrentRoom: () => Promise<CurrentRoomSummary | null>;
   createGuest: (nickname: string) => Promise<GameIdentity>;
-  createRoom: (input: {
-    mode: GameMode;
-    layout: GameLayout;
-    packVersionId: string;
-    secondNickname?: string;
-  }) => Promise<RoomView>;
+  createRoom: (input: CreateRoomInput) => Promise<RoomView>;
   joinRoom: (code: string) => Promise<RoomView>;
   roomCommand: (
     code: string,
@@ -536,12 +531,7 @@ export function PlatformProvider({ children }: { children: ReactNode }) {
   );
 
   const createRoom = useCallback(
-    (input: {
-      mode: GameMode;
-      layout: GameLayout;
-      packVersionId: string;
-      secondNickname?: string;
-    }) =>
+    (input: CreateRoomInput) =>
       runRoomMutation(
         (socket) => request<RoomView>((ack) => socket.emit('room:create', input, ack)),
         acceptRoomView,

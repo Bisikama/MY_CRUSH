@@ -3,10 +3,12 @@
 > **Mục đích:** Vòng đời phòng, realtime, kết nối và giới hạn LAN.
 > **Đối tượng:** Lập trình viên và QA.
 > **Trạng thái:** `current`.
-> **Cập nhật:** 2026-11-07 (sắp xếp tài liệu; các mốc kiểm chứng trong nội dung giữ nguyên).
+> **Cập nhật:** 2026-11-11.
 > **Liên quan:** [Mục lục](../README.md), [Nguồn tham khảo](../../apps/api/src/modules/rooms/rooms.service.ts).
 
 Room lifecycle: `WAITING → READY → IN_PROGRESS → FINISHED`; Leave/grace expiry/TTL có thể chuyển `CANCELLED`. Ready chỉ khi đủ slot và tất cả đã Ready; Start chỉ host. Không sửa cấu hình lobby trong foundation; tạo phòng mới nếu muốn đổi.
+
+Room giữ đề được QuizPreparationService chốt trước khi công bố. Start và Sync giữ cùng tập câu/thứ tự. Tái đấu gọi lại bộ chuẩn bị đề sau khi kết toán ván trước. Khi hủy ván đang chơi, lịch sử các câu đã tới lượt và trạng thái CANCELLED được commit cùng nhau. Nếu DB lỗi, room giữ cờ chờ đóng, chặn thao tác mới và timer thử lại. Thành viên vẫn thuộc phòng đến khi đóng thành công.
 
 Shared screen: host nhận hai slot server tạo, một identity điều khiển cả hai. Multi-device: mỗi identity một slot; cùng identity ở nhiều tab vẫn là cùng người chơi. Guest có room membership phía server, mã mời không cấp quyền gửi action thay slot khác.
 

@@ -1,6 +1,17 @@
 import { z } from 'zod';
-import { optionIdSchema, type OptionId, type PublicQuestion } from './question-pack';
+import {
+  optionIdSchema,
+  questionFilterSchema,
+  quizSelectionSchema,
+  type QuizSelection,
+  type QuestionFilter,
+  type OptionId,
+  type PublicQuestion,
+  type summarizePack,
+} from './question-pack';
+import { skillSchema, type QuizSkill } from './quiz-skills';
 export * from './question-pack';
+export * from './quiz-skills';
 
 export const modeSchema = z.enum(['SOLO', 'DUEL', 'COOP']);
 export const layoutSchema = z.enum(['SHARED_SCREEN', 'MULTI_DEVICE']);
@@ -33,14 +44,28 @@ export const createRoomSchema = z
   .object({
     mode: modeSchema,
     layout: layoutSchema,
-    packVersionId: z.string().min(1).max(100),
+    packVersionId: z.string().min(1).max(100).optional(),
+    filter: questionFilterSchema.optional(),
+    selection: quizSelectionSchema.optional(),
     secondNickname: nicknameSchema.optional(),
   })
-  .strict();
+  .strict()
+  .superRefine((input, ctx) => {
+    if (!input.selection && !input.packVersionId)
+      ctx.addIssue({ code: 'custom', path: ['selection'], message: 'Chọn cách tạo đề' });
+    if (input.selection && (input.packVersionId !== undefined || input.filter !== undefined))
+      ctx.addIssue({
+        code: 'custom',
+        path: ['selection'],
+        message: 'Chỉ gửi một cấu hình chọn đề',
+      });
+  });
 export const roomCodeSchema = z.string().regex(/^[A-Z2-9]{6}$/);
+export type CreateRoomInput = z.input<typeof createRoomSchema>;
 export const joinRoomSchema = z.object({ code: roomCodeSchema }).strict();
 export const roomCommandSchema = z.object({ code: roomCodeSchema }).strict();
 export const quizActionSchema = z.discriminatedUnion('type', [
+  z.object({ type: z.literal('USE_SKILL'), skill: skillSchema }).strict(),
   z.object({ type: z.literal('BUZZ') }).strict(),
   z.object({ type: z.literal('ANSWER'), optionId: optionIdSchema }).strict(),
 ]);
@@ -100,6 +125,7 @@ export interface QuizView {
   questionNumber: number;
   questionCount: number;
   question: PublicQuestion;
+  openedAt: number;
   deadline: number;
   serverNow: number;
   scores: Record<string, number>;
@@ -111,6 +137,16 @@ export interface QuizView {
   lives: number;
   stage: number;
   stageCount: number;
+  support: { hints: string[]; hiddenOptions: OptionId[] };
+  interference: { skill: 'COVER' | 'BLUR'; until: number } | null;
+  skillSlots: {
+    playerId: string;
+    remaining: number;
+    free: QuizSkill[];
+    usedThisRound: QuizSkill[];
+    stock: Partial<Record<QuizSkill, number>>;
+  }[];
+  hintRemaining: boolean;
   reveal: {
     correctOptionId: OptionId;
     explanation: string;
@@ -127,15 +163,16 @@ export interface RoomView {
   players: PlayerSlot[];
   controlledPlayerIds: string[];
   rematchVotes: string[];
+  setup?: {
+    title: string;
+    category: string;
+    filter: QuestionFilter;
+    questionCount: number;
+    selection?: QuizSelection;
+  };
   game: QuizView | null;
 }
-export interface PackSummary {
-  id: string;
-  packId: string;
-  title: string;
-  questionCount: number;
-  trusted: boolean;
-}
+export type PackSummary = ReturnType<typeof summarizePack>;
 export interface ActionReceipt {
   actionId: string;
   stateVersion: number;

@@ -3,7 +3,7 @@
 > **Mục đích:** Kiến trúc hệ thống và ranh giới các workspace/module.
 > **Đối tượng:** Lập trình viên và agent.
 > **Trạng thái:** `current`.
-> **Cập nhật:** 2026-11-07 (sắp xếp tài liệu; các mốc kiểm chứng trong nội dung giữ nguyên).
+> **Cập nhật:** 2026-11-11.
 > **Liên quan:** [Mục lục](../README.md), [Nguồn tham khảo](../../packages/game-sdk/src/index.ts).
 
 Monorepo quản lý source; NestJS Modular Monolith là tổ chức runtime. Một API instance, một PostgreSQL. Game packages là thư viện nội bộ được bundle vào API.
@@ -26,6 +26,8 @@ Frontend feature Quiz tách `quiz-client` (identity/transport/commands), `quiz-s
 `RoomsService` sở hữu controller/slot/Ready/votes và hàng xử lý mỗi room. `SessionsService` sở hữu deadline, action receipts, snapshot của engine và kết toán. `GameGateway` chỉ auth, validation, ACK, rate limit và chuyển tiếp. View được lọc cho từng socket; không broadcast raw state.
 
 State trận đang chạy trong RAM. Database giữ guest, pack versions, session snapshot, answers, result và kinh tế. Không có tự động resume process sau crash; startup hủy session `IN_PROGRESS` cũ. Tách interface store không đồng nghĩa đã giải quyết multi-instance.
+
+Question Packs có QuizPreparationService chốt đề trước khi tạo phòng, gồm nguồn nhiều pack cho đố vui và pack đơn cho học luyện. Rooms giữ đề cố định, Sessions lưu snapshot khi Start và chốt batch lịch sử đố vui khi hoàn thành/hủy. PostgreSQL lưu QuizQuestionHistory theo host. Engine tiếp tục nhận danh sách câu đã chuẩn bị. [Quy tắc chọn câu](../features/question-packs.md).
 
 Prisma 6.19 được pin để sử dụng generator/datasource đã kiểm tra. Các framework khác được khóa bằng `pnpm-lock.yaml`. Nâng major phải cập nhật config, kiểm thử và migration. DI Nest dùng `@Inject(...)` rõ ràng để dev/build cùng hoạt động khi transpile bằng esbuild, không phụ thuộc metadata tự suy diễn.
 

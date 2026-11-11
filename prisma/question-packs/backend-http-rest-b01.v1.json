@@ -1,0 +1,440 @@
+{
+  "schemaVersion": 1,
+  "packId": "backend-http-rest-b01",
+  "title": "Backend B01 — HTTP & REST: Hiểu API qua tình huống",
+  "language": "vi",
+  "knowledgeType": "academic",
+  "category": "Backend",
+  "questions": [
+    {
+      "id": "b01-http-001",
+      "type": "single_choice",
+      "topic": "HTTP và REST",
+      "difficulty": "easy",
+      "prompt": "Trang DuoQuest muốn lấy danh sách bộ đề hiện có mà không yêu cầu máy chủ tạo hay sửa dữ liệu. Phương thức HTTP nào phù hợp nhất?",
+      "options": [
+        {
+          "id": "A",
+          "text": "GET"
+        },
+        {
+          "id": "B",
+          "text": "POST"
+        },
+        {
+          "id": "C",
+          "text": "PATCH"
+        },
+        {
+          "id": "D",
+          "text": "DELETE"
+        }
+      ],
+      "correctOptionId": "A",
+      "explanation": "GET có ngữ nghĩa truy xuất biểu diễn của tài nguyên. Với thao tác chỉ đọc danh sách, GET là lựa chọn tự nhiên; POST dùng để gửi dữ liệu cho tài nguyên xử lý, còn PATCH/DELETE liên quan đến thay đổi tài nguyên.",
+      "hints": [
+        "Xác định người dùng đang yêu cầu đọc hay thay đổi trạng thái.",
+        "Tìm phương thức có ngữ nghĩa lấy biểu diễn tài nguyên.",
+        "Không chọn phương thức gắn với chỉnh sửa hoặc xóa dữ liệu."
+      ],
+      "tags": ["http", "get", "resource"],
+      "timeLimitSeconds": 20
+    },
+    {
+      "id": "b01-http-002",
+      "type": "single_choice",
+      "topic": "HTTP và REST",
+      "difficulty": "easy",
+      "prompt": "Một API đã tạo xong tài nguyên /packs/58 từ yêu cầu của client. Mã trạng thái nào thể hiện rõ việc tạo mới thành công?",
+      "options": [
+        {
+          "id": "A",
+          "text": "200 OK"
+        },
+        {
+          "id": "B",
+          "text": "201 Created"
+        },
+        {
+          "id": "C",
+          "text": "202 Accepted"
+        },
+        {
+          "id": "D",
+          "text": "204 No Content"
+        }
+      ],
+      "correctOptionId": "B",
+      "explanation": "201 Created cho biết yêu cầu đã tạo ra tài nguyên. Server thường dùng Location: /packs/58 để chỉ URL tài nguyên mới. 202 chỉ mới chấp nhận xử lý, còn 204 là thành công nhưng không trả nội dung.",
+      "hints": [
+        "Phân biệt đã tạo xong với mới tiếp nhận để xử lý.",
+        "Tìm mã 2xx gắn trực tiếp với việc tạo tài nguyên.",
+        "Một header có thể chỉ địa chỉ tài nguyên mới."
+      ],
+      "tags": ["http", "status", "created"],
+      "timeLimitSeconds": 25
+    },
+    {
+      "id": "b01-http-003",
+      "type": "single_choice",
+      "topic": "HTTP và REST",
+      "difficulty": "easy",
+      "prompt": "Với URL `GET /users/42/orders?limit=5`, cách hiểu nào đúng?",
+      "options": [
+        {
+          "id": "A",
+          "text": "`42` là query parameter; `limit=5` là path parameter."
+        },
+        {
+          "id": "B",
+          "text": "`42` và `limit=5` đều nằm trong HTTP request body."
+        },
+        {
+          "id": "C",
+          "text": "`42` là path parameter; `limit=5` là query parameter."
+        },
+        {
+          "id": "D",
+          "text": "`42` là HTTP method; `limit` là status code."
+        }
+      ],
+      "correctOptionId": "C",
+      "explanation": "Đoạn /users/42/orders đặt 42 vào vị trí động của đường dẫn (path/route parameter). Phần sau dấu ? là query string; limit=5 thường biểu diễn bộ lọc hoặc giới hạn kết quả. Hai nhóm dữ liệu được NestJS đọc bằng @Param() và @Query().",
+      "hints": [
+        "Tìm dấu `?` trong URL.",
+        "Thông tin đứng sau `?` thuộc query string.",
+        "Phần thay đổi ở giữa các dấu `/` có thể là path parameter."
+      ],
+      "tags": ["http", "path-param", "query-param"],
+      "timeLimitSeconds": 30
+    },
+    {
+      "id": "b01-http-004",
+      "type": "single_choice",
+      "topic": "HTTP và REST",
+      "difficulty": "medium",
+      "prompt": "API lưu hồ sơ người dùng hỗ trợ cả PUT và PATCH. Client chỉ muốn đổi trường `nickname` mà không thay thế toàn bộ biểu diễn hồ sơ. Nên chọn phương thức nào?",
+      "options": [
+        {
+          "id": "A",
+          "text": "PUT, vì bắt buộc chỉ thay một trường."
+        },
+        {
+          "id": "B",
+          "text": "PATCH, vì biểu thị cập nhật một phần."
+        },
+        {
+          "id": "C",
+          "text": "GET, vì muốn lấy nickname mới."
+        },
+        {
+          "id": "D",
+          "text": "HEAD, vì chỉ cần header."
+        }
+      ],
+      "correctOptionId": "B",
+      "explanation": "PATCH dành cho sửa đổi từng phần của tài nguyên. PUT mang ngữ nghĩa thay thế trạng thái/biểu diễn của tài nguyên đích bằng nội dung gửi lên. Hành vi chính xác còn phụ thuộc contract của API, nên giả thiết ở câu này là cả hai đã được hỗ trợ đúng ngữ nghĩa.",
+      "hints": [
+        "Tập trung vào cụm “chỉ đổi một trường”.",
+        "So sánh sửa đổi một phần và thay thế toàn bộ.",
+        "Hãy chọn phương thức có ngữ nghĩa partial modification."
+      ],
+      "tags": ["http", "patch", "put", "update"],
+      "timeLimitSeconds": 35
+    },
+    {
+      "id": "b01-http-005",
+      "type": "single_choice",
+      "topic": "HTTP và REST",
+      "difficulty": "medium",
+      "prompt": "Client gọi DELETE /avatars/8. Server xóa thành công và không cần gửi thêm nội dung trong response body. Status nào phù hợp nhất?",
+      "options": [
+        {
+          "id": "A",
+          "text": "204 No Content"
+        },
+        {
+          "id": "B",
+          "text": "201 Created"
+        },
+        {
+          "id": "C",
+          "text": "202 Accepted"
+        },
+        {
+          "id": "D",
+          "text": "404 Not Found"
+        }
+      ],
+      "correctOptionId": "A",
+      "explanation": "204 No Content cho biết thao tác đã thành công và response không mang nội dung. Đây là lựa chọn thường gặp sau DELETE khi không cần trả dữ liệu; 202 thích hợp khi mới chấp nhận xử lý, chưa hoàn tất.",
+      "hints": [
+        "Kết quả xóa đã hoàn tất hay mới được xếp hàng?",
+        "Response có cần phần body không?",
+        "Tìm mã 2xx dành cho thành công nhưng không gửi nội dung."
+      ],
+      "tags": ["http", "status", "delete"],
+      "timeLimitSeconds": 30
+    },
+    {
+      "id": "b01-http-006",
+      "type": "single_choice",
+      "topic": "HTTP và REST",
+      "difficulty": "medium",
+      "prompt": "Hai request vào API quản trị: (1) không gửi thông tin xác thực hợp lệ; (2) đã đăng nhập hợp lệ nhưng không có quyền quản trị. Ghép mã trạng thái phù hợp nhất cho (1) và (2)?",
+      "options": [
+        {
+          "id": "A",
+          "text": "(1) 403; (2) 401"
+        },
+        {
+          "id": "B",
+          "text": "(1) 404; (2) 400"
+        },
+        {
+          "id": "C",
+          "text": "(1) 401; (2) 403"
+        },
+        {
+          "id": "D",
+          "text": "(1) 500; (2) 200"
+        }
+      ],
+      "correctOptionId": "C",
+      "explanation": "401 Unauthorized (tên gọi dễ gây nhầm) thường có nghĩa thiếu thông tin xác thực hợp lệ. 403 Forbidden có nghĩa server từ chối hành động vì không đủ quyền dù client đã được xác thực. Trong API thực tế có thể chủ động dùng 404 để che sự tồn tại của tài nguyên nhạy cảm.",
+      "hints": [
+        "Tách “người này là ai” khỏi “người này được phép làm gì”.",
+        "Ở trường hợp đầu, danh tính chưa xác thực hợp lệ.",
+        "Ở trường hợp hai, danh tính đã biết nhưng quyền chưa đủ."
+      ],
+      "tags": ["http", "status", "authentication", "authorization"],
+      "timeLimitSeconds": 40
+    },
+    {
+      "id": "b01-http-007",
+      "type": "single_choice",
+      "topic": "HTTP và REST",
+      "difficulty": "medium",
+      "prompt": "Client yêu cầu xuất báo cáo lớn. Server đã nhận yêu cầu và đưa vào hàng đợi, nhưng chưa chạy xong và chưa chắc tác vụ sẽ thành công. Mã phản hồi phù hợp nhất lúc này?",
+      "options": [
+        {
+          "id": "A",
+          "text": "201 Created"
+        },
+        {
+          "id": "B",
+          "text": "200 OK và thông báo đã hoàn tất"
+        },
+        {
+          "id": "C",
+          "text": "202 Accepted"
+        },
+        {
+          "id": "D",
+          "text": "204 No Content và khẳng định đã chạy xong"
+        }
+      ],
+      "correctOptionId": "C",
+      "explanation": "202 Accepted biểu thị yêu cầu đã được chấp nhận để xử lý nhưng tiến trình có thể chưa bắt đầu hoặc chưa hoàn thành; kết quả cuối không được bảo đảm bởi mã này. API có thể kèm ID tác vụ/đường dẫn kiểm tra trạng thái.",
+      "hints": [
+        "Tác vụ đang xử lý hay đã hoàn tất?",
+        "Phân biệt “đã nhận” với “đã làm xong”.",
+        "Tìm mã 2xx dành cho xử lý bất đồng bộ chưa hoàn thành."
+      ],
+      "tags": ["http", "status", "async", "jobs"],
+      "timeLimitSeconds": 35
+    },
+    {
+      "id": "b01-http-008",
+      "type": "single_choice",
+      "topic": "HTTP và REST",
+      "difficulty": "medium",
+      "prompt": "Client gửi JSON tới một API và muốn nhận JSON trong phản hồi. Cặp header request nào diễn tả đúng cả hai ý định?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Content-Type: text/plain và Accept: text/html"
+        },
+        {
+          "id": "B",
+          "text": "Content-Type: application/json và Accept: application/json"
+        },
+        {
+          "id": "C",
+          "text": "Accept: application/json và Location: application/json"
+        },
+        {
+          "id": "D",
+          "text": "Content-Length: application/json và Authorization: application/json"
+        }
+      ],
+      "correctOptionId": "B",
+      "explanation": "Trong request, Content-Type mô tả kiểu dữ liệu của phần nội dung gửi lên, còn Accept nêu các kiểu nội dung client muốn nhận. Với JSON ở cả hai chiều, dùng application/json cho hai header là phù hợp. Việc server có hỗ trợ hay không vẫn phải được kiểm tra.",
+      "hints": [
+        "Một header nói “tôi gửi gì”, header còn lại nói “tôi nhận được gì”.",
+        "Tên kiểu nội dung chuẩn cho JSON là application/json.",
+        "Chú ý vai trò khác nhau của Content-Type và Accept."
+      ],
+      "tags": ["http", "headers", "json", "content-negotiation"],
+      "timeLimitSeconds": 40
+    },
+    {
+      "id": "b01-http-009",
+      "type": "single_choice",
+      "topic": "HTTP và REST",
+      "difficulty": "hard",
+      "prompt": "Endpoint /reports/7 tồn tại và chỉ hỗ trợ GET, HEAD. Client gửi POST vào đó; server hiểu phương thức POST nhưng endpoint không cho phép. Phản hồi nào đúng ngữ nghĩa HTTP nhất?",
+      "options": [
+        {
+          "id": "A",
+          "text": "404 Not Found, không cần header nào."
+        },
+        {
+          "id": "B",
+          "text": "403 Forbidden vì thiếu quyền admin."
+        },
+        {
+          "id": "C",
+          "text": "405 Method Not Allowed, kèm `Allow: GET, HEAD`."
+        },
+        {
+          "id": "D",
+          "text": "501 Not Implemented vì server không biết POST."
+        }
+      ],
+      "correctOptionId": "C",
+      "explanation": "405 Method Not Allowed áp dụng khi phương thức được server nhận biết nhưng không được tài nguyên đích hỗ trợ. Server phải trả header Allow liệt kê những phương thức hiện được phép tại tài nguyên đó. 501 khác vì nói tới phương thức không được server hỗ trợ/nhận biết.",
+      "hints": [
+        "Tài nguyên có tồn tại; client không dùng sai địa chỉ.",
+        "Vấn đề nằm ở method của đúng endpoint.",
+        "Một response header có nhiệm vụ liệt kê các method được chấp nhận."
+      ],
+      "tags": ["http", "status", "method-not-allowed", "allow"],
+      "timeLimitSeconds": 45
+    },
+    {
+      "id": "b01-http-010",
+      "type": "single_choice",
+      "topic": "HTTP và REST",
+      "difficulty": "hard",
+      "prompt": "DuoQuest có endpoint POST /question-packs/preview: nhận JSON bộ đề, kiểm tra rồi trả bản xem trước nhưng không lưu bộ đề. Kết luận nào đúng nhất?",
+      "options": [
+        {
+          "id": "A",
+          "text": "POST là sai vì POST bắt buộc tạo tài nguyên trong DB."
+        },
+        {
+          "id": "B",
+          "text": "Bắt buộc trả 201 Created vì dùng POST."
+        },
+        {
+          "id": "C",
+          "text": "Phải đổi thành GET với JSON trong request body."
+        },
+        {
+          "id": "D",
+          "text": "POST có thể dùng để gửi nội dung cho server xử lý; không bắt buộc tạo tài nguyên."
+        }
+      ],
+      "correctOptionId": "D",
+      "explanation": "POST yêu cầu tài nguyên đích xử lý dữ liệu gửi đến theo ngữ nghĩa riêng của nó; tạo tài nguyên mới chỉ là một trường hợp. Vì vậy endpoint preview có thể dùng POST mà không tạo bản ghi. Câu hỏi dựa trên luồng preview hiện được mô tả trong tài liệu DuoQuest.",
+      "hints": [
+        "Tách HTTP method khỏi status code và thao tác SQL.",
+        "Đọc định nghĩa POST theo ngữ nghĩa gửi nội dung để xử lý.",
+        "Tạo mới là một khả năng, nhưng không phải nghĩa duy nhất của POST."
+      ],
+      "tags": ["http", "post", "api-design", "duoquest"],
+      "timeLimitSeconds": 50
+    },
+    {
+      "id": "b01-http-011",
+      "type": "single_choice",
+      "topic": "HTTP và REST",
+      "difficulty": "hard",
+      "prompt": "Client gửi PUT /profiles/42 với cùng một biểu diễn hồ sơ đầy đủ, nhưng mất mạng nên gửi lại đúng request đó. Phát biểu nào sát khái niệm idempotent nhất?",
+      "options": [
+        {
+          "id": "A",
+          "text": "PUT luôn không thay đổi dữ liệu ngay từ lần đầu."
+        },
+        {
+          "id": "B",
+          "text": "Hai request PUT giống nhau phải có status code giống hệt nhau."
+        },
+        {
+          "id": "C",
+          "text": "Tác động dự kiến lên tài nguyên sau hai request giống hệt một request, dù log hoặc response có thể khác."
+        },
+        {
+          "id": "D",
+          "text": "PUT và POST đều mặc định không idempotent."
+        }
+      ],
+      "correctOptionId": "C",
+      "explanation": "Idempotent nghĩa là nhiều yêu cầu giống hệt nhau có cùng tác động dự kiến lên server như một yêu cầu. PUT được đặc tả là idempotent, nhưng lần đầu vẫn có thể sửa dữ liệu; response hoặc bản ghi log giữa các lần gọi không nhất thiết giống nhau. Server phải triển khai đúng ngữ nghĩa đó.",
+      "hints": [
+        "Đừng nhầm idempotent với read-only.",
+        "So sánh trạng thái dự kiến sau 1 lần và nhiều lần PUT trùng nhau.",
+        "Idempotency xét tác động được yêu cầu, không yêu cầu response/log trùng hệt."
+      ],
+      "tags": ["http", "put", "idempotency", "retry"],
+      "timeLimitSeconds": 55
+    },
+    {
+      "id": "b01-http-012",
+      "type": "single_choice",
+      "topic": "HTTP và REST",
+      "difficulty": "hard",
+      "prompt": "Một API cho phép GET /wallet/claim?coins=10 và mỗi lần gọi sẽ cộng 10 Coins vào ví. Nhận định nào đúng nhất về thiết kế HTTP này?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Hợp lý vì GET luôn có thể thay đổi dữ liệu nếu có query parameter."
+        },
+        {
+          "id": "B",
+          "text": "Không phù hợp với tính safe của GET; hành động cộng xu nên dùng một thao tác thay đổi trạng thái có xác thực thích hợp."
+        },
+        {
+          "id": "C",
+          "text": "Hợp lý vì cộng Coins là thao tác chỉ đọc."
+        },
+        {
+          "id": "D",
+          "text": "Chỉ sai nếu trả 404; còn trả 200 là an toàn."
+        }
+      ],
+      "correctOptionId": "B",
+      "explanation": "GET có ngữ nghĩa an toàn (safe): client không yêu cầu thay đổi trạng thái như cộng Coins. Dùng GET để phát thưởng dễ gây tác động ngoài ý muốn khi link bị tải trước, lập chỉ mục hoặc gọi lại. Ghi log truy cập tự động không làm GET mất tính safe vì đó không phải thay đổi do client yêu cầu. Việc cấp thưởng thực tế vẫn cần backend kiểm quyền và chống phát trùng.",
+      "hints": [
+        "GET thuộc nhóm chỉ đọc hay nhóm ghi dữ liệu?",
+        "Xét tác động mà client chủ động yêu cầu lên số dư.",
+        "Cơ chế tải trước link có thể tự động gọi GET, nên GET không nên cấp thưởng."
+      ],
+      "tags": ["http", "get", "safe-method", "api-design", "coins"],
+      "timeLimitSeconds": 55
+    }
+  ],
+  "relatedKnowledge": [
+    {
+      "category": "Backend",
+      "topic": "NestJS và dependency injection",
+      "reason": "Hiểu cách ánh xạ HTTP request vào Controller, Service và Module trong ứng dụng thực tế."
+    },
+    {
+      "category": "Backend",
+      "topic": "Validation, Authentication và Authorization",
+      "reason": "Đi sâu vào xác thực, phân quyền và cách phản hồi lỗi API đúng ngữ cảnh."
+    },
+    {
+      "category": "Backend",
+      "topic": "SQL và PostgreSQL",
+      "reason": "Nắm cách lưu trữ và truy vấn dữ liệu phía sau một API."
+    },
+    {
+      "category": "Backend",
+      "topic": "Prisma và transaction",
+      "reason": "Tìm hiểu cách biến thao tác API thành thay đổi dữ liệu đáng tin cậy, có giao dịch."
+    }
+  ]
+}

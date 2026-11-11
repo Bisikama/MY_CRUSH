@@ -227,7 +227,14 @@ export class GameGateway implements OnGatewayInit, OnModuleDestroy {
       });
     });
     socket.on('game:action', (data, ack) => {
-      void execute(ack, () => this.rooms.action(gameActionSchema.parse(data), player.id, check));
+      void execute(ack, () =>
+        this.rooms.action(
+          gameActionSchema.parse(data),
+          player.id,
+          check,
+          !!socket.data.principal.accountId,
+        ),
+      );
     });
     socket.on('disconnect', () => {
       void this.rooms

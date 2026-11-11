@@ -1,0 +1,350 @@
+{
+  "schemaVersion": 1,
+  "packId": "backend-sql-postgresql-b04",
+  "title": "Backend B04 — SQL & PostgreSQL: Quan hệ và truy vấn",
+  "language": "vi",
+  "knowledgeType": "academic",
+  "category": "Backend",
+  "questions": [
+    {
+      "id": "b04-001",
+      "type": "single_choice",
+      "topic": "SQL và PostgreSQL",
+      "difficulty": "easy",
+      "prompt": "Trong bảng `Player(id, nickname)`, muốn `id` xác định duy nhất từng hàng và không được NULL, ràng buộc nào phù hợp nhất?",
+      "options": [
+        {
+          "id": "A",
+          "text": "PRIMARY KEY"
+        },
+        {
+          "id": "B",
+          "text": "FOREIGN KEY"
+        },
+        {
+          "id": "C",
+          "text": "CHECK (nickname <> \"\")"
+        },
+        {
+          "id": "D",
+          "text": "GROUP BY"
+        }
+      ],
+      "correctOptionId": "A",
+      "explanation": "PRIMARY KEY ràng buộc mỗi hàng có một khóa duy nhất, không NULL. Trong PostgreSQL, khóa chính cũng tạo unique B-tree index để hỗ trợ thực thi tính duy nhất.",
+      "hints": [
+        "Cần tính duy nhất và không được trống.",
+        "Khóa xác định bản ghi trong chính bảng.",
+        "Khác với khóa dùng tham chiếu bảng khác."
+      ],
+      "tags": ["sql", "primary-key", "postgresql"],
+      "timeLimitSeconds": 25
+    },
+    {
+      "id": "b04-002",
+      "type": "single_choice",
+      "topic": "SQL và PostgreSQL",
+      "difficulty": "easy",
+      "prompt": "Bảng `SessionPlayer(sessionId, playerId)` dùng `playerId` tham chiếu `Player(id)`. Ràng buộc nào bảo vệ tính tham chiếu?",
+      "options": [
+        {
+          "id": "A",
+          "text": "ORDER BY"
+        },
+        {
+          "id": "B",
+          "text": "LIMIT"
+        },
+        {
+          "id": "C",
+          "text": "FOREIGN KEY"
+        },
+        {
+          "id": "D",
+          "text": "LIKE"
+        }
+      ],
+      "correctOptionId": "C",
+      "explanation": "FOREIGN KEY bảo đảm giá trị tham chiếu khớp với khóa đích được phép; nhờ đó hệ thống tránh những liên kết session-player không có Player tương ứng, trừ trường hợp null được cho phép theo thiết kế.",
+      "hints": [
+        "Có hai bảng liên quan.",
+        "Một trường chỉ đến khóa của bảng khác.",
+        "Cần referential integrity."
+      ],
+      "tags": ["sql", "foreign-key", "relation"],
+      "timeLimitSeconds": 30
+    },
+    {
+      "id": "b04-003",
+      "type": "single_choice",
+      "topic": "SQL và PostgreSQL",
+      "difficulty": "easy",
+      "prompt": "Hai bảng: Player (id: 1, 2) và Match (id: 10, playerId: 1). `INNER JOIN` theo `Player.id = Match.playerId` trả về mấy hàng?",
+      "options": [
+        {
+          "id": "A",
+          "text": "0"
+        },
+        {
+          "id": "B",
+          "text": "1"
+        },
+        {
+          "id": "C",
+          "text": "2"
+        },
+        {
+          "id": "D",
+          "text": "3"
+        }
+      ],
+      "correctOptionId": "B",
+      "explanation": "INNER JOIN chỉ giữ cặp hàng khớp điều kiện. Player 1 khớp Match 10, Player 2 không có match nên bị loại; tổng cộng một hàng.",
+      "hints": [
+        "Đếm các cặp có key khớp.",
+        "Player 2 không có Match.",
+        "INNER JOIN không giữ hàng không khớp."
+      ],
+      "tags": ["sql", "join", "count"],
+      "timeLimitSeconds": 35
+    },
+    {
+      "id": "b04-004",
+      "type": "single_choice",
+      "topic": "SQL và PostgreSQL",
+      "difficulty": "medium",
+      "prompt": "Dữ liệu như trên: Player (1, 2), Match (10, playerId=1). `Player LEFT JOIN Match ON Player.id=Match.playerId` trả bao nhiêu hàng?",
+      "options": [
+        {
+          "id": "A",
+          "text": "0"
+        },
+        {
+          "id": "B",
+          "text": "1"
+        },
+        {
+          "id": "C",
+          "text": "3"
+        },
+        {
+          "id": "D",
+          "text": "2"
+        }
+      ],
+      "correctOptionId": "D",
+      "explanation": "LEFT JOIN giữ cả hai hàng Player. Player 1 ghép Match 10; Player 2 không có trận nên vẫn xuất hiện với cột Match là NULL. Tổng cộng hai hàng.",
+      "hints": [
+        "LEFT chỉ phía nào được giữ đầy đủ?",
+        "Có hai player.",
+        "Hàng không có match vẫn xuất hiện."
+      ],
+      "tags": ["sql", "left-join", "null"],
+      "timeLimitSeconds": 40
+    },
+    {
+      "id": "b04-005",
+      "type": "single_choice",
+      "topic": "SQL và PostgreSQL",
+      "difficulty": "medium",
+      "prompt": "Vẫn dùng kết quả LEFT JOIN có hai hàng ở câu trước. `COUNT(*)` và `COUNT(Match.id)` lần lượt trả bao nhiêu?",
+      "options": [
+        {
+          "id": "A",
+          "text": "(2,1)"
+        },
+        {
+          "id": "B",
+          "text": "(1,2)"
+        },
+        {
+          "id": "C",
+          "text": "(2,2)"
+        },
+        {
+          "id": "D",
+          "text": "(1,1)"
+        }
+      ],
+      "correctOptionId": "A",
+      "explanation": "COUNT(*) đếm mọi hàng của kết quả JOIN: 2. COUNT(Match.id) chỉ đếm các giá trị Match.id không NULL: 1, vì Player 2 không có Match. Đây là khác biệt quan trọng khi thống kê số trận.",
+      "hints": [
+        "COUNT(*) đếm hàng; COUNT(cột) xử lý NULL ra sao?",
+        "Hàng Player 2 có Match.id là NULL.",
+        "Đếm tổng hàng và tổng giá trị không NULL riêng."
+      ],
+      "tags": ["sql", "count", "null", "aggregate"],
+      "timeLimitSeconds": 45
+    },
+    {
+      "id": "b04-006",
+      "type": "single_choice",
+      "topic": "SQL và PostgreSQL",
+      "difficulty": "medium",
+      "prompt": "Bảng Answer có các hàng `(playerId,score)`: (1,10), (1,20), (2,5). Kết quả `SELECT playerId, SUM(score) FROM Answer GROUP BY playerId` là gì?",
+      "options": [
+        {
+          "id": "A",
+          "text": "(1,10), (1,20), (2,5)"
+        },
+        {
+          "id": "B",
+          "text": "(1,30) và (2,5)"
+        },
+        {
+          "id": "C",
+          "text": "Chỉ có (1,35)"
+        },
+        {
+          "id": "D",
+          "text": "Lỗi vì SUM không dùng với GROUP BY"
+        }
+      ],
+      "correctOptionId": "B",
+      "explanation": "GROUP BY gom hàng theo playerId rồi SUM(score) trong từng nhóm. Player 1 có 10+20=30, Player 2 có 5. Đề đã cung cấp đủ dữ liệu nên có thể giải không cần chạy SQL.",
+      "hints": [
+        "Nhóm theo playerId.",
+        "Tính tổng score của từng nhóm.",
+        "Không cộng điểm của các player khác nhau vào một nhóm."
+      ],
+      "tags": ["sql", "group-by", "sum"],
+      "timeLimitSeconds": 45
+    },
+    {
+      "id": "b04-007",
+      "type": "single_choice",
+      "topic": "SQL và PostgreSQL",
+      "difficulty": "medium",
+      "prompt": "Bạn muốn không cho một player xuất hiện hai lần trong cùng một session, nhưng vẫn được vào session khác. Thiết kế constraint nào tốt nhất?",
+      "options": [
+        {
+          "id": "A",
+          "text": "UNIQUE(playerId)"
+        },
+        {
+          "id": "B",
+          "text": "UNIQUE(sessionId)"
+        },
+        {
+          "id": "C",
+          "text": "UNIQUE(sessionId, playerId)"
+        },
+        {
+          "id": "D",
+          "text": "INDEX(nickname)"
+        }
+      ],
+      "correctOptionId": "C",
+      "explanation": "Composite UNIQUE(sessionId, playerId) chặn cặp trùng nhưng cho phép player tham gia các session khác nhau và nhiều player ở cùng session. UNIQUE từng cột sẽ ràng buộc quá mức so với yêu cầu.",
+      "hints": [
+        "Đơn vị cần duy nhất là cặp nào?",
+        "Một player được có nhiều session.",
+        "Ràng buộc phải áp dụng đồng thời trên hai cột."
+      ],
+      "tags": ["sql", "unique", "composite-key", "duoquest"],
+      "timeLimitSeconds": 45
+    },
+    {
+      "id": "b04-008",
+      "type": "single_choice",
+      "topic": "SQL và PostgreSQL",
+      "difficulty": "hard",
+      "prompt": "Trong PostgreSQL 17, tạo FOREIGN KEY `Match.playerId → Player.id`. Nhận định nào chính xác về index ở `Match.playerId`?",
+      "options": [
+        {
+          "id": "A",
+          "text": "FOREIGN KEY không tự tạo index ở cột tham chiếu của Match; có thể cần tạo thủ công nếu workload phù hợp."
+        },
+        {
+          "id": "B",
+          "text": "PostgreSQL tự động tạo index ở cột tham chiếu của Match."
+        },
+        {
+          "id": "C",
+          "text": "Index ở cột tham chiếu bị cấm."
+        },
+        {
+          "id": "D",
+          "text": "Tạo index luôn khiến mọi truy vấn nhanh hơn."
+        }
+      ],
+      "correctOptionId": "A",
+      "explanation": "PostgreSQL bảo đảm phía khóa được tham chiếu có ràng buộc duy nhất/index phù hợp, nhưng không tự tạo index cho cột phía referencing của FK. Index ở Match.playerId có thể giúp JOIN/xóa cập nhật liên quan nhưng có chi phí ghi và lưu trữ.",
+      "hints": [
+        "Phân biệt bảng đích và bảng chứa FK.",
+        "Foreign key constraint không đồng nghĩa index trên cột tham chiếu.",
+        "Cân nhắc hiệu năng theo truy vấn thực tế."
+      ],
+      "tags": ["postgresql", "foreign-key", "index"],
+      "timeLimitSeconds": 55
+    },
+    {
+      "id": "b04-009",
+      "type": "single_choice",
+      "topic": "SQL và PostgreSQL",
+      "difficulty": "hard",
+      "prompt": "Trong một transaction SQL, chương trình UPDATE Wallet trừ 50 xu rồi INSERT Inventory thất bại khiến giao dịch ROLLBACK. Kết quả nào đúng?",
+      "options": [
+        {
+          "id": "A",
+          "text": "Wallet vẫn trừ 50, Inventory không tạo."
+        },
+        {
+          "id": "B",
+          "text": "Inventory vẫn được tạo."
+        },
+        {
+          "id": "C",
+          "text": "Database tự động trừ thêm 50 xu."
+        },
+        {
+          "id": "D",
+          "text": "Cả thay đổi Wallet và Inventory của transaction được hoàn tác."
+        }
+      ],
+      "correctOptionId": "D",
+      "explanation": "Một transaction gom các thao tác thành một đơn vị atomic. Khi rollback xảy ra trước commit, các thay đổi trong transaction bị hủy, tránh trạng thái trừ xu nhưng không giao vật phẩm.",
+      "hints": [
+        "Hai thao tác nằm trong cùng transaction.",
+        "ROLLBACK có ý nghĩa gì?",
+        "Atomicity ngăn hoàn tất một nửa."
+      ],
+      "tags": ["sql", "transaction", "rollback", "duoquest"],
+      "timeLimitSeconds": 50
+    },
+    {
+      "id": "b04-010",
+      "type": "single_choice",
+      "topic": "SQL và PostgreSQL",
+      "difficulty": "hard",
+      "prompt": "Bảng Player: (1,A), (2,B). Bảng Match: (10,1),(11,1),(12,2). Truy vấn `SELECT COUNT(*) FROM Player JOIN Match ON Player.id=Match.playerId` trả về bao nhiêu?",
+      "options": [
+        {
+          "id": "A",
+          "text": "2 (số player)"
+        },
+        {
+          "id": "B",
+          "text": "3 (số cặp match-player)"
+        },
+        {
+          "id": "C",
+          "text": "1 (số bảng)"
+        },
+        {
+          "id": "D",
+          "text": "5 (tổng dòng hai bảng)"
+        }
+      ],
+      "correctOptionId": "B",
+      "explanation": "INNER JOIN tạo một hàng cho mỗi cặp ghép khớp: Match 10 và 11 ghép Player 1, Match 12 ghép Player 2. Kết quả có 3 hàng; COUNT(*) đếm hàng JOIN chứ không đếm player phân biệt.",
+      "hints": [
+        "Một player có thể xuất hiện nhiều lần khi JOIN.",
+        "Đếm hàng kết quả sau khi JOIN.",
+        "COUNT(*) không tự loại trùng player."
+      ],
+      "tags": ["sql", "join", "aggregate", "count"],
+      "timeLimitSeconds": 50
+    }
+  ]
+}

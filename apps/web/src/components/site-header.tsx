@@ -77,7 +77,7 @@ export function SiteHeader() {
   const isProfileActive = pathname === '/profile';
 
   return (
-    <header className="site-header lavender-header">
+    <header id="site-header" className="site-header lavender-header">
       <div className="lavender-header-inner">
         <Link className="logo lavender-logo" href="/" onClick={(e) => handleNavClick(e, '/')}>
           <span className="logo-mark lavender-logo-mark" aria-hidden="true">

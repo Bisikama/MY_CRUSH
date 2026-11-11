@@ -631,7 +631,7 @@ kbd {
   color: var(--foreground);
   font-weight: 500;
 }
-.answer > span {
+.answer > .answer-letter {
   display: grid;
   place-items: center;
   width: 32px;
@@ -1939,6 +1939,8 @@ details p {
 }
 
 .lavender-header {
+  --header-content-width: 1180px;
+  --header-gutter: 24px;
   position: sticky;
   top: 0;
   z-index: 50;
@@ -1957,9 +1959,9 @@ details p {
 
 .lavender-header-inner {
   width: 100%;
-  max-width: 1180px;
+  max-width: var(--header-content-width);
   margin: 0 auto;
-  padding: 12px 24px;
+  padding: 12px var(--header-gutter);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -2842,8 +2844,11 @@ details p {
 }
 
 @media (max-width: 640px) {
+  .lavender-header {
+    --header-gutter: 14px;
+  }
   .lavender-header-inner {
-    padding: 10px 14px;
+    padding-block: 10px;
     gap: 10px;
   }
   .lavender-logo-text {

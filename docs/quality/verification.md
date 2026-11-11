@@ -3,8 +3,28 @@
 > **Mục đích:** Bằng chứng kiểm chứng theo từng mốc, không chứng nhận source mới nhất.
 > **Đối tượng:** Chủ dự án, lập trình viên và QA.
 > **Trạng thái:** `historical`.
-> **Cập nhật:** 2026-11-08 (bổ sung kiểm chứng lifecycle; giữ nguyên các mốc lịch sử).
+> **Cập nhật:** 2026-11-11 (bổ sung kiểm chứng ảnh câu hỏi).
 > **Liên quan:** [Mục lục](../README.md), [Nguồn tham khảo](../project/roadmap-quality.md).
+
+## Ảnh câu hỏi Quiz ngày 2026-11-11
+
+- 155 test unit/integration qua trên PostgreSQL test riêng, gồm 12 test cho ảnh, giới hạn số lượng, origin CDN và định danh nội dung. Lint, typecheck và build qua.
+- 23 E2E Quiz và platform lifecycle qua trên Chrome với web/API cổng loopback riêng vì cổng mặc định đã được sử dụng. Kịch bản hai trình duyệt dùng ảnh mô phỏng cả đường dẫn local lẫn CDN. Kiểm tra Preview → Save → Start → Sync, viewport 390 px, ảnh 404, Skill Che câu hỏi và giữ kín lựa chọn đối phương.
+- Chưa thử trên CDN thật hoặc hai thiết bị LAN vật lý. Nén ảnh trước khi phát hành file theo [hướng dẫn bộ đề](../features/question-packs.md#dung-lượng-và-lưu-trữ).
+
+## Hai trải nghiệm Quiz và lịch sử tránh lặp ngày 2026-11-11
+
+Phạm vi gồm Đố vui Ngẫu nhiên/Tự chọn nhiều lĩnh vực, chủ đề và độ khó; Học luyện chọn một pack và bốc lại mỗi ván; chuẩn bị đề trước phòng; snapshot nhiều nguồn; lịch sử đố vui theo host và batch khi hoàn thành/hủy.
+
+- `pnpm db:generate`, `pnpm db:validate`, `pnpm lint`, `pnpm typecheck` và `pnpm build` thành công.
+- Dựng PostgreSQL test riêng trên loopback cổng 55439, database dùng một lần có hậu tố `_test`. Áp dụng đủ bốn migration và seed thành công. Đối chiếu `prisma migrate diff` giữa DB test và schema cho kết quả không khác biệt. Database cấu hình phát triển không được dùng cho kiểm thử này.
+- Chạy `pnpm test` với `RUN_DB_TESTS=1` trên DB test. 15 file, 143 test pass, gồm PostgreSQL, Auth, Swagger và Socket.IO thật. Kiểm tra chu kỳ 20/20/4, tập lọc dùng chung lịch sử, hủy chỉ ghi câu đã tới lượt, rollback khi batch lỗi, retry cùng session và đủ ba mode/hai layout hợp lệ.
+- Chạy toàn bộ `pnpm test:e2e` với `RUN_AUTH_E2E=1`, DB test và SMTP giả. 24 test pass trên Chrome production build. Bao gồm hai browser độc lập, reconnect, shared-screen, nhập pack, học luyện, đố vui giới hạn 20 câu và lịch sử còn 3 câu sau hủy câu đầu trong tập 4 câu.
+- Kiểm tra ảnh mobile 390px của bộ lọc đố vui Tự chọn và assertion không tràn ngang. Ảnh kiểm thử nằm trong `test-results/` bị Git bỏ qua.
+- `pnpm format:check` còn báo 41 file ngoài thay đổi của task. Các file TypeScript/TSX/Markdown của task được kiểm tra định dạng riêng.
+- Chưa nghiệm thu trên hai thiết bị LAN vật lý. Ván đang chạy bị hủy khi backend crash theo chính sách hiện tại; các câu chưa kịp ghi batch có thể lặp lại sau restart.
+
+Lượt E2E đầu có một assertion cũ giả định nhóm học chuyên đề chỉ có bộ vừa nhập. Sau khi sửa assertion để nhận thư viện seed Backend, lượt đầy đủ cuối cùng pass 24/24. Test HTTP/Socket.IO ban đầu gặp EACCES trong sandbox, đã chạy lại thành công với quyền kết nối loopback.
 
 ## Sửa lifecycle Game Hub ngày 2026-11-08
 
@@ -71,3 +91,10 @@ Các hành vi đã kiểm tra:
 - Chrome: Solo tới kết quả và history qua refresh; quay về/rời room từ Home; hai browser context vào cùng phòng; shared-screen A/L và cướp điểm; viewport 390×844 không tràn ngang. Đã xem ảnh mobile render.
 
 Chưa kiểm chứng hai máy vật lý/Wi-Fi thật, firewall, keyboard ghosting vật lý, Co-op browser regression, gift/power-up, soak/load test hoặc Internet deployment. Room đang chơi không resume qua restart API; policy hiện tại hủy không thưởng và giữ lịch sử đã commit.
+
+## 2026-11-09 — Bộ lọc Quiz và Skill
+
+- Áp dụng ba migration và seed trên database test PostgreSQL riêng ở loopback. Migration mới tạo catalog Skill và biên nhận trừ kho.
+- `pnpm lint`, `pnpm typecheck`, `pnpm db:validate` và `pnpm build` pass. Vitest với `RUN_DB_TESTS=1` pass 111 test, gồm mua Skill lặp, retry action trừ kho một lần và giới hạn Skill theo mode.
+- `pnpm test:e2e e2e/quiz.spec.ts` pass 5 ca Chrome, gồm lọc đề Solo, 50/50 và làm mờ trong Duel với hai browser context. Chưa nghiệm thu bằng hai thiết bị LAN vật lý.
+- Suite browser Platform Lifecycle pass 15 ca với fixture HTTP/Socket.IO.

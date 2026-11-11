@@ -1,16 +1,31 @@
 import { AllowGuest, CurrentPlayer } from '../auth/auth-guard';
 import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
-import { questionPackSchema } from '@duoquest/shared-types';
+import { questionPackSchema, casualCatalogSchema } from '@duoquest/shared-types';
 import { z } from 'zod';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiEndpoint } from '../../common/api-endpoint';
 import { packSummarySchema } from '../../common/rest-schemas';
 import { PlatformStore } from '../persistence/store';
+import { QuizPreparationService } from './quiz-preparation.service';
+import { parseQuestionPack } from './parse-question-pack';
 
 @Controller('question-packs')
 @ApiTags('Question packs')
 export class QuestionPacksController {
-  constructor(@Inject(PlatformStore) private readonly store: PlatformStore) {}
+  constructor(
+    @Inject(PlatformStore) private readonly store: PlatformStore,
+    @Inject(QuizPreparationService) private readonly preparation: QuizPreparationService,
+  ) {}
+  @AllowGuest()
+  @ApiEndpoint({
+    summary: 'Danh mục câu đố vui đã duyệt',
+    auth: true,
+    response: casualCatalogSchema,
+  })
+  @Get('casual-catalog')
+  catalog() {
+    return this.preparation.catalog();
+  }
   @AllowGuest()
   @ApiEndpoint({
     summary: 'Liệt kê bộ đề thư viện và bộ đề của guest',
@@ -25,7 +40,7 @@ export class QuestionPacksController {
   @ApiEndpoint({
     summary: 'Kiểm tra bộ đề JSON, không lưu',
     description:
-      'Kiểm tra thêm ID/prompt không trùng, đủ bốn lựa chọn A–D và nội dung lựa chọn không trùng. Bộ đề tự nhập không nhận Coins/XP.',
+      'Kiểm tra câu trùng theo đề bài và tập ảnh, bốn lựa chọn A–D, cùng nguồn CDN của ảnh. Bộ đề tự nhập không nhận Coins/XP.',
     auth: true,
     body: questionPackSchema,
     response: z.object({ pack: questionPackSchema, warning: z.string() }),
@@ -34,7 +49,7 @@ export class QuestionPacksController {
   @Post('preview')
   preview(@Body() body: unknown) {
     return {
-      pack: questionPackSchema.parse(body),
+      pack: parseQuestionPack(body),
       warning: 'Hãy duyệt tính chính xác của câu hỏi. Bộ đề tự nhập không nhận Coins/XP.',
     };
   }
@@ -50,6 +65,6 @@ export class QuestionPacksController {
   })
   @Post()
   async save(@CurrentPlayer() playerId: string, @Body() body: unknown) {
-    return this.store.savePack(questionPackSchema.parse(body), playerId);
+    return this.store.savePack(parseQuestionPack(body), playerId);
   }
 }

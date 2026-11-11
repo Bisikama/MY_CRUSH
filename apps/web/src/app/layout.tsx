@@ -4,7 +4,7 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: 'DuoQuest — Học • Chơi • Kết nối',
-  description: 'Quiz Battle cho một người, đấu bạn bè hoặc cùng vượt ải qua mạng LAN.',
+  description: 'Thử sức một mình, rủ người ấy so tài hoặc cùng nhau vượt ải trong Quiz Battle.',
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

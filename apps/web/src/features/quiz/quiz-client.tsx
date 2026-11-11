@@ -4,8 +4,19 @@ import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Card } from '@duoquest/ui';
-import type { GameLayout, GameMode, PackSummary, QuizAction } from '@duoquest/shared-types';
+import {
+  matchesQuestion,
+  type QuizSelection,
+  type CasualCustomSelection,
+  type CasualCatalog,
+  type QuestionFilter,
+  type GameLayout,
+  type GameMode,
+  type PackSummary,
+  type QuizAction,
+} from '@duoquest/shared-types';
 import { actionId, api, copyText } from '../../lib/client';
+import type { KnowledgeTypeFilter } from '../../lib/knowledge-type';
 import { usePlatform } from '../../providers/platform-provider';
 import { useRoomStore } from '../../stores/room.store';
 import { QuizSetup } from './quiz-setup';
@@ -39,6 +50,24 @@ export function QuizClient({ code }: { code?: string }) {
   const [layout, setLayout] = useState<GameLayout>('MULTI_DEVICE');
   const [packs, setPacks] = useState<PackSummary[]>([]);
   const [packId, setPackId] = useState('');
+  const [filter, setFilter] = useState<QuestionFilter>({});
+  const [selectionType, setSelectionType] = useState<QuizSelection['type']>('CASUAL_RANDOM');
+  const [casualCatalog, setCasualCatalog] = useState<CasualCatalog>([]);
+  const [casualSelection, setCasualSelection] = useState<CasualCustomSelection>({
+    type: 'CASUAL_CUSTOM',
+    categories: [],
+    topics: [],
+    difficulty: 'mixed',
+  });
+  const [knowledgeType, setKnowledgeType] = useState<KnowledgeTypeFilter>('all');
+  const visiblePacks = packs.filter(
+    (pack) => knowledgeType === 'all' || (pack.knowledgeType ?? 'unclassified') === knowledgeType,
+  );
+  const eligiblePack = visiblePacks.find(
+    (pack) =>
+      pack.id === packId &&
+      pack.groups.some((group) => matchesQuestion(pack.category, group, filter)),
+  );
   const [joinCode, setJoinCode] = useState(code ?? '');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
@@ -72,6 +101,21 @@ export function QuizClient({ code }: { code?: string }) {
           setPacks(data);
           setPackId((id) => id || data[0]?.id || '');
         }
+      })
+      .catch((cause: unknown) => {
+        if (!cancelled) setError(errorText(cause));
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [identity]);
+
+  useEffect(() => {
+    if (!identity) return;
+    let cancelled = false;
+    void api<CasualCatalog>('/question-packs/casual-catalog')
+      .then((data) => {
+        if (!cancelled) setCasualCatalog(data);
       })
       .catch((cause: unknown) => {
         if (!cancelled) setError(errorText(cause));
@@ -139,11 +183,18 @@ export function QuizClient({ code }: { code?: string }) {
   }
 
   async function handleCreateRoom() {
+    if (selectionType === 'STUDY' && !eligiblePack) return;
     await run(async () => {
+      const selection: QuizSelection =
+        selectionType === 'STUDY'
+          ? { type: 'STUDY', packVersionId: eligiblePack!.id, filter }
+          : selectionType === 'CASUAL_RANDOM'
+            ? { type: 'CASUAL_RANDOM' }
+            : casualSelection;
       const view = await platformCreateRoom({
         mode,
-        layout,
-        packVersionId: packId,
+        layout: mode === 'SOLO' ? 'MULTI_DEVICE' : layout,
+        selection,
         ...(layout === 'SHARED_SCREEN' && mode !== 'SOLO' ? { secondNickname } : {}),
       });
       router.push(`/play/${view.code}`);
@@ -192,9 +243,9 @@ export function QuizClient({ code }: { code?: string }) {
         <div>
           <p className="eyebrow">HỌC • CHƠI • KẾT NỐI</p>
           <h1>
-            Kiến thức vui hơn
+            Một câu đố nhỏ
             <br />
-            khi có <em>bạn chơi.</em>
+            cho <em>hai người.</em>
           </h1>
           <p className="lead">
             Một bộ câu hỏi. Nhiều cách khám phá. Chọn tên của bạn để bắt đầu một vòng Quiz Battle.
@@ -263,9 +314,33 @@ export function QuizClient({ code }: { code?: string }) {
         setMode={setMode}
         layout={layout}
         setLayout={setLayout}
-        packs={packs}
+        selectionType={selectionType}
+        setSelectionType={setSelectionType}
+        casualCatalog={casualCatalog}
+        casualSelection={casualSelection}
+        setCasualSelection={setCasualSelection}
+        packs={visiblePacks}
+        hasUnclassifiedPacks={packs.some((pack) => !pack.knowledgeType)}
+        knowledgeType={knowledgeType}
+        setKnowledgeType={(next) => {
+          setKnowledgeType(next);
+          setFilter({ difficulty: filter.difficulty });
+          setPackId('');
+        }}
         packId={packId}
         setPackId={setPackId}
+        filter={filter}
+        setFilter={(next) => {
+          setFilter(next);
+          if (
+            !visiblePacks.some(
+              (pack) =>
+                pack.id === packId &&
+                pack.groups.some((group) => matchesQuestion(pack.category, group, next)),
+            )
+          )
+            setPackId('');
+        }}
         secondNickname={secondNickname}
         setSecondNickname={setSecondNickname}
         joinCode={joinCode}

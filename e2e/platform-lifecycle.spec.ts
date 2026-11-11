@@ -27,6 +27,19 @@ test.afterEach(async ({ page }) => {
   await fixture.close();
 });
 
+test('anonymous profile hydrates and shows the localhost login link', async ({ page }) => {
+  fixture.identity = null;
+  const pageErrors: Error[] = [];
+  page.on('pageerror', (error) => pageErrors.push(error));
+
+  await page.goto('/profile');
+  await expect(page.getByRole('link', { name: 'Đăng nhập tài khoản' })).toHaveAttribute(
+    'href',
+    '/login',
+  );
+  expect(pageErrors).toEqual([]);
+});
+
 async function lobby(page: Page) {
   await page.goto('/play');
   await expect(page.getByRole('button', { name: 'Tạo ván Solo →' })).toBeEnabled();

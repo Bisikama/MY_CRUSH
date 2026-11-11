@@ -2,13 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import {
-  api,
-  isLocalAccountHost,
-  loadIdentity,
-  onAuthChanged,
-  type GameIdentity,
-} from '../../../lib/client';
+import { api, loadIdentity, onAuthChanged, type GameIdentity } from '../../../lib/client';
+import { usePlatform } from '../../../providers/platform-provider';
 import { AccountSettings } from '../../../features/auth/account-settings';
 import {
   formatProfileMatchTime,
@@ -91,11 +86,11 @@ function ModeIcon({ tone }: { tone: 'solo' | 'duel' | 'coop' }) {
 }
 
 export default function ProfilePage() {
+  const { hydrated, localHost } = usePlatform();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [history, setHistory] = useState<HistoryRow[]>([]);
   const [identity, setIdentity] = useState<GameIdentity | null>(null);
   const [message, setMessage] = useState('Đang tải hồ sơ…');
-  const localHost = typeof window !== 'undefined' && isLocalAccountHost();
 
   useEffect(() => {
     let live = true;
@@ -156,7 +151,7 @@ export default function ProfilePage() {
               <Link href="/play" className="hub-btn-primary">
                 Tạo hồ sơ khách tại trang Chơi →
               </Link>
-              {localHost && (
+              {hydrated && localHost && (
                 <Link href="/login" className="site-header-btn site-header-btn--outline">
                   Đăng nhập tài khoản
                 </Link>

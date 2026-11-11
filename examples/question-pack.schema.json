@@ -22,10 +22,48 @@
           "minLength": 2,
           "maxLength": 20
         },
+        "knowledgeType": {
+          "type": "string",
+          "enum": [
+            "academic",
+            "practical",
+            "discovery"
+          ]
+        },
         "category": {
           "type": "string",
           "minLength": 1,
           "maxLength": 80
+        },
+        "relatedKnowledge": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "category": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 80
+              },
+              "topic": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4000
+              }
+            },
+            "required": [
+              "category",
+              "topic",
+              "reason"
+            ],
+            "additionalProperties": false
+          },
+          "maxItems": 12
         },
         "questions": {
           "type": "array",
@@ -42,16 +80,42 @@
                 "const": "single_choice"
               },
               "topic": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 4000
+                "$ref": "#/definitions/QuestionPack/properties/relatedKnowledge/items/properties/reason"
               },
               "difficulty": {
                 "type": "string",
-                "enum": ["easy", "medium", "hard"]
+                "enum": [
+                  "easy",
+                  "medium",
+                  "hard"
+                ]
               },
               "prompt": {
-                "$ref": "#/definitions/QuestionPack/properties/questions/items/properties/topic"
+                "$ref": "#/definitions/QuestionPack/properties/relatedKnowledge/items/properties/reason"
+              },
+              "images": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "src": {
+                      "type": "string",
+                      "maxLength": 1024,
+                      "pattern": "^(?:\\/images\\/quiz\\/|https:\\/\\/[a-zA-Z0-9.-]+(?::[0-9]+)?\\/)(?:[a-zA-Z0-9_-][a-zA-Z0-9_.~-]*\\/)*[a-zA-Z0-9_-][a-zA-Z0-9_.~-]*\\.(?:webp|jpe?g|png|avif)(?![\\s\\S])"
+                    },
+                    "alt": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 300
+                    }
+                  },
+                  "required": [
+                    "src",
+                    "alt"
+                  ],
+                  "additionalProperties": false
+                },
+                "maxItems": 4
               },
               "options": {
                 "type": "array",
@@ -60,13 +124,21 @@
                   "properties": {
                     "id": {
                       "type": "string",
-                      "enum": ["A", "B", "C", "D"]
+                      "enum": [
+                        "A",
+                        "B",
+                        "C",
+                        "D"
+                      ]
                     },
                     "text": {
-                      "$ref": "#/definitions/QuestionPack/properties/questions/items/properties/topic"
+                      "$ref": "#/definitions/QuestionPack/properties/relatedKnowledge/items/properties/reason"
                     }
                   },
-                  "required": ["id", "text"],
+                  "required": [
+                    "id",
+                    "text"
+                  ],
                   "additionalProperties": false
                 },
                 "minItems": 4,
@@ -76,12 +148,12 @@
                 "$ref": "#/definitions/QuestionPack/properties/questions/items/properties/options/items/properties/id"
               },
               "explanation": {
-                "$ref": "#/definitions/QuestionPack/properties/questions/items/properties/topic"
+                "$ref": "#/definitions/QuestionPack/properties/relatedKnowledge/items/properties/reason"
               },
               "hints": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/definitions/QuestionPack/properties/questions/items/properties/topic"
+                  "$ref": "#/definitions/QuestionPack/properties/relatedKnowledge/items/properties/reason"
                 },
                 "maxItems": 5,
                 "default": []
@@ -118,7 +190,14 @@
           "maxItems": 500
         }
       },
-      "required": ["schemaVersion", "packId", "title", "language", "category", "questions"],
+      "required": [
+        "schemaVersion",
+        "packId",
+        "title",
+        "language",
+        "category",
+        "questions"
+      ],
       "additionalProperties": false
     }
   },

@@ -91,12 +91,17 @@ export class PlatformBrowserFixture {
       };
       if (this.holdRoomReads) this.heldReads.push(finish);
       else finish();
-    } else if (path === '/api/question-packs')
+    } else if (path === '/api/question-packs/casual-catalog')
+      send([{ category: 'General', topic: 'Lifecycle', difficulty: 'easy', count: 1 }]);
+    else if (path === '/api/question-packs')
       send([
         {
           id: '33333333-3333-4333-8333-333333333333',
           title: 'Lifecycle pack',
           questionCount: 1,
+          category: 'General',
+          groups: [{ topic: 'Lifecycle', difficulty: 'easy', count: 1 }],
+          relatedKnowledge: [],
         },
       ]);
     else if (path === '/api/players/me/history') send([]);
@@ -183,6 +188,7 @@ export class PlatformBrowserFixture {
               { id: 'B', text: 'Two' },
             ],
           },
+          openedAt: Date.now(),
           deadline: Date.now() + 120_000,
           serverNow: Date.now(),
           scores: { [id]: 0 },
@@ -194,6 +200,10 @@ export class PlatformBrowserFixture {
           lives: 3,
           stage: 1,
           stageCount: 1,
+          support: { hints: [], hiddenOptions: [] },
+          interference: null,
+          skillSlots: [],
+          hintRemaining: false,
           reveal: null,
           result: null,
         };

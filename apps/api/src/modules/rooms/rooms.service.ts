@@ -16,10 +16,15 @@ import type {
   PlayerSlot,
   RoomStatus,
   RoomView,
+  createRoomSchema,
 } from '@duoquest/shared-types';
-import { PlatformStore, type PackRecord, type PlayerRecord } from '../persistence/store';
+import { type PlayerRecord } from '../persistence/store';
 import { PlayersService } from '../players/players.service';
 import { SessionsService, type LiveSession } from '../sessions/sessions.service';
+import {
+  QuizPreparationService,
+  type PreparedQuiz,
+} from '../question-packs/quiz-preparation.service';
 
 interface Participant extends PlayerSlot {
   controllerId: string;
@@ -32,7 +37,8 @@ interface LiveRoom {
   layout: GameLayout;
   status: RoomStatus;
   players: Participant[];
-  pack: PackRecord;
+  prepared: PreparedQuiz;
+  cancelRequested: boolean;
   session: LiveSession | null;
   rematchVotes: Set<string>;
   touchedAt: number;
@@ -49,9 +55,9 @@ export class RoomsService implements OnModuleInit, OnModuleDestroy {
   private timer?: ReturnType<typeof setInterval>;
   private ticking = false;
   constructor(
-    @Inject(PlatformStore) private readonly store: PlatformStore,
     @Inject(PlayersService) private readonly playersService: PlayersService,
     @Inject(SessionsService) private readonly sessions: SessionsService,
+    @Inject(QuizPreparationService) private readonly preparation: QuizPreparationService,
   ) {}
   onModuleInit() {
     this.timer = setInterval(() => {
@@ -119,7 +125,7 @@ export class RoomsService implements OnModuleInit, OnModuleDestroy {
   }
   async create(
     player: PlayerRecord,
-    input: { mode: GameMode; layout: GameLayout; packVersionId: string; secondNickname?: string },
+    input: import('zod').infer<typeof createRoomSchema>,
     check?: () => Promise<void>,
   ) {
     return this.queue.run('__membership__', async () => {
@@ -136,8 +142,15 @@ export class RoomsService implements OnModuleInit, OnModuleDestroy {
         'CONFLICT',
         'Hãy rời phòng hiện tại trước',
       );
-      const pack = await this.store.getPack(input.packVersionId, player.id);
-      assertDomain(pack, 'NOT_FOUND', 'Không có quyền dùng bộ đề này');
+      const prepared = await this.preparation.prepare(
+        player.id,
+        input.mode,
+        input.selection ?? {
+          type: 'STUDY',
+          packVersionId: input.packVersionId!,
+          filter: input.filter,
+        },
+      );
       const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
       let code: string;
       do {
@@ -171,7 +184,8 @@ export class RoomsService implements OnModuleInit, OnModuleDestroy {
         layout: input.layout,
         status: 'WAITING',
         players: slots,
-        pack,
+        prepared,
+        cancelRequested: false,
         session: null,
         rematchVotes: new Set(),
         touchedAt: Date.now(),
@@ -223,6 +237,7 @@ export class RoomsService implements OnModuleInit, OnModuleDestroy {
     return this.queue.run(code, async () => {
       await check?.();
       const room = this.authorize(code, playerId);
+      assertDomain(!room.cancelRequested, 'CONFLICT', 'Phòng đang chờ đóng');
       assertDomain(
         room.status === 'WAITING' || room.status === 'READY',
         'CONFLICT',
@@ -246,6 +261,7 @@ export class RoomsService implements OnModuleInit, OnModuleDestroy {
     return this.queue.run(code, async () => {
       await check?.();
       const room = this.authorize(code, playerId);
+      assertDomain(!room.cancelRequested, 'CONFLICT', 'Phòng đang chờ đóng');
       assertDomain(room.hostPlayerId === playerId, 'FORBIDDEN', 'Chỉ host được bắt đầu');
       assertDomain(
         room.status === 'READY' && room.players.every((p) => p.connected),
@@ -262,10 +278,16 @@ export class RoomsService implements OnModuleInit, OnModuleDestroy {
       return this.view(this.authorize(code, playerId), playerId);
     });
   }
-  action(command: GameActionCommand, controllerId: string, check?: () => Promise<void>) {
+  action(
+    command: GameActionCommand,
+    controllerId: string,
+    check?: () => Promise<void>,
+    hasAccount = false,
+  ) {
     return this.queue.run(command.code, async () => {
       await check?.();
       const room = this.authorize(command.code, controllerId);
+      assertDomain(!room.cancelRequested, 'CONFLICT', 'Phòng đang chờ đóng');
       assertDomain(
         room.players.some(
           (p) => p.playerId === command.playerId && p.controllerId === controllerId,
@@ -278,7 +300,12 @@ export class RoomsService implements OnModuleInit, OnModuleDestroy {
         'CONFLICT',
         'Trận chưa chạy',
       );
-      const receipt = await this.sessions.apply(room.session, command, Date.now());
+      const receipt = await this.sessions.apply(
+        room.session,
+        command,
+        Date.now(),
+        hasAccount && command.playerId === controllerId,
+      );
       this.changed(room);
       return receipt;
     });
@@ -287,6 +314,7 @@ export class RoomsService implements OnModuleInit, OnModuleDestroy {
     return this.queue.run(code, async () => {
       await check?.();
       const room = this.authorize(code, playerId);
+      assertDomain(!room.cancelRequested, 'CONFLICT', 'Phòng đang chờ đóng');
       assertDomain(
         room.status === 'FINISHED' && room.players.every((p) => p.connected),
         'CONFLICT',
@@ -303,11 +331,7 @@ export class RoomsService implements OnModuleInit, OnModuleDestroy {
     return this.queue.run(code, async () => {
       await check?.();
       const room = this.authorize(code, playerId);
-      if (room.session && room.status === 'IN_PROGRESS') await this.sessions.cancel(room.session);
-      room.status = 'CANCELLED';
-      this.changed(room);
-      // Cancel entire room in V1. Historical session/results remain in PostgreSQL.
-      this.rooms.delete(code);
+      await this.cancelRoom(room);
       return null;
     });
   }
@@ -344,16 +368,14 @@ export class RoomsService implements OnModuleInit, OnModuleDestroy {
         const room = this.rooms.get(code);
         if (!room) return;
         if (
-          room.status === 'IN_PROGRESS' &&
-          room.players.some(
-            (p) =>
-              p.disconnectedAt !== null && now - p.disconnectedAt >= ROOM_POLICY.reconnectGraceMs,
-          )
+          room.cancelRequested ||
+          (room.status === 'IN_PROGRESS' &&
+            room.players.some(
+              (p) =>
+                p.disconnectedAt !== null && now - p.disconnectedAt >= ROOM_POLICY.reconnectGraceMs,
+            ))
         ) {
-          if (room.session) await this.sessions.cancel(room.session);
-          room.status = 'CANCELLED';
-          this.changed(room);
-          this.rooms.delete(code);
+          await this.cancelRoom(room);
           return;
         }
         if (room.status !== 'IN_PROGRESS' && now - room.touchedAt >= ROOM_POLICY.idleTtlMs) {
@@ -373,17 +395,32 @@ export class RoomsService implements OnModuleInit, OnModuleDestroy {
       });
   }
   private async startSession(room: LiveRoom) {
+    const prepared = room.session
+      ? await this.preparation.prepare(
+          room.hostPlayerId,
+          room.mode,
+          room.prepared.snapshot.selection,
+        )
+      : room.prepared;
     room.session = await this.sessions.create(
       room.code,
       room.mode,
       room.layout,
       room.players.map((p) => p.playerId),
-      room.pack,
+      prepared,
       Date.now(),
     );
+    room.prepared = prepared;
     room.status = 'IN_PROGRESS';
     room.rematchVotes.clear();
     this.changed(room);
+  }
+  private async cancelRoom(room: LiveRoom) {
+    room.cancelRequested = true;
+    if (room.session && room.status === 'IN_PROGRESS') await this.sessions.cancel(room.session);
+    room.status = 'CANCELLED';
+    this.changed(room);
+    this.rooms.delete(room.code);
   }
   private find(code: string) {
     const room = this.rooms.get(code);
@@ -407,7 +444,24 @@ export class RoomsService implements OnModuleInit, OnModuleDestroy {
     const controlledPlayerIds = room.players
       .filter((p) => p.controllerId === controllerId)
       .map((p) => p.playerId);
+    const game = room.session
+      ? this.sessions.engine.getPlayerView(room.session.state, controlledPlayerIds, Date.now())
+      : null;
+    if (game && room.session) {
+      for (const slot of game.skillSlots)
+        if (slot.playerId === controllerId) slot.stock = { ...room.session.stock[slot.playerId] };
+    }
     return {
+      setup: {
+        title: room.prepared.title,
+        category: room.prepared.category,
+        filter:
+          room.prepared.snapshot.selection.type === 'STUDY'
+            ? (room.prepared.snapshot.selection.filter ?? {})
+            : {},
+        selection: room.prepared.snapshot.selection,
+        questionCount: room.prepared.questions.length,
+      },
       code: room.code,
       hostPlayerId: room.hostPlayerId,
       mode: room.mode,
@@ -421,9 +475,7 @@ export class RoomsService implements OnModuleInit, OnModuleDestroy {
       })),
       controlledPlayerIds,
       rematchVotes: [...room.rematchVotes],
-      game: room.session
-        ? this.sessions.engine.getPlayerView(room.session.state, controlledPlayerIds, Date.now())
-        : null,
+      game,
     };
   }
 }

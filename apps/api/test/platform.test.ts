@@ -7,6 +7,7 @@ import { SessionsService } from '../src/modules/sessions/sessions.service';
 import { GameRegistry } from '../src/modules/sessions/game-registry';
 import { RewardsService } from '../src/modules/rewards/rewards.service';
 import { RoomsService } from '../src/modules/rooms/rooms.service';
+import { QuizPreparationService } from '../src/modules/question-packs/quiz-preparation.service';
 
 describe('Room/session orchestration', () => {
   let store: MemoryStore;
@@ -17,7 +18,7 @@ describe('Room/session orchestration', () => {
     store = new MemoryStore();
     players = new PlayersService(store);
     sessions = new SessionsService(store, new GameRegistry(), new RewardsService());
-    rooms = new RoomsService(store, players, sessions);
+    rooms = new RoomsService(players, sessions, new QuizPreparationService(store));
   });
   async function start(mode: GameMode = 'SOLO', layout: GameLayout = 'MULTI_DEVICE') {
     const guest = await players.create('Player one');
@@ -46,6 +47,56 @@ describe('Room/session orchestration', () => {
       payload: { type: 'ANSWER', optionId: 'A' },
     };
   }
+  it('validates the combined filter and snapshots only matching questions', async () => {
+    const guest = await players.create('Filter tester');
+    const player = await players.authenticate(guest.token);
+    const content = store.pack.content;
+    const first = content.questions[0]!;
+    content.questions.push({ ...first, id: 'hard', difficulty: 'hard' });
+    const base = { mode: 'SOLO', layout: 'MULTI_DEVICE', packVersionId: store.pack.id } as const;
+    await expect(
+      rooms.create(player, { ...base, filter: { topic: 'unmatched', difficulty: 'hard' } }),
+    ).rejects.toThrow('Bộ đề không có câu');
+    const room = await rooms.create(player, {
+      ...base,
+      filter: { topic: first.topic, difficulty: 'hard' },
+    });
+    expect(room.setup?.questionCount).toBe(1);
+    await rooms.ready(room.code, player.id);
+    const live = await rooms.start(room.code, player.id);
+    expect(live.game?.question.id).toBe('hard');
+    expect(store.sessions.get(live.game!.sessionId)?.questions.map((q) => q.id)).toEqual(['hard']);
+  });
+
+  it('spends free first, rejects guest stock use, and deducts only once on retry', async () => {
+    store.pack.content.questions[0]!.hints = ['one', 'two', 'three'];
+    const { view, player } = await start();
+    store.stock[player.id] = { HINT: 2 };
+    const hint = () =>
+      ({ ...action(view, player.id), payload: { type: 'USE_SKILL', skill: 'HINT' } }) as const;
+    await rooms.action(hint(), player.id, undefined, true);
+    expect(store.stock[player.id]!.HINT).toBe(2);
+    await expect(rooms.action(hint(), player.id)).rejects.toThrow('đăng nhập');
+    const paid = hint();
+    const receipt = await rooms.action(paid, player.id, undefined, true);
+    expect(await rooms.action(paid, player.id, undefined, true)).toEqual(receipt);
+    expect(store.stock[player.id]!.HINT).toBe(1);
+    expect(rooms.viewFor(view.code, player.id).game?.support.hints).toEqual(['one', 'two']);
+  });
+
+  it('blocks a shared-screen guest slot from spending the signed-in host stock', async () => {
+    store.pack.content.questions[0]!.hints = ['one', 'two', 'three'];
+    const { view, player } = await start('DUEL', 'SHARED_SCREEN');
+    const second = view.controlledPlayerIds[1]!;
+    store.stock[player.id] = { HINT: 2 };
+    await rooms.action({ ...action(view, second), payload: { type: 'BUZZ' } }, player.id);
+    const hint = () =>
+      ({ ...action(view, second), payload: { type: 'USE_SKILL', skill: 'HINT' } }) as const;
+    await rooms.action(hint(), player.id, undefined, true);
+    await expect(rooms.action(hint(), player.id, undefined, true)).rejects.toThrow('đăng nhập');
+    expect(store.stock[player.id]!.HINT).toBe(2);
+  });
+
   it('stores only guest token hashes', async () => {
     const guest = await players.create('Guest');
     const player = await players.authenticate(guest.token);

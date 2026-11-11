@@ -19,6 +19,7 @@ export default defineConfig({
           ? 'pnpm --filter @duoquest/api exec tsx --tsconfig tsconfig.json test/browser-api.ts'
           : 'pnpm --filter @duoquest/api start',
       url: 'http://127.0.0.1:4000/api/health/ready',
+      env: { QUIZ_IMAGE_CDN_ORIGINS: 'https://quiz-cdn.example.test' },
       reuseExistingServer: false,
       timeout: 60_000,
     },

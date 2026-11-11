@@ -3,6 +3,7 @@
   "packId": "duoquest-starter",
   "title": "Khởi động cùng DuoQuest",
   "language": "vi",
+  "knowledgeType": "discovery",
   "category": "general",
   "questions": [
     {
