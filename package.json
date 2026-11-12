@@ -22,7 +22,10 @@
     "db:up": "docker compose --env-file .env -f infra/compose.yaml up -d",
     "db:down": "docker compose --env-file .env -f infra/compose.yaml down",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "dev:ui-lab": "pnpm --filter @duoquest/ui-lab dev",
+    "build:ui-lab": "pnpm --filter @duoquest/ui-lab build",
+    "test:ui-lab": "playwright test --config apps/ui-lab/playwright.config.ts"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.0",

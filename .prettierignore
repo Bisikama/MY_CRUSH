@@ -9,3 +9,4 @@ prisma/migrations
 test-results
 playwright-report
 apps/web/next-env.d.ts
+apps/ui-lab/next-env.d.ts

@@ -41,6 +41,8 @@ jobs:
       - run: pnpm build
       - run: pnpm db:seed
       - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm build:ui-lab
+      - run: pnpm test:ui-lab
       - run: pnpm test:e2e
       - run: pnpm test:e2e e2e/auth.spec.ts
         env:

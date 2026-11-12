@@ -1,0 +1,63 @@
+.panel {
+  position: fixed;
+  z-index: 20;
+  right: 1rem;
+  bottom: 1rem;
+  max-width: calc(100vw - 2rem);
+  width: max-content;
+  color: #271d42;
+  background: #fff;
+  border: 1px solid #ded6ed;
+  border-radius: 0.85rem;
+  box-shadow: 0 4px 18px #2b184825;
+  font:
+    600 0.875rem/1.45 system-ui,
+    sans-serif;
+}
+
+.panel summary {
+  cursor: pointer;
+  padding: 0.65rem 0.9rem;
+}
+
+.controls {
+  display: grid;
+  gap: 0.5rem;
+  width: min(19rem, calc(100vw - 2rem));
+  padding: 0 0.85rem 0.85rem;
+  max-height: 65vh;
+  overflow: auto;
+}
+
+.controls select,
+.controls button {
+  min-height: 2.25rem;
+  padding: 0.35rem 0.55rem;
+  border: 1px solid #cfc4e2;
+  border-radius: 0.45rem;
+  background: #faf7ff;
+}
+
+.controls button:disabled {
+  opacity: 0.5;
+}
+
+.controls button[aria-pressed='true'] {
+  color: white;
+  background: #52358a;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.controls p {
+  font-size: 0.75rem;
+  overflow-wrap: anywhere;
+}
+
+.controls a {
+  text-decoration: underline;
+}

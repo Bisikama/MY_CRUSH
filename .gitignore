@@ -6,6 +6,7 @@ coverage/
 .env.*
 !.env.example
 *.tsbuildinfo
+/apps/ui-lab/next-env.d.ts
 *.log
 .pnpm-store/
 test-results/

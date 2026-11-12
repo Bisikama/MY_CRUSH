@@ -1,0 +1,111 @@
+.arena:global(.question-card) {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  max-width: 1050px;
+  padding: clamp(1.5rem, 5vw, 3.25rem) clamp(1.25rem, 8vw, 6rem);
+  border-color: #3d6548;
+  background: #375941 url('/images/quiz/forest-arena.png') center / cover no-repeat;
+}
+
+.panel {
+  position: relative;
+  z-index: 1;
+  max-width: 41rem;
+  margin-inline: auto;
+  padding: clamp(1rem, 3vw, 1.85rem);
+  border: 1px solid #b6d1aa66;
+  border-radius: 1.25rem;
+  background: #112d21e8;
+  box-shadow: 0 12px 32px #0a211b55;
+  color: #f8fbef;
+}
+
+.panel :global(.question-meta),
+.panel :global(.muted) {
+  color: #deecd8;
+}
+
+.panel :global(.timer) {
+  background: #294d35;
+  border-color: #a6c195;
+  color: #f8fbef;
+}
+
+.panel :global(.button-outline) {
+  background: #f0f5e9;
+  border-color: #b3c8aa;
+  color: #244830;
+}
+
+.panel :global(.button-outline:hover:not(:disabled)) {
+  background: #dae9cf;
+}
+
+.panel :global(.coop-info) {
+  color: #2c3925;
+}
+
+.panel :global(.answer:disabled) {
+  opacity: 1;
+  cursor: default;
+}
+
+.panel :global(.answer:focus-visible),
+.panel :global(.button:focus-visible) {
+  outline: 3px solid #ffe39a;
+  outline-offset: 3px;
+}
+
+.arena::before,
+.arena::after {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #fff0a3;
+  box-shadow: 0 0 10px 2px #ffdd73;
+  pointer-events: none;
+  content: '';
+}
+
+.arena::before {
+  top: 36%;
+  left: 9%;
+  animation: drift 5s ease-in-out infinite alternate;
+}
+
+.arena::after {
+  right: 9%;
+  bottom: 29%;
+  animation: drift 6s ease-in-out -2s infinite alternate-reverse;
+}
+
+@keyframes drift {
+  from {
+    opacity: 0.28;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 0.85;
+    transform: translateY(-8px);
+  }
+}
+
+@media (max-width: 600px) {
+  .arena:global(.question-card) {
+    padding: 1.5rem 0.75rem;
+    background-position: 28% center;
+  }
+
+  .panel {
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arena::before,
+  .arena::after {
+    animation: none;
+  }
+}

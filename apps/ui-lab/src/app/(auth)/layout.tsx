@@ -1,0 +1,52 @@
+import type { ReactNode } from 'react';
+import localFont from 'next/font/local';
+
+const quicksand = localFont({
+  src: [
+    {
+      path: '../../assets/fonts/quicksand-vietnamese.woff2',
+      weight: '500 700',
+      style: 'normal',
+    },
+    {
+      path: '../../assets/fonts/quicksand-latin-ext.woff2',
+      weight: '500 700',
+      style: 'normal',
+    },
+    {
+      path: '../../assets/fonts/quicksand-latin.woff2',
+      weight: '500 700',
+      style: 'normal',
+    },
+  ],
+  variable: '--font-auth-heading',
+  display: 'swap',
+});
+
+const nunitoSans = localFont({
+  src: [
+    {
+      path: '../../assets/fonts/nunito-sans-vietnamese.woff2',
+      weight: '400 800',
+      style: 'normal',
+    },
+    {
+      path: '../../assets/fonts/nunito-sans-latin-ext.woff2',
+      weight: '400 800',
+      style: 'normal',
+    },
+    {
+      path: '../../assets/fonts/nunito-sans-latin.woff2',
+      weight: '400 800',
+      style: 'normal',
+    },
+  ],
+  variable: '--font-auth-body',
+  display: 'swap',
+});
+
+export default function AuthLayout({ children }: { children: ReactNode }) {
+  return (
+    <div className={`auth-theme ${quicksand.variable} ${nunitoSans.variable}`}>{children}</div>
+  );
+}

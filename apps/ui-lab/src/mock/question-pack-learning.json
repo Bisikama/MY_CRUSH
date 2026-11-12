@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "packId": "chu-vi-hinh-vuong",
+  "title": "Chu vi hình vuông",
+  "language": "vi",
+  "knowledgeType": "academic",
+  "category": "Toán học",
+  "relatedKnowledge": [
+    {
+      "category": "Toán học",
+      "topic": "Diện tích hình vuông",
+      "reason": "So sánh độ dài đường bao với phần mặt phẳng bên trong."
+    }
+  ],
+  "questions": [
+    {
+      "id": "chu-vi-6",
+      "type": "single_choice",
+      "topic": "Chu vi hình vuông",
+      "difficulty": "easy",
+      "prompt": "Một hình vuông có cạnh 6 cm. Chu vi của hình vuông là bao nhiêu?",
+      "options": [
+        {
+          "id": "A",
+          "text": "12 cm"
+        },
+        {
+          "id": "B",
+          "text": "36 cm"
+        },
+        {
+          "id": "C",
+          "text": "24 cm"
+        },
+        {
+          "id": "D",
+          "text": "10 cm"
+        }
+      ],
+      "correctOptionId": "C",
+      "explanation": "Chu vi là tổng độ dài bốn cạnh: 6 + 6 + 6 + 6 = 24 cm. Nhân hai độ dài cạnh là cách tính diện tích, có đơn vị cm².",
+      "hints": [
+        "Chu vi đo độ dài đường bao quanh hình.",
+        "Hình vuông có bốn cạnh bằng nhau.",
+        "Cộng độ dài của từng cạnh vào tổng."
+      ],
+      "timeLimitSeconds": 25
+    }
+  ]
+}

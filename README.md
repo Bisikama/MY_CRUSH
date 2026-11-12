@@ -41,6 +41,15 @@ Mở http://localhost:3000/register để đăng ký theo ba bước email → m
 
 Role mặc định là `PLAYER`. Cấp hoặc gỡ Admin qua `pnpm auth:role <email> ADMIN` hoặc `pnpm auth:role <email> PLAYER`. Xem [đặc tả Auth và phân quyền](docs/features/auth.md).
 
+## Thử giao diện trong UI Lab
+
+Chạy `pnpm install` rồi `pnpm dev:ui-lab` từ root và mở http://127.0.0.1:3100. UI Lab chạy bằng dữ liệu mẫu trong tab trình duyệt, kể cả khi API, PostgreSQL và dịch vụ email đều tắt.
+
+- Đăng nhập mẫu bằng `demo@example.test` và `DuoQuest!123`. Mã xác minh mẫu là `123456`. Dùng thông tin giả khi thử các form tài khoản.
+- Mở **UI Lab** ở góc dưới để chọn cảnh, **Phát lại** hoặc **Đặt lại**. Khi chơi Duel hoặc Co-op LAN, bấm **P2** để đưa người chơi thứ hai vào phòng, Ready ở cả hai góc nhìn, rồi quay về **P1** để bắt đầu. Mã mời mẫu là `LAB222`.
+- Reload hoặc **Đặt lại** sẽ phục hồi fixture. Hồ sơ, Coins, kho, nhập đề và lịch sử trong lần thử nằm trong bộ nhớ. Các cảnh dựng sẵn để duyệt giao diện không cấp thưởng. Ảnh bộ đề nhập được thay bằng ảnh minh họa local lúc hiển thị.
+- Chạy `pnpm build:ui-lab` rồi `pnpm test:ui-lab` để chạy browser E2E riêng trên cổng 3100. Sau khi duyệt thiết kế, chuyển riêng phần hiển thị và tài nguyên đã duyệt sang web chính, nối với snapshot và thao tác thật rồi kiểm tra hồi quy. [Ranh giới UI Lab](docs/architecture/decisions.md#ui-lab).
+
 ## Swagger REST API
 
 Sau khi chạy `pnpm dev`, mở http://localhost:4000/api/docs. OpenAPI JSON: http://localhost:4000/api/docs-json.
@@ -77,6 +86,7 @@ Browser tự lấy hostname trang web rồi gọi API cùng hostname, cổng 400
 
 ```text
 apps/web                 UI và Socket.IO client
+apps/ui-lab              Bản thử giao diện local và dữ liệu giả
 apps/api                 Domain orchestration và persistence
 packages/shared-types    Zod schemas, public views, REST/socket contracts
 packages/game-sdk        Server engine interface

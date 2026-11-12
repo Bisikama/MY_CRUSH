@@ -42,7 +42,36 @@ export default tseslint.config(
     rules: {
       'no-restricted-imports': [
         'error',
-        { patterns: ['@prisma/*', '@duoquest/game-quiz', '@duoquest/game-core', '@nestjs/*'] },
+        {
+          patterns: [
+            '@prisma/*',
+            '@duoquest/game-quiz',
+            '@duoquest/game-core',
+            '@nestjs/*',
+            '@duoquest/ui-lab',
+            '**/ui-lab/**',
+          ],
+        },
+      ],
+    },
+  },
+  {
+    files: ['apps/ui-lab/src/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            '@prisma/*',
+            '@nestjs/*',
+            'socket.io-client',
+            '@duoquest/web',
+            '@duoquest/ui',
+            '**/web/**',
+            '**/api/**',
+            '**/packages/ui/**',
+          ],
+        },
       ],
     },
   },

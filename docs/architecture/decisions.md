@@ -3,7 +3,7 @@
 > **Mục đích:** Nguồn chính cho các quyết định LOCKED, PROPOSAL và OPEN.
 > **Đối tượng:** Chủ dự án, lập trình viên và agent.
 > **Trạng thái:** `current`.
-> **Cập nhật:** 2026-11-11.
+> **Cập nhật:** 2026-11-12.
 > **Liên quan:** [Mục lục](../README.md), [Nguồn tham khảo](../../AGENTS.md).
 
 ## LOCKED theo Blueprint V1.0
@@ -48,3 +48,9 @@
 - Game 2–3, rank, deployment Internet, durable room recovery.
 
 Các lựa chọn PROPOSAL được ghi nhận để tránh agent tự xem là quyết định sản phẩm bất biến. Nếu đổi, cập nhật file này, contracts, tests và domain docs cùng task.
+
+## UI Lab
+
+- UI Lab là workspace phát triển độc lập trên loopback cổng 3100. Mốc sao chép giao diện là web tại commit `b1cf1dd`. Workspace sở hữu bản sao màn hình, CSS và tài nguyên để chỉnh giao diện độc lập. Build và dev mặc định của web chính dùng các entry point hiện có.
+- UI Lab dùng các public view types hiện có. Lớp mô phỏng chạy QuizEngine với câu hỏi mẫu trong tab rồi cấp snapshot theo góc nhìn đang chọn. Các màn shop, nhập đề, profile và tài khoản dùng dữ liệu giả trong bộ nhớ. Reload đặt lại dữ liệu. LAN trong UI Lab mô phỏng hai góc nhìn của cùng một trận trong một tab.
+- Thử animation và 3D qua props, snapshot hoặc sự kiện UI; tải riêng cảnh 3D và giữ phương án 2D, hỗ trợ giảm chuyển động khi triển khai. Sau khi chủ dự án duyệt, chuyển phần hiển thị, CSS và tài nguyên đã chọn sang web chính trong thay đổi riêng. Web chính tiếp tục nhận trạng thái có thẩm quyền từ server qua PlatformProvider và cần kiểm tra hồi quy, gồm LAN hai thiết bị nếu thiết kế chạm luồng LAN. [Lệnh chạy UI Lab](../../README.md#thử-giao-diện-trong-ui-lab).
