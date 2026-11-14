@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import type { QuestionImage } from '@duoquest/shared-types';
 import { sampleImage } from '../../mock/packs';
 import styles from './question-images.module.css';
@@ -9,15 +9,20 @@ function QuestionImageTile({
   image,
   lazy,
   inMatch,
+  concealed,
 }: {
   image: QuestionImage;
   lazy: boolean;
   inMatch: boolean;
+  concealed: boolean;
 }) {
   const [failed, setFailed] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const viewer = useRef<HTMLDialogElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
+  useLayoutEffect(() => {
+    if (concealed) viewer.current?.close();
+  }, [concealed]);
 
   if (failed) {
     return (
@@ -86,10 +91,12 @@ export function QuestionImages({
   images,
   lazy = false,
   inMatch = false,
+  concealed = false,
 }: {
   images?: readonly QuestionImage[];
   lazy?: boolean;
   inMatch?: boolean;
+  concealed?: boolean;
 }) {
   if (!images?.length) return null;
   return (
@@ -102,6 +109,7 @@ export function QuestionImages({
           image={image}
           lazy={lazy}
           inMatch={inMatch}
+          concealed={concealed}
         />
       ))}
     </div>

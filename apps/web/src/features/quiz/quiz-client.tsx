@@ -126,6 +126,7 @@ export function QuizClient({ code }: { code?: string }) {
   }, [identity]);
 
   useEffect(() => {
+    setNow(Date.now());
     const timer = setInterval(() => setNow(Date.now()), 100);
     return () => clearInterval(timer);
   }, []);
@@ -386,7 +387,8 @@ export function QuizClient({ code }: { code?: string }) {
       busy={busy}
       now={now}
       clockOffset={clockOffset}
-      identityPlayerId={identity.playerId}
+      identityPlayerId={activeRoom.controlledPlayerIds[0] ?? identity.playerId}
+      accountPlayerId={identity.kind === 'account' ? identity.playerId : undefined}
       notice={notice}
       onCopy={() => run(() => copyText(`${window.location.origin}/play/${code}`))}
       onLeave={() => handleLeaveRoom(code)}

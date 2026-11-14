@@ -69,6 +69,7 @@ export interface PlatformContextValue {
   xp: number | null;
   profileStatus: ProfileLoadStatus;
   room: RoomView | null;
+  matchFocused: boolean;
   currentRoom: CurrentRoomSummary | null;
   connected: boolean;
   clockOffset: number;
@@ -704,6 +705,8 @@ export function PlatformProvider({ children }: { children: ReactNode }) {
     [currentRoom, handleUnauthorized, resetRoomState, router, stopSocket],
   );
 
+  const matchFocused = room?.status === 'IN_PROGRESS' && pathname === `/play/${room.code}`;
+
   const value = useMemo<PlatformContextValue>(
     () => ({
       hydrated,
@@ -714,6 +717,7 @@ export function PlatformProvider({ children }: { children: ReactNode }) {
       xp,
       profileStatus,
       room,
+      matchFocused,
       currentRoom,
       connected,
       clockOffset,
@@ -743,6 +747,7 @@ export function PlatformProvider({ children }: { children: ReactNode }) {
       xp,
       profileStatus,
       room,
+      matchFocused,
       currentRoom,
       connected,
       clockOffset,

@@ -57,8 +57,10 @@ test('Solo completes, guards IN_PROGRESS navigation, survives refresh and appear
 
   await readyAndStart(page);
 
-  // Clicking a header navigation link during IN_PROGRESS opens LeaveMatchDialog; Cancel keeps match alive
-  await page.getByRole('link', { name: 'Các trò chơi', exact: true }).click();
+  // During IN_PROGRESS, navigation shell is hidden and leaving opens LeaveMatchDialog
+  await expect(page.getByRole('navigation', { name: 'Điều hướng chính' })).toHaveCount(0);
+  await expect(page.getByRole('contentinfo')).toHaveCount(0);
+  await page.getByRole('button', { name: 'Rời phòng', exact: true }).click();
   const leaveDialog = page.getByRole('dialog');
   await expect(leaveDialog).toBeVisible();
   await expect(leaveDialog).toContainText(
@@ -160,7 +162,13 @@ test('two isolated browsers join a LAN-style room via invite URL and keep answer
     expect(await b.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
       true,
     );
-    const blur = a.getByRole('button', { name: 'Làm mờ đáp án · Miễn phí' });
+    const zoomTrigger = b.getByRole('button', { name: `Phóng to ảnh: ${images[0]!.alt}` });
+    const zoomDialog = b.getByRole('dialog', { name: 'Ảnh câu hỏi phóng to' });
+    await zoomTrigger.click();
+    await expect(zoomDialog).toBeVisible();
+    await zoomDialog.getByRole('button', { name: 'Đóng ảnh' }).click();
+    await expect(zoomDialog).toBeHidden();
+    const blur = a.getByRole('button', { name: 'Làm mờ đáp án', exact: true });
     await expect(blur).toBeEnabled({ timeout: 8000 });
     await blur.click();
     await expect(b.getByText('Làm mờ đáp án đang có hiệu lực.', { exact: false })).toBeVisible();
@@ -168,17 +176,30 @@ test('two isolated browsers join a LAN-style room via invite URL and keep answer
     await expect(b.getByText('Làm mờ đáp án đang có hiệu lực.', { exact: false })).toHaveCount(0, {
       timeout: 5000,
     });
-    await a.getByRole('button', { name: 'Che câu hỏi · Miễn phí' }).click();
-    await expect(b.getByRole('heading', { name: 'Câu hỏi đang bị che' })).toBeVisible();
-    await expect(b.locator('.question-card img')).toHaveCount(0);
-    await expect(a.locator('.question-card img')).toHaveCount(3);
-    await expect(b.locator('.question-card img')).toHaveCount(3);
+    await zoomTrigger.click();
+    await expect(zoomDialog).toBeVisible();
+    await a.getByRole('button', { name: 'Che câu hỏi', exact: true }).click();
+    await expect(zoomDialog).toBeHidden();
+    const covered = b.getByText('Câu hỏi đang bị che', { exact: true });
+    const coverVideo = b.locator('.question-card video');
+    await expect(covered).toBeVisible();
+    await expect(b.locator('.question-card').getByRole('img')).toHaveCount(0);
+    await expect(a.locator('.question-card').getByRole('img')).toHaveCount(3);
+    await expect(coverVideo).toHaveAttribute('data-playing', 'true');
     await b.reload();
-    await expect(b.getByRole('img', { name: images[1]!.alt })).toBeVisible();
-    await a.getByRole('button', { name: 'A Hà Nội', exact: true }).click();
-    await expect(a.getByText('Đã khóa đáp án. Chờ người còn lại hoặc hết giờ…')).toBeVisible();
-    await expect(b.locator('.explanation')).toHaveCount(0);
+    await expect(covered).toBeVisible();
+    await expect(coverVideo).toHaveAttribute('data-playing', 'true');
+    expect(
+      await coverVideo.evaluate((video: HTMLVideoElement) => video.currentTime),
+    ).toBeGreaterThan(0);
     await b.getByRole('button', { name: 'B Đà Nẵng', exact: true }).click();
+    await expect(covered).toHaveCount(0);
+    await expect(coverVideo).toHaveJSProperty('paused', true);
+    await expect(b.getByRole('img', { name: images[1]!.alt })).toBeVisible();
+    await expect(b.getByText('Đã khóa đáp án. Chờ người còn lại hoặc hết giờ…')).toBeVisible();
+    await expect(a.locator('.explanation')).toHaveCount(0);
+    await expect(a.locator('.answer.chosen')).toHaveCount(0);
+    await a.getByRole('button', { name: 'A Hà Nội', exact: true }).click();
     await expect(a.getByText('Hà Nội là thủ đô của Việt Nam.', { exact: true })).toBeVisible();
     await expect(b.getByText('Hà Nội là thủ đô của Việt Nam.', { exact: true })).toBeVisible();
     for (const player of [a, b])
@@ -246,10 +267,10 @@ test('shared-screen Duel keyboard buzzer permits a steal after a wrong answer', 
   ).toBeVisible();
   await page.keyboard.press('a');
   await page.getByRole('button', { name: 'B Đà Nẵng', exact: true }).click();
-  await expect(page.locator('.score').first()).toHaveText('-20');
+  await expect(page.getByRole('group', { name: 'Người chơi 1', exact: true })).toContainText('-20');
   await page.keyboard.press('l');
   await page.getByRole('button', { name: 'A Hà Nội', exact: true }).click();
-  await expect(page.locator('.score').nth(1)).toHaveText('75');
+  await expect(page.getByRole('group', { name: 'Người chơi 2', exact: true })).toContainText('75');
 });
 
 test('mobile hub and setup fit a small viewport and do not expose a fake playable fallback', async ({
@@ -289,7 +310,7 @@ test('filters a Solo pack by topic and difficulty and plays only the matching qu
   await expect(
     page.getByRole('heading', { name: 'Số nguyên tố nhỏ nhất là số nào?' }),
   ).toBeVisible();
-  await page.getByRole('button', { name: '50/50 · Miễn phí' }).click();
+  await page.getByRole('button', { name: '50/50', exact: true }).click();
   await expect(page.locator('.answers button:visible')).toHaveCount(2);
   await page.getByRole('button', { name: 'C 2', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Thêm một hành trình mới!' })).toBeVisible();
@@ -321,8 +342,12 @@ test('casual custom shares persisted host history after cancellation and survive
   async function selectCustom() {
     await page.getByLabel('Trải nghiệm').selectOption('CASUAL');
     await page.getByLabel('Cách chọn đề').selectOption('CASUAL_CUSTOM');
-    await page.getByLabel('Lĩnh vực').selectOption([starter.category]);
-    await expect(page.getByLabel('Chủ đề')).toHaveAttribute('multiple', '');
+    const categoryLabel = starter.category === 'general' ? 'Kiến thức chung' : starter.category;
+    await page
+      .getByRole('group', { name: 'Lĩnh vực' })
+      .getByRole('checkbox', { name: categoryLabel })
+      .check();
+    await expect(page.getByRole('group', { name: 'Chủ đề' })).toBeVisible();
     await expect(page.getByLabel('Độ khó')).toHaveValue('mixed');
     await expect(page.getByLabel('Bộ câu hỏi')).toHaveCount(0);
   }

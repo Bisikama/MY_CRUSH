@@ -18,6 +18,7 @@ import {
 import type { GameIdentity } from '../../lib/client';
 import { knowledgeTypeLabels, type KnowledgeTypeFilter } from '../../lib/knowledge-type';
 import { CasualFilters } from './casual-filters';
+import { matchesLabCasual } from '../../mock/packs';
 interface Props {
   selectionType: QuizSelection['type'];
   setSelectionType: (value: QuizSelection['type']) => void;
@@ -103,6 +104,14 @@ export function QuizSetup({
   joinRoom,
   leaveRoom,
 }: Props) {
+  const casualCount = casualCatalog.reduce(
+    (count, row) =>
+      count +
+      (selectionType !== 'CASUAL_CUSTOM' || matchesLabCasual(row.category, row, casualSelection)
+        ? row.count
+        : 0),
+    0,
+  );
   const distinct = (values: string[]) =>
     [...new Map(values.map((value) => [knowledgeKey(value), value])).values()].sort((a, b) =>
       a.localeCompare(b, 'vi'),
@@ -336,12 +345,17 @@ export function QuizSetup({
               </>
             )}
           </div>
-          {selectionType !== 'STUDY' && (
+          {selectionType === 'CASUAL_RANDOM' && (
             <p className="small">
               Tối đa 20 câu, ưu tiên câu bạn chưa gặp. Hết câu mới trong lựa chọn này sẽ bắt đầu
               vòng mới.
-              {selectionType === 'CASUAL_CUSTOM' &&
-                ' Có thể chọn nhiều lĩnh vực, chủ đề. Để trống để lấy tất cả; giữ Ctrl hoặc Command khi chọn nhiều trên máy tính.'}
+            </p>
+          )}
+          {selectionType === 'CASUAL_CUSTOM' && casualCatalog.length > 0 && (
+            <p className="small" role="status">
+              {casualCount
+                ? `${casualCount} câu phù hợp · Tối đa 20 câu mỗi ván.`
+                : 'Không có câu phù hợp. Hãy đổi độ khó hoặc xóa bớt bộ lọc.'}
             </p>
           )}
           {selectionType !== 'STUDY' && !casualCatalog.length && (
@@ -392,9 +406,7 @@ export function QuizSetup({
           )}
           <Button
             onClick={() => void createRoom()}
-            disabled={
-              busy || !connected || (selectionType === 'STUDY' ? !selected : !casualCatalog.length)
-            }
+            disabled={busy || !connected || (selectionType === 'STUDY' ? !selected : !casualCount)}
           >
             Tạo {mode === 'SOLO' ? 'ván Solo' : 'phòng chơi'} →
           </Button>

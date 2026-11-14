@@ -73,7 +73,7 @@ test('late absent-room response cannot erase a new match or bypass leave confirm
   );
   fixture.releaseReads();
   await released;
-  await page.locator('.lavender-logo').click();
+  await page.getByRole('button', { name: 'Rời phòng', exact: true }).click();
   await expect(page.getByRole('dialog')).toBeVisible();
   await page.getByRole('button', { name: 'Ở lại trận' }).click();
   expect(fixture.leaves).toBe(0);
@@ -81,13 +81,13 @@ test('late absent-room response cannot erase a new match or bypass leave confirm
   await expect(
     page.getByRole('heading', { name: 'Lifecycle question', exact: true }),
   ).toBeVisible();
-  await page.locator('.lavender-logo').click();
+  await page.getByRole('button', { name: 'Rời phòng', exact: true }).click();
   fixture.holdLeave = true;
-  await page.getByRole('button', { name: 'Rời phòng', exact: true }).last().click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Rời phòng', exact: true }).click();
   await expect.poll(() => fixture.leaves).toBe(1);
   await expect(page).toHaveURL(/\/play\/ABC234$/);
   fixture.releaseLeave!();
-  await expect(page).toHaveURL(/\/$/);
+  await expect(page).toHaveURL(/\/play$/);
   expect(fixture.room).toBeNull();
 });
 

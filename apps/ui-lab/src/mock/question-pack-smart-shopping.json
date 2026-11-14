@@ -71,6 +71,28 @@
       ],
       "tags": ["phan-tram", "giam-gia"],
       "timeLimitSeconds": 35
+    },
+    {
+      "id": "so-sanh-giam-gia-va-phi-ship",
+      "type": "single_choice",
+      "topic": "Tính tiền giảm giá",
+      "difficulty": "hard",
+      "prompt": "Một món hàng giá 500.000 đồng. Cửa hàng A giảm 20%, rồi giảm thêm 10% trên giá đã giảm và tính 25.000 đồng phí giao hàng. Cửa hàng B giảm 25% và miễn phí giao hàng. Mua ở đâu rẻ hơn và rẻ hơn bao nhiêu?",
+      "options": [
+        { "id": "A", "text": "A rẻ hơn 10.000 đồng" },
+        { "id": "B", "text": "B rẻ hơn 10.000 đồng" },
+        { "id": "C", "text": "B rẻ hơn 15.000 đồng" },
+        { "id": "D", "text": "Hai nơi bằng giá" }
+      ],
+      "correctOptionId": "B",
+      "explanation": "A còn 500.000 × 0,8 × 0,9 + 25.000 = 385.000 đồng. B còn 500.000 × 0,75 = 375.000 đồng, rẻ hơn 10.000 đồng.",
+      "hints": [
+        "Hai lần giảm giá ở A áp dụng trên hai mức giá khác nhau.",
+        "Cộng phí giao hàng sau khi tính cả hai lần giảm ở A.",
+        "So sánh tổng tiền sau khi giao hàng của hai cửa hàng."
+      ],
+      "tags": ["phan-tram", "so-sanh-gia"],
+      "timeLimitSeconds": 50
     }
   ]
 }

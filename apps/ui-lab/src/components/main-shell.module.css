@@ -1,0 +1,7 @@
+.focused {
+  background: var(--quiz-shell-bg, #183f2b);
+}
+
+.match>main {
+  padding: 0;
+}

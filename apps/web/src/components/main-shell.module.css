@@ -1,0 +1,7 @@
+.focused {
+  background: #183f2b;
+}
+
+.match > main {
+  padding: 0;
+}

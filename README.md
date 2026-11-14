@@ -46,7 +46,7 @@ Role mặc định là `PLAYER`. Cấp hoặc gỡ Admin qua `pnpm auth:role <em
 Chạy `pnpm install` rồi `pnpm dev:ui-lab` từ root và mở http://127.0.0.1:3100. UI Lab chạy bằng dữ liệu mẫu trong tab trình duyệt, kể cả khi API, PostgreSQL và dịch vụ email đều tắt.
 
 - Đăng nhập mẫu bằng `demo@example.test` và `DuoQuest!123`. Mã xác minh mẫu là `123456`. Dùng thông tin giả khi thử các form tài khoản.
-- Mở **UI Lab** ở góc dưới để chọn cảnh, **Phát lại** hoặc **Đặt lại**. Khi chơi Duel hoặc Co-op LAN, bấm **P2** để đưa người chơi thứ hai vào phòng, Ready ở cả hai góc nhìn, rồi quay về **P1** để bắt đầu. Mã mời mẫu là `LAB222`.
+- Bấm **UI Lab** ở góc dưới hoặc nhấn **Shift+F2** để mở và thu gọn bảng chọn cảnh, **Phát lại** và **Đặt lại**. Trong trận, bảng nằm ở góc dưới bên trái. Khi chơi Duel hoặc Co-op LAN, bấm **P2** để đưa người chơi thứ hai vào phòng, Ready ở cả hai góc nhìn, rồi quay về **P1** để bắt đầu. Mã mời mẫu là `LAB222`.
 - Reload hoặc **Đặt lại** sẽ phục hồi fixture. Hồ sơ, Coins, kho, nhập đề và lịch sử trong lần thử nằm trong bộ nhớ. Các cảnh dựng sẵn để duyệt giao diện không cấp thưởng. Ảnh bộ đề nhập được thay bằng ảnh minh họa local lúc hiển thị.
 - Chạy `pnpm build:ui-lab` rồi `pnpm test:ui-lab` để chạy browser E2E riêng trên cổng 3100. Sau khi duyệt thiết kế, chuyển riêng phần hiển thị và tài nguyên đã duyệt sang web chính, nối với snapshot và thao tác thật rồi kiểm tra hồi quy. [Ranh giới UI Lab](docs/architecture/decisions.md#ui-lab).
 

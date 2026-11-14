@@ -20,6 +20,11 @@
   padding: 0.65rem 0.9rem;
 }
 
+.inMatch {
+  left: 1rem;
+  right: auto;
+}
+
 .controls {
   display: grid;
   gap: 0.5rem;

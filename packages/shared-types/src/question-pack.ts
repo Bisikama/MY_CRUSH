@@ -167,6 +167,24 @@ export function matchesQuestion(
   );
 }
 
+export function matchesCasualQuestion(
+  category: string,
+  question: Pick<Question, 'topic' | 'difficulty'>,
+  selection: CasualCustomSelection,
+) {
+  return (
+    (!selection.categories.length ||
+      selection.categories.some((value) => knowledgeKey(value) === knowledgeKey(category))) &&
+    (!selection.topics.length ||
+      selection.topics.some(
+        (value) =>
+          knowledgeKey(value.category) === knowledgeKey(category) &&
+          knowledgeKey(value.topic) === knowledgeKey(question.topic),
+      )) &&
+    (selection.difficulty === 'mixed' || selection.difficulty === question.difficulty)
+  );
+}
+
 export function summarizePack(id: string, pack: QuestionPack, trusted: boolean) {
   const groups = new Map<string, { topic: string; difficulty: Difficulty; count: number }>();
   for (const { topic, difficulty } of pack.questions) {

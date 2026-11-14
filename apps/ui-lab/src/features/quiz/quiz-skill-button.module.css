@@ -1,0 +1,60 @@
+.button {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 3px;
+  width: 100%;
+  min-height: 44px;
+  padding: 5px;
+  border: 1px solid #b6d1aa66;
+  border-radius: 12px;
+  background: #112d21ed;
+  color: inherit;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.icon {
+  display: block;
+  width: clamp(4rem, 7vw, 5.5rem);
+  height: auto;
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--skill-accent), transparent 75%));
+}
+
+.button:hover:not(:disabled),
+.button:focus-visible {
+  border-color: var(--skill-accent);
+  background: #244830;
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--skill-accent);
+  outline-offset: 2px;
+}
+
+.button:disabled {
+  cursor: not-allowed;
+}
+
+.button:disabled .icon {
+  opacity: 0.55;
+  filter: saturate(0.25);
+}
+
+.name {
+  font-size: clamp(0.75rem, 1.1vw, 0.875rem);
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.usage {
+  color: #deecd8;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 640px) {
+  .icon {
+    width: 48px;
+  }
+}

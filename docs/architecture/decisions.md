@@ -3,7 +3,7 @@
 > **Mục đích:** Nguồn chính cho các quyết định LOCKED, PROPOSAL và OPEN.
 > **Đối tượng:** Chủ dự án, lập trình viên và agent.
 > **Trạng thái:** `current`.
-> **Cập nhật:** 2026-11-12.
+> **Cập nhật:** 2026-11-13.
 > **Liên quan:** [Mục lục](../README.md), [Nguồn tham khảo](../../AGENTS.md).
 
 ## LOCKED theo Blueprint V1.0
@@ -29,6 +29,7 @@
 - Game Hub & quản lý phiên/phòng dùng chung (2026-11-08): `/` là Game Hub chọn trò chơi (Pastel Lavender, screen `7d9066eeafb84b979a3266c355b4f90e`), `/play` là sảnh Quiz Battle, `/play/[code]` là màn phòng/trận. `PlatformProvider` trong `(main)` giữ một kết nối Socket.IO cho mỗi tab có phiên, đọc `GET /api/rooms/current` theo controller membership từ cookie phiên mà không thay đổi presence hoặc idle TTL. Guest tiếp tục chơi đầy đủ 3 mode và 2 layout; điều hướng nội bộ rời màn trận đang `IN_PROGRESS` phải qua hộp thoại xác nhận hủy trận không thưởng.
 
 - Quiz lọc theo lĩnh vực, đề tài và độ khó trước khi tạo phòng. Bonus độ khó thuộc Game Score. Skill có lượt miễn phí theo trận hoặc lượt mua trong kho. Co-op chỉ dùng kho. Các mức điểm, giá, giới hạn và thời gian hiệu ứng là thông số playtest. Xem [luật Quiz](../features/quiz.md) và [kinh tế](../features/economy-items.md).
+- Che câu hỏi lấy thời điểm hiệu lực từ snapshot của mục tiêu. Web và UI Lab phục vụ MP4 cùng ảnh dự phòng theo phiên bản từ thư mục `public/videos/quiz`. Khi đổi clip, cập nhật đường dẫn trong component và chỉnh cấu hình thời lượng chung nếu độ dài hiệu ứng thay đổi. Xem [luật Skill](../features/quiz.md#skill).
 
 - Bộ đề JSON v1 hỗ trợ `knowledgeType` tùy chọn với ba nhóm học chuyên đề, đời sống hữu ích và khám phá thú vị. Sảnh lọc thư viện theo nhóm, còn các bộ thiếu nhóm hiển thị là Chưa phân loại. [Hướng dẫn bộ đề](../features/question-packs.md)
 

@@ -389,6 +389,7 @@ export function QuizClient({ code }: { code?: string }) {
       now={now}
       clockOffset={clockOffset}
       identityPlayerId={activeRoom.controlledPlayerIds[0] ?? identity.playerId}
+      accountPlayerId={identity.kind === 'account' ? identity.playerId : undefined}
       notice={notice}
       onCopy={() => run(() => copyText(`${window.location.origin}/play/${code}`))}
       onLeave={() => handleLeaveRoom(code)}

@@ -1,5 +1,5 @@
 import { assertDomain } from '@duoquest/game-core';
-import { allowedQuizSkills } from '@duoquest/shared-types';
+import { allowedQuizSkills, QUIZ_SKILL_TIMING } from '@duoquest/shared-types';
 import type { GameEngine } from '@duoquest/game-sdk';
 import type {
   GameLayout,
@@ -26,10 +26,7 @@ export const DEFAULT_QUIZ_RULES = {
 export const QUIZ_SKILL_RULES = {
   limit: 7,
   coopLimit: 3,
-  supportCutoffMs: 3000,
-  interferenceDelayMs: 5000,
-  COVER: 2000,
-  BLUR: 3000,
+  ...QUIZ_SKILL_TIMING,
 };
 export const DIFFICULTY_BONUS = { easy: 0, medium: 15, hard: 30 };
 type Support = QuizView['support'];
@@ -148,6 +145,7 @@ export class QuizEngine implements GameEngine<QuizState, QuizConfig, QuizAction,
         'Đáp án đã bị ẩn',
       );
       state.answers[playerId] = action.optionId;
+      if (state.interference[playerId]?.skill === 'COVER') delete state.interference[playerId];
       const correct = action.optionId === current(state).correctOptionId;
       const ratio = Math.max(
         0,
@@ -227,7 +225,13 @@ export class QuizEngine implements GameEngine<QuizState, QuizConfig, QuizAction,
     const effect = viewer ? state.interference[viewer] : undefined;
     return structuredClone({
       support: revealed ? { hints: [], hiddenOptions: [] } : support,
-      interference: !revealed && effect && effect.until > now ? effect : null,
+      interference:
+        !revealed &&
+        effect &&
+        effect.until > now &&
+        (effect.skill !== 'COVER' || now < state.deadline)
+          ? effect
+          : null,
       hintRemaining: !revealed && support.hints.length < question.hints.length,
       skillSlots: controlledPlayerIds.map((playerId) => ({
         playerId,
@@ -338,7 +342,7 @@ export class QuizEngine implements GameEngine<QuizState, QuizConfig, QuizAction,
         'Chờ hết 5 giây đầu câu',
       );
       assertDomain(
-        now + duration <= state.deadline,
+        skill === 'COVER' || now + duration <= state.deadline,
         'TOO_LATE',
         'Không còn đủ thời gian cho hiệu ứng',
       );

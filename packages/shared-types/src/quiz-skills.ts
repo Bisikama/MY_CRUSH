@@ -3,6 +3,14 @@ import type { GameLayout, GameMode } from './index';
 
 export const skillSchema = z.enum(['HINT', 'FIFTY_FIFTY', 'COVER', 'BLUR']);
 export type QuizSkill = z.infer<typeof skillSchema>;
+/** Playtest timings in milliseconds, shared by action validation and the Quiz UI. */
+export const QUIZ_SKILL_TIMING = {
+  supportCutoffMs: 3000,
+  interferenceDelayMs: 5000,
+  COVER: 10_027,
+  BLUR: 3000,
+} as const;
+
 export const QUIZ_SKILLS = {
   HINT: { id: 'quiz-hint', name: 'Gợi ý', price: 10 },
   FIFTY_FIFTY: { id: 'quiz-fifty-fifty', name: '50/50', price: 15 },

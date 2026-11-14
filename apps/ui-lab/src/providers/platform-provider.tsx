@@ -270,6 +270,7 @@ function useMockPlatform() {
     identity,
     identityError: '',
     room,
+    matchFocused: room?.status === 'IN_PROGRESS' && pathname === `/play/${room.code}`,
     currentRoom,
     connected: room ? connected : !!identity,
     clockOffset: 0,

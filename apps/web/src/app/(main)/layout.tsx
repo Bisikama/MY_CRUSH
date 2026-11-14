@@ -1,9 +1,7 @@
 import type { ReactNode } from 'react';
 import localFont from 'next/font/local';
 import { PlatformProvider } from '../../providers/platform-provider';
-import { SiteHeader } from '../../components/site-header';
-import { ActiveRoomBanner } from '../../components/active-room-banner';
-import { LeaveMatchDialog } from '../../components/leave-match-dialog';
+import { MainShell } from '../../components/main-shell';
 
 const quicksand = localFont({
   src: [
@@ -52,18 +50,7 @@ const nunitoSans = localFont({
 export default function MainLayout({ children }: { children: ReactNode }) {
   return (
     <PlatformProvider>
-      <div className={`lavender-shell-bg ${quicksand.variable} ${nunitoSans.variable}`}>
-        <SiteHeader />
-        <div className="app-shell">
-          <ActiveRoomBanner />
-          <main>{children}</main>
-          <footer>
-            DuoQuest <span>Học một chút. Chơi một trận. Kết nối nhiều hơn.</span>
-            <span>DUOQUEST HUB · V1</span>
-          </footer>
-        </div>
-        <LeaveMatchDialog />
-      </div>
+      <MainShell fonts={`${quicksand.variable} ${nunitoSans.variable}`}>{children}</MainShell>
     </PlatformProvider>
   );
 }

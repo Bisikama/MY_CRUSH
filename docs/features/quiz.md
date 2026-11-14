@@ -3,7 +3,7 @@
 > **Mục đích:** Luật Quiz theo mode và cách chơi.
 > **Đối tượng:** Lập trình viên, thiết kế game và QA.
 > **Trạng thái:** `current`.
-> **Cập nhật:** 2026-11-11.
+> **Cập nhật:** 2026-11-13.
 > **Liên quan:** [Mục lục](../README.md), [Nguồn tham khảo](../../packages/game-quiz/src/quiz.engine.ts).
 
 Một engine, phân nhánh luật qua mode/layout. Mỗi câu: `QUESTION → REVEAL → câu tiếp theo / FINISHED`. Câu hiện tại có ID riêng trong session; deadline do server tạo. Browser chỉ hiển thị đếm ngược có bù clock offset gần đúng.
@@ -29,8 +29,12 @@ Extra-time và UI ôn riêng chưa có. Không hứa khả năng chơi offline: 
 
 Câu hỏi có thể hiển thị tối đa bốn ảnh. Skill Che câu hỏi tạm ẩn ảnh cùng đề bài trên màn hình của người bị tác động. [Soạn câu hỏi có ảnh](question-packs.md#câu-hỏi-có-ảnh)
 
+Trong Duel LAN, vùng đề dành sẵn chiều cao tối thiểu theo tỷ lệ video 16:9 và tăng theo nội dung. Video và ảnh dự phòng hiển thị trọn khung hình.
+
 ## Skill
 
-Solo và Duel chung màn hình có Hint và 50/50. Duel LAN có thêm Che câu hỏi 2 giây và Làm mờ đáp án 3 giây. Solo/Duel cấp một lượt miễn phí mỗi loại mỗi slot mỗi trận và dùng trước lượt kho. Mỗi người dùng tối đa 7 lượt tổng. Co-op chỉ có hai Skill hỗ trợ và dùng từ kho ngay, tối đa 3 lượt mỗi người. Cả hai có thể mở gợi ý hoặc ẩn đáp án cho đội, còn đội trưởng nộp đáp án. Duel chung màn hình chỉ slot giữ buzzer được dùng.
+Solo và Duel chung màn hình có Hint và 50/50. Duel LAN có thêm Che câu hỏi tối đa 10.027 ms và Làm mờ đáp án 3 giây. Solo/Duel cấp một lượt miễn phí mỗi loại mỗi slot mỗi trận và dùng trước lượt kho. Mỗi người dùng tối đa 7 lượt tổng. Co-op chỉ có hai Skill hỗ trợ và dùng từ kho ngay, tối đa 3 lượt mỗi người. Cả hai có thể mở gợi ý hoặc ẩn đáp án cho đội, còn đội trưởng nộp đáp án. Duel chung màn hình chỉ slot giữ buzzer được dùng.
 
-Skill chỉ dùng trong QUESTION. Hint mở lần lượt. 50/50 ẩn hai lựa chọn sai tối đa một lần mỗi câu cho người hoặc đội. Hai Skill hỗ trợ đóng trong 3 giây cuối. Đối kháng bắt đầu sau 5 giây đầu, yêu cầu còn đủ thời gian hiệu ứng và đối thủ chưa trả lời. Mỗi loại đối kháng dùng một lần mỗi người mỗi câu và không chồng hiệu ứng lên cùng mục tiêu. Hai hiệu ứng thay đổi hiển thị, người bị tác động vẫn nộp được đáp án và timer tiếp tục chạy.
+Skill chỉ dùng trong QUESTION. Hint mở lần lượt. 50/50 ẩn hai lựa chọn sai tối đa một lần mỗi câu cho người hoặc đội. Hai Skill hỗ trợ đóng trong 3 giây cuối. Đối kháng bắt đầu sau 5 giây đầu và yêu cầu đối thủ chưa trả lời. Mỗi loại đối kháng dùng một lần mỗi người mỗi câu và không chồng hiệu ứng lên cùng mục tiêu. Người bị tác động vẫn nộp được đáp án và timer tiếp tục chạy.
+
+Làm mờ đáp án cần còn đủ 3 giây. Che câu hỏi có thể tung đến trước hạn chót. Video mây sét và âm thanh dừng khi server chấp nhận đáp án của mục tiêu, khi hết thời lượng hoặc khi câu kết thúc, tùy mốc nào đến trước. Khi video chưa sẵn sàng, phát lỗi hoặc người chơi bật giảm chuyển động, vùng đề dùng ảnh mây sét tĩnh. Nút Tiếng sét lưu lựa chọn trên trình duyệt.

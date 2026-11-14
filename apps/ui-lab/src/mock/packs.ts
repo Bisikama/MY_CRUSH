@@ -1,5 +1,5 @@
 import {
-  knowledgeKey,
+  matchesCasualQuestion,
   matchesQuestion,
   questionPackSchema,
   summarizePack,
@@ -67,6 +67,8 @@ export function labCatalog(packs: LabPack[]): CasualCatalog {
   );
 }
 
+export const matchesLabCasual = matchesCasualQuestion;
+
 export function selectLabQuestions(packs: LabPack[], input: CreateRoomInput) {
   const selection = input.selection ?? {
     type: 'STUDY' as const,
@@ -96,17 +98,8 @@ export function selectLabQuestions(packs: LabPack[], input: CreateRoomInput) {
       .filter(isCasual)
       .flatMap(({ pack }) => {
         if (selection.type === 'CASUAL_RANDOM') return pack.questions;
-        const category = knowledgeKey(pack.category);
-        const categories = selection.categories.map(knowledgeKey);
-        const topics = selection.topics.filter(
-          (topic) => knowledgeKey(topic.category) === category,
-        );
-        return pack.questions.filter(
-          (question) =>
-            (!categories.length || categories.includes(category)) &&
-            (!selection.topics.length ||
-              topics.some((topic) => knowledgeKey(topic.topic) === knowledgeKey(question.topic))) &&
-            (selection.difficulty === 'mixed' || question.difficulty === selection.difficulty),
+        return pack.questions.filter((question) =>
+          matchesLabCasual(pack.category, question, selection),
         );
       })
       .slice(0, 20);

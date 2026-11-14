@@ -181,8 +181,41 @@ describe('Quiz Skills', () => {
     });
     expect(() => use(blurred, 'p1', 'COVER', 6500)).toThrow('đang có hiệu ứng');
     expect(engine.getPlayerView(blurred, ['p2'], 9000).interference).toBeNull();
-    expect(answer(blurred, 'p2', 'B', 7000).answers.p2).toBe('B');
+    const answered = answer(blurred, 'p2', 'B', 7000);
+    expect(answered.answers.p2).toBe('B');
+    expect(engine.getPlayerView(answered, ['p2'], 7000).interference?.skill).toBe('BLUR');
     expect(() => use(setup('DUEL', 'SHARED_SCREEN'), 'p1', 'BLUR', 6000)).toThrow('chế độ');
+  });
+
+  it('ends Cover when the target answers, while the other player can keep playing', () => {
+    const covered = use(setup('DUEL'), 'p1', 'COVER', 6000);
+    expect(engine.getPlayerView(covered, ['p1'], 6000).interference).toBeNull();
+    expect(engine.getPlayerView(covered, ['p2'], 6000).interference).toEqual({
+      skill: 'COVER',
+      until: 16_027,
+    });
+    expect(engine.getPlayerView(covered, ['p2'], 16_026).interference?.skill).toBe('COVER');
+    expect(engine.getPlayerView(covered, ['p2'], 16_027).interference).toBeNull();
+    const answered = answer(covered, 'p2', 'B', 9000);
+    expect(answered.phase).toBe('QUESTION');
+    expect(engine.getPlayerView(answered, ['p2'], 9000).interference).toBeNull();
+    expect(() => use(answered, 'p1', 'COVER', 9000)).toThrow('Đối thủ đã khóa đáp án');
+    const revealed = answer(answered, 'p1', 'A', 9001);
+    const next = engine.onTimeout(revealed, revealed.deadline);
+    expect(engine.getPlayerView(next, ['p2'], next.openedAt).interference).toBeNull();
+  });
+
+  it('allows a last-moment Cover but expires it at the question deadline', () => {
+    const state = setup('DUEL');
+    const now = state.deadline - 1;
+    expect(() => use(state, 'p1', 'BLUR', now)).toThrow('Không còn đủ thời gian');
+    const covered = use(state, 'p1', 'COVER', now);
+    expect(engine.getPlayerView(covered, ['p2'], now).interference?.skill).toBe('COVER');
+    expect(() => answer(covered, 'p2', 'B', state.deadline)).toThrow('Đã hết thời gian');
+    expect(engine.getPlayerView(covered, ['p2'], state.deadline).interference).toBeNull();
+    const revealed = engine.onTimeout(covered, state.deadline);
+    expect(revealed.phase).toBe('REVEAL');
+    expect(engine.getPlayerView(revealed, ['p2'], state.deadline).interference).toBeNull();
   });
 
   it('uses a team support view with independent three-use caps and no free Co-op Skills', () => {

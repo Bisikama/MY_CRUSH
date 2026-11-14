@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { demoCode, demoEmail, demoPassword } from '../mock/data';
 import { labScenes, type LabScene } from '../mock/match';
@@ -11,6 +11,7 @@ export function LabControls() {
   const [scene, setScene] = useState<LabScene>('lobby');
   const {
     room,
+    matchFocused,
     lastScene,
     connected,
     canSwitch,
@@ -20,9 +21,23 @@ export function LabControls() {
     openScene,
     previewPending,
   } = usePlatform();
+  const panel = useRef<HTMLDetailsElement>(null);
+
+  useEffect(() => {
+    function toggle(event: KeyboardEvent) {
+      if (!event.shiftKey || event.key !== 'F2' || event.repeat || !panel.current) return;
+      event.preventDefault();
+      panel.current.open = !panel.current.open;
+    }
+    window.addEventListener('keydown', toggle);
+    return () => window.removeEventListener('keydown', toggle);
+  }, []);
 
   return (
-    <details className={styles.panel}>
+    <details
+      ref={panel}
+      className={matchFocused ? `${styles.panel} ${styles.inMatch}` : styles.panel}
+    >
       <summary>UI Lab</summary>
       <div className={styles.controls}>
         <label htmlFor="lab-scene">Cảnh thử</label>
