@@ -8,6 +8,7 @@ import {
 import { randomInt } from 'node:crypto';
 import { EventEmitter } from 'node:events';
 import { assertDomain, KeyedQueue } from '@duoquest/game-core';
+import { serializeErrorForLog } from '../../common/error-utils';
 import type {
   CurrentRoomSummary,
   GameActionCommand,
@@ -64,7 +65,11 @@ export class RoomsService implements OnModuleInit, OnModuleDestroy {
       if (this.ticking) return;
       this.ticking = true;
       void this.tick(Date.now())
-        .catch((error: unknown) => this.logger.error(error))
+        .catch((error: unknown) =>
+          this.logger.error(
+            JSON.stringify({ event: 'rooms:tick', error: serializeErrorForLog(error) }),
+          ),
+        )
         .finally(() => {
           this.ticking = false;
         });

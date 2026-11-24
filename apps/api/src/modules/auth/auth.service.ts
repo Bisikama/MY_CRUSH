@@ -1,6 +1,7 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { argon2id, hash, verify } from 'argon2';
+import { serializeErrorForLog } from '../../common/error-utils';
 import { serialTransaction } from '../../common/transaction';
 import { PrismaService } from '../persistence/prisma.service';
 import { RoomsService } from '../rooms/rooms.service';
@@ -15,6 +16,7 @@ const options = { type: argon2id, memoryCost: 19 * 1024, timeCost: 2, parallelis
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
   private dummy?: Promise<string>;
   private hashing = 0;
 
@@ -239,6 +241,13 @@ export class AuthService {
 
   private notifyPasswordChanged(email: string) {
     const message = passwordChangedEmail();
-    void this.mail.send(email, message.subject, message.text, message.html).catch(() => {});
+    void this.mail.send(email, message.subject, message.text, message.html).catch((error: unknown) =>
+      this.logger.warn(
+        JSON.stringify({
+          event: 'auth:passwordChangedMail',
+          error: serializeErrorForLog(error),
+        }),
+      ),
+    );
   }
 }

@@ -82,7 +82,7 @@ export const gameActionSchema = z
   .strict();
 export type GameActionCommand = z.infer<typeof gameActionSchema>;
 
-export type ErrorCode =
+export type DomainErrorCode =
   | 'INVALID_INPUT'
   | 'UNAUTHORIZED'
   | 'FORBIDDEN'
@@ -91,9 +91,21 @@ export type ErrorCode =
   | 'TOO_LATE'
   | 'RATE_LIMITED'
   | 'INTERNAL';
+export type AuthErrorCode =
+  | 'CSRF_INVALID'
+  | 'INVALID_CREDENTIALS'
+  | 'ACCOUNT_CONFLICT'
+  | 'EMAIL_ALREADY_REGISTERED'
+  | 'FLOW_INVALID'
+  | 'CODE_INVALID'
+  | 'RESEND_COOLDOWN'
+  | 'MAIL_UNAVAILABLE';
+export type InfraErrorCode = 'SERVICE_UNAVAILABLE' | 'PAYLOAD_TOO_LARGE';
+export type ErrorCode = DomainErrorCode | AuthErrorCode | InfraErrorCode;
 export interface AppError {
   code: ErrorCode;
   message: string;
+  details?: Record<string, unknown>;
 }
 export type Ack<T> = { ok: true; data: T } | { ok: false; error: AppError };
 export interface GuestIdentity {

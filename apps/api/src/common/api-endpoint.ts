@@ -59,6 +59,8 @@ export function ApiEndpoint(options: {
               403: 'Không có quyền',
               404: 'Không tìm thấy',
               409: 'Xung đột hoặc không đủ Coins',
+              413: 'Dữ liệu gửi lên quá lớn',
+              429: 'Quá nhiều yêu cầu',
               503: 'Database chưa sẵn sàng',
             } as Record<number, string>
           )[status] ?? 'Lỗi nội bộ',

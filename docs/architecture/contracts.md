@@ -10,7 +10,7 @@ Nguồn chuẩn: `packages/shared-types/src/index.ts`. Socket namespace mặc đ
 
 REST Swagger UI ở /api/docs, OpenAPI JSON ở /api/docs-json. Tạo guest hoặc đăng nhập để browser nhận cookie. Swagger tự lấy CSRF token cho request ghi. Xem [đặc tả Auth và phân quyền](../features/auth.md).
 
-ACK: `{ ok:true, data:T }` hoặc `{ ok:false, error:{code,message} }`. Error codes: INVALID_INPUT, UNAUTHORIZED, FORBIDDEN, NOT_FOUND, CONFLICT, TOO_LATE, RATE_LIMITED, INTERNAL. Không trả stack/database details cho browser.
+ACK: `{ ok:true, data:T }` hoặc `{ ok:false, error:{code,message} }`. Domain error codes: `INVALID_INPUT`, `UNAUTHORIZED`, `FORBIDDEN`, `NOT_FOUND`, `CONFLICT`, `TOO_LATE`, `RATE_LIMITED`, `INTERNAL`; Auth error codes: `CSRF_INVALID`, `INVALID_CREDENTIALS`, `ACCOUNT_CONFLICT`, `EMAIL_ALREADY_REGISTERED`, `FLOW_INVALID`, `CODE_INVALID`, `RESEND_COOLDOWN`, `MAIL_UNAVAILABLE`; Infra error codes: `SERVICE_UNAVAILABLE`, `PAYLOAD_TOO_LARGE`. REST trả kèm header `X-Request-Id` để đối chiếu log nội bộ phía server. Không trả stack/database/internal details cho browser.
 
 | Client event | Payload / quyền                                                               |
 | ------------ | ----------------------------------------------------------------------------- |

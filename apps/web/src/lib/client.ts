@@ -12,8 +12,20 @@ export class ApiError extends Error {
     readonly status: number,
     readonly code: string,
     message: string,
+    readonly requestId?: string,
   ) {
     super(message);
+    this.name = 'ApiError';
+  }
+}
+
+export class SocketError extends Error {
+  constructor(
+    readonly code: string,
+    message: string,
+  ) {
+    super(message);
+    this.name = 'SocketError';
   }
 }
 
@@ -26,12 +38,28 @@ export type GameIdentity = {
 };
 
 async function readResponse<T>(response: Response): Promise<T> {
-  const data = await response.json();
+  const requestId = response.headers.get('x-request-id') ?? undefined;
+  let data: unknown;
+  try {
+    data = await response.json();
+  } catch {
+    throw new ApiError(
+      response.status,
+      response.status >= 500 ? 'INTERNAL' : 'INVALID_INPUT',
+      response.status >= 500
+        ? 'Hệ thống đang gặp sự cố. Hãy thử lại sau.'
+        : 'Không thể kết nối API.',
+      requestId,
+    );
+  }
+  const record =
+    typeof data === 'object' && data !== null ? (data as Record<string, unknown>) : {};
   if (!response.ok)
     throw new ApiError(
       response.status,
-      typeof data.code === 'string' ? data.code : '',
-      typeof data.message === 'string' ? data.message : 'Không thể kết nối API.',
+      typeof record.code === 'string' ? record.code : '',
+      typeof record.message === 'string' ? record.message : 'Không thể kết nối API.',
+      requestId,
     );
   return data as T;
 }
@@ -145,13 +173,14 @@ export async function copyText(value: string) {
 export function request<T>(send: (ack: (result: Ack<T>) => void) => void): Promise<T> {
   return new Promise((resolve, reject) => {
     const timer = setTimeout(
-      () => reject(new Error('API chưa phản hồi. Kiểm tra kết nối rồi đồng bộ lại.')),
+      () =>
+        reject(new SocketError('TIMEOUT', 'API chưa phản hồi. Kiểm tra kết nối rồi đồng bộ lại.')),
       8000,
     );
     send((result) => {
       clearTimeout(timer);
       if (result.ok) resolve(result.data);
-      else reject(new Error(result.error.message));
+      else reject(new SocketError(result.error.code, result.error.message));
     });
   });
 }

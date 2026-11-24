@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import nodemailer from 'nodemailer';
+import { serializeErrorForLog } from '../../common/error-utils';
 
 @Injectable()
 export class MailService {
+  private readonly logger = new Logger(MailService.name);
   private readonly host = process.env.SMTP_HOST;
   private readonly from = process.env.MAIL_FROM;
   private readonly transport =
@@ -30,14 +32,37 @@ export class MailService {
     text: string,
     html?: string,
   ): Promise<'accepted' | 'rejected' | 'unknown'> {
-    if (!this.transport) return 'rejected';
+    if (!this.transport) {
+      this.logger.warn(
+        JSON.stringify({ event: 'mail:send', outcome: 'rejected', reason: 'smtp_unconfigured' }),
+      );
+      return 'rejected';
+    }
     const delivery = this.transport.sendMail({ from: this.from, to, subject, text, html }).then(
-      (result) => (result.accepted.length === 1 ? ('accepted' as const) : ('rejected' as const)),
+      (result) => {
+        if (result.accepted.length === 1) return 'accepted' as const;
+        this.logger.warn(
+          JSON.stringify({
+            event: 'mail:send',
+            outcome: 'rejected',
+            acceptedCount: result.accepted.length,
+            rejectedCount: result.rejected.length,
+          }),
+        );
+        return 'rejected' as const;
+      },
       (error: unknown) => {
         const code = (error as { responseCode?: number }).responseCode;
-        return typeof code === 'number' && code >= 400
-          ? ('rejected' as const)
-          : ('unknown' as const);
+        const outcome =
+          typeof code === 'number' && code >= 400 ? ('rejected' as const) : ('unknown' as const);
+        this.logger.warn(
+          JSON.stringify({
+            event: 'mail:send',
+            outcome,
+            error: serializeErrorForLog(error),
+          }),
+        );
+        return outcome;
       },
     );
     let timer: ReturnType<typeof setTimeout> | undefined;
@@ -45,7 +70,12 @@ export class MailService {
       return await Promise.race([
         delivery,
         new Promise<'unknown'>((resolve) => {
-          timer = setTimeout(() => resolve('unknown'), 12000);
+          timer = setTimeout(() => {
+            this.logger.warn(
+              JSON.stringify({ event: 'mail:send', outcome: 'unknown', reason: 'timeout_12000ms' }),
+            );
+            resolve('unknown');
+          }, 12000);
         }),
       ]);
     } finally {

@@ -1,19 +1,30 @@
-import type { ErrorCode } from '@duoquest/shared-types';
+import type { DomainErrorCode } from '@duoquest/shared-types';
+
+export interface DomainErrorOptions {
+  cause?: unknown;
+  details?: Record<string, unknown>;
+}
 
 export class DomainError extends Error {
+  public readonly details?: Record<string, unknown>;
+
   constructor(
-    public readonly code: ErrorCode,
+    public readonly code: DomainErrorCode,
     message: string,
+    options?: DomainErrorOptions,
   ) {
-    super(message);
+    super(message, options?.cause === undefined ? undefined : { cause: options.cause });
+    this.name = 'DomainError';
+    this.details = options?.details;
   }
 }
 export function assertDomain(
   condition: unknown,
-  code: ErrorCode,
+  code: DomainErrorCode,
   message: string,
+  options?: DomainErrorOptions,
 ): asserts condition {
-  if (!condition) throw new DomainError(code, message);
+  if (!condition) throw new DomainError(code, message, options);
 }
 
 /** Commands, timers and disconnects share this queue; rejected tasks never poison it. */

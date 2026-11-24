@@ -1,13 +1,16 @@
 import { Public } from '../auth/auth-guard';
-import { Controller, Get, Inject, ServiceUnavailableException } from '@nestjs/common';
+import { Controller, Get, Inject, Logger, ServiceUnavailableException } from '@nestjs/common';
 import { PrismaService } from '../persistence/prisma.service';
 import { ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { ApiEndpoint } from '../../common/api-endpoint';
+import { serializeErrorForLog } from '../../common/error-utils';
+
 @Public()
 @Controller('health')
 @ApiTags('Health')
 export class HealthController {
+  private readonly logger = new Logger(HealthController.name);
   constructor(@Inject(PrismaService) private readonly db: PrismaService) {}
   @ApiEndpoint({
     summary: 'Kiểm tra API đang chạy',
@@ -27,8 +30,18 @@ export class HealthController {
     try {
       await this.db.$queryRaw`SELECT 1`;
       return { status: 'ok', database: 'up' };
-    } catch {
-      throw new ServiceUnavailableException('PostgreSQL chưa sẵn sàng');
+    } catch (error) {
+      this.logger.error(
+        JSON.stringify({
+          event: 'health:ready',
+          code: 'SERVICE_UNAVAILABLE',
+          error: serializeErrorForLog(error),
+        }),
+      );
+      throw new ServiceUnavailableException({
+        code: 'SERVICE_UNAVAILABLE',
+        message: 'PostgreSQL chưa sẵn sàng',
+      });
     }
   }
 }

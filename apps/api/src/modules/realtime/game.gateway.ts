@@ -13,6 +13,7 @@ import {
   type ServerToClientEvents,
 } from '@duoquest/shared-types';
 import { webOrigins } from '../../common/config';
+import { formatZodError, serializeErrorForLog } from '../../common/error-utils';
 import { AuthSessions, type Principal, type Revocation } from '../auth/auth-session.service';
 import { readCookie, SESSION_COOKIE } from '../auth/auth-security';
 import { RoomsService } from '../rooms/rooms.service';
@@ -92,7 +93,16 @@ export class GameGateway implements OnGatewayInit, OnModuleDestroy {
         continue;
       try {
         client.emit('room:state', this.rooms.viewFor(code, client.data.principal.playerId));
-      } catch {
+      } catch (error) {
+        this.logger.warn(
+          JSON.stringify({
+            event: 'room:state:publish',
+            code,
+            socketId: client.id,
+            playerId: client.data.principal.playerId,
+            error: serializeErrorForLog(error),
+          }),
+        );
         void client.leave(code);
       }
     }
@@ -111,7 +121,18 @@ export class GameGateway implements OnGatewayInit, OnModuleDestroy {
           socket.data.credential = credential;
           next();
         },
-        () => next(new Error('UNAUTHORIZED')),
+        (error: unknown) => {
+          if (!(error instanceof DomainError && error.code === 'UNAUTHORIZED')) {
+            this.logger.warn(
+              JSON.stringify({
+                event: 'ws:handshake',
+                socketId: socket.id,
+                error: serializeErrorForLog(error),
+              }),
+            );
+          }
+          next(new Error('UNAUTHORIZED'));
+        },
       );
     });
     this.sessions.events.on('revoked', this.revoke);
@@ -126,7 +147,14 @@ export class GameGateway implements OnGatewayInit, OnModuleDestroy {
     this.expiryTimer.unref();
     server.on('connection', (raw) => {
       void this.bind(raw as GameSocket).catch((error: unknown) => {
-        this.logger.error(error);
+        this.logger.error(
+          JSON.stringify({
+            event: 'ws:bind',
+            socketId: raw.id,
+            playerId: (raw as GameSocket).data.principal?.playerId ?? null,
+            error: serializeErrorForLog(error),
+          }),
+        );
         raw.disconnect(true);
       });
     });
@@ -152,6 +180,7 @@ export class GameGateway implements OnGatewayInit, OnModuleDestroy {
     let windowStart = Date.now();
     let count = 0;
     const execute = async <T>(
+      eventName: keyof ClientToServerEvents,
       ack: ((result: Ack<T>) => void) | undefined,
       task: () => Promise<T>,
     ) => {
@@ -165,61 +194,76 @@ export class GameGateway implements OnGatewayInit, OnModuleDestroy {
         await check();
         ack({ ok: true, data: await task() });
       } catch (error) {
+        const context = { event: eventName, socketId: socket.id, playerId: player.id };
         if (error instanceof DomainError) {
           if (error.code === 'UNAUTHORIZED') socket.disconnect(true);
+          if (error.code === 'RATE_LIMITED' || error.code === 'UNAUTHORIZED') {
+            this.logger.warn(JSON.stringify({ ...context, code: error.code }));
+          } else {
+            this.logger.debug(JSON.stringify({ ...context, code: error.code }));
+          }
           ack({ ok: false, error: { code: error.code, message: error.message } });
-        } else if (error instanceof ZodError)
+        } else if (error instanceof ZodError) {
+          this.logger.debug(
+            JSON.stringify({ ...context, code: 'INVALID_INPUT', issues: error.issues.length }),
+          );
           ack({
             ok: false,
             error: {
               code: 'INVALID_INPUT',
-              message: error.issues.map((i) => i.message).join('; '),
+              message: formatZodError(error),
             },
           });
-        else {
-          this.logger.error(error);
+        } else {
+          this.logger.error(
+            JSON.stringify({
+              ...context,
+              code: 'INTERNAL',
+              error: serializeErrorForLog(error),
+            }),
+          );
           ack({ ok: false, error: { code: 'INTERNAL', message: 'Không thể hoàn thành thao tác' } });
         }
       }
     };
     socket.on('room:create', (data, ack) => {
-      void execute(ack, async () => {
+      void execute('room:create', ack, async () => {
         const view = await this.rooms.create(player, createRoomSchema.parse(data), check);
         await socket.join(view.code);
         return view;
       });
     });
     socket.on('room:join', (data, ack) => {
-      void execute(ack, async () => {
+      void execute('room:join', ack, async () => {
         const view = await this.rooms.join(joinRoomSchema.parse(data).code, player, check);
         await socket.join(view.code);
         return view;
       });
     });
     socket.on('room:sync', (data, ack) => {
-      void execute(ack, async () => {
+      void execute('room:sync', ack, async () => {
         const view = await this.rooms.sync(roomCommandSchema.parse(data).code, player.id, check);
         await socket.join(view.code);
         return view;
       });
     });
     socket.on('room:ready', (data, ack) => {
-      void execute(ack, () =>
+      void execute('room:ready', ack, () =>
         this.rooms.ready(roomCommandSchema.parse(data).code, player.id, check),
       );
     });
     socket.on('match:start', (data, ack) => {
-      void execute(ack, () =>
+      void execute('match:start', ack, () =>
         this.rooms.start(roomCommandSchema.parse(data).code, player.id, check),
       );
     });
     socket.on('room:rematch', (data, ack) => {
-      void execute(ack, () =>
+      void execute('room:rematch', ack, () =>
         this.rooms.rematch(roomCommandSchema.parse(data).code, player.id, check),
       );
     });
     socket.on('room:leave', (data, ack) => {
-      void execute(ack, async () => {
+      void execute('room:leave', ack, async () => {
         const code = roomCommandSchema.parse(data).code;
         await this.rooms.leave(code, player.id, check);
         await socket.leave(code);
@@ -227,7 +271,7 @@ export class GameGateway implements OnGatewayInit, OnModuleDestroy {
       });
     });
     socket.on('game:action', (data, ack) => {
-      void execute(ack, () =>
+      void execute('game:action', ack, () =>
         this.rooms.action(
           gameActionSchema.parse(data),
           player.id,
@@ -237,9 +281,16 @@ export class GameGateway implements OnGatewayInit, OnModuleDestroy {
       );
     });
     socket.on('disconnect', () => {
-      void this.rooms
-        .disconnect(player.id, socket.id)
-        .catch((error: unknown) => this.logger.error(error));
+      void this.rooms.disconnect(player.id, socket.id).catch((error: unknown) =>
+        this.logger.error(
+          JSON.stringify({
+            event: 'ws:disconnect',
+            socketId: socket.id,
+            playerId: player.id,
+            error: serializeErrorForLog(error),
+          }),
+        ),
+      );
     });
     await this.rooms.connect(player.id, socket.id);
   }

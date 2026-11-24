@@ -1,6 +1,7 @@
 import { createHash, createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
 import { HttpException } from '@nestjs/common';
 import type { Request, Response } from 'express';
+import type { ErrorCode } from '@duoquest/shared-types';
 import { z } from 'zod';
 
 export const SESSION_COOKIE = 'dq_session';
@@ -32,7 +33,7 @@ export const tokenSchema = z.string().regex(/^[A-Za-z0-9_-]{43}$/);
 export const emailSchema = z.string().trim().max(254).email().toLowerCase();
 export { passwordSchema } from '@duoquest/shared-types';
 
-export function fail(status: number, code: string, message: string): never {
+export function fail(status: number, code: ErrorCode, message: string): never {
   throw new HttpException({ code, message }, status);
 }
 

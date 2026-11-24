@@ -111,7 +111,7 @@ describe('Swagger REST documentation and cookie workflow', () => {
     const response = await fetch(`${origin}/api/health/ready`);
     expect(response.status).toBe(503);
     expect(await response.json()).toEqual({
-      code: 'INVALID_INPUT',
+      code: 'SERVICE_UNAVAILABLE',
       message: 'PostgreSQL chưa sẵn sàng',
     });
   });
