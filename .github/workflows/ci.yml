@@ -20,7 +20,7 @@ jobs:
     env:
       DATABASE_URL: postgresql://duoquest:ci_only@127.0.0.1:5432/duoquest_test?schema=public
       RUN_DB_TESTS: '1'
-      PLAYWRIGHT_CHANNEL: chromium
+      PLAYWRIGHT_CHANNEL: chrome
       NEXT_TELEMETRY_DISABLED: '1'
     steps:
       - uses: actions/checkout@v4
@@ -40,7 +40,7 @@ jobs:
       - run: pnpm format:check
       - run: pnpm build
       - run: pnpm db:seed
-      - run: pnpm exec playwright install --with-deps chromium
+      - run: pnpm exec playwright install --with-deps chrome
       - run: pnpm build:ui-lab
       - run: pnpm test:ui-lab
       - run: pnpm test:e2e

@@ -12,8 +12,19 @@ export function LeaveMatchDialog() {
 
   useEffect(() => {
     if (!leaveConfirm.open) return;
-    const previousFocus = document.activeElement as HTMLElement | null;
+    const active = document.activeElement as HTMLElement | null;
+    const previousFocus =
+      active && active !== document.body
+        ? active
+        : document.querySelector<HTMLElement>('button[class*="leaveMatch"]');
     stayButtonRef.current?.focus();
+    return () => {
+      previousFocus?.focus?.();
+    };
+  }, [leaveConfirm.open]);
+
+  useEffect(() => {
+    if (!leaveConfirm.open) return;
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -43,7 +54,6 @@ export function LeaveMatchDialog() {
     window.addEventListener('keydown', onKeyDown);
     return () => {
       window.removeEventListener('keydown', onKeyDown);
-      previousFocus?.focus?.();
     };
   }, [cancelLeaveConfirm, leaveConfirm.busy, leaveConfirm.open]);
 
