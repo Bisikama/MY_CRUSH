@@ -541,14 +541,18 @@ test('shows Co-op captain permissions and mock reconnection', async ({ page }) =
   await start(page);
   await openPanel(page);
   await page.getByRole('button', { name: 'P2', exact: true }).click();
+  await page.getByText('UI Lab', { exact: true }).click();
   await expect(choose(page, 'C')).toBeDisabled();
   await page.getByRole('button', { name: 'Gợi ý', exact: true }).click();
   await expect(page.locator('.explanation li')).toBeVisible();
+  await openPanel(page);
   await page.getByRole('button', { name: 'P1', exact: true }).click();
+  await page.getByText('UI Lab', { exact: true }).click();
   await expect(choose(page, 'C')).toBeEnabled();
   await choose(page, 'A').click();
   await expect(page.locator('.coop-info')).toContainText('2 mạng');
 
+  await openPanel(page);
   await scene(page, 'disconnect');
   await expect(page.getByText(/Mất kết nối. Đang kết nối lại/)).toBeVisible();
   await openPanel(page);

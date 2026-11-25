@@ -21,8 +21,29 @@
 }
 
 .inMatch {
-  left: 1rem;
+  left: 0.65rem;
+  bottom: 0.65rem;
   right: auto;
+}
+
+.inMatch summary {
+  padding: 0.45rem 0.75rem;
+}
+
+.inMatch .controls {
+  gap: 0.3rem;
+  padding: 0 0.7rem 0.6rem;
+}
+
+.inMatch .controls select,
+.inMatch .controls button {
+  min-height: 1.85rem;
+  padding: 0.2rem 0.45rem;
+}
+
+.inMatch .controls p {
+  margin: 0;
+  line-height: 1.25;
 }
 
 .controls {
