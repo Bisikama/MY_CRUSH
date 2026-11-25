@@ -56,21 +56,28 @@ export function QuestionCover({
     const showPoster = () => {
       delete video.dataset.playing;
     };
+    const showIfPlaying = () => {
+      if (!stopped && !video.paused && !video.ended) showVideo();
+    };
 
     if (video.readyState >= HTMLMediaElement.HAVE_METADATA) seekToElapsed();
     else video.addEventListener('loadedmetadata', seekToElapsed, { once: true });
     video.addEventListener('playing', showVideo);
+    video.addEventListener('seeked', showIfPlaying);
     video.addEventListener('waiting', showPoster);
     video.addEventListener('error', showPoster);
     video.addEventListener('ended', showPoster);
 
     setInitialMute(video);
-    void video.play().catch((error: unknown) => {
-      if (stopped || !(error instanceof DOMException) || error.name !== 'NotAllowedError') return;
-      video.muted = true;
-      if (video.readyState >= HTMLMediaElement.HAVE_METADATA) seekToElapsed();
-      void video.play().catch(showPoster);
-    });
+    void video
+      .play()
+      .then(showIfPlaying)
+      .catch((error: unknown) => {
+        if (stopped || !(error instanceof DOMException) || error.name !== 'NotAllowedError') return;
+        video.muted = true;
+        if (video.readyState >= HTMLMediaElement.HAVE_METADATA) seekToElapsed();
+        void video.play().then(showIfPlaying).catch(showPoster);
+      });
 
     return () => {
       stopped = true;
@@ -78,6 +85,7 @@ export function QuestionCover({
       showPoster();
       video.removeEventListener('loadedmetadata', seekToElapsed);
       video.removeEventListener('playing', showVideo);
+      video.removeEventListener('seeked', showIfPlaying);
       video.removeEventListener('waiting', showPoster);
       video.removeEventListener('error', showPoster);
       video.removeEventListener('ended', showPoster);

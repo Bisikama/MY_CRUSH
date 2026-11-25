@@ -149,7 +149,7 @@ export class RoomsService implements OnModuleInit, OnModuleDestroy {
       );
       if (creatorIp) {
         const activeFromIp = [...this.rooms.values()].filter(
-          (r) => r.status !== 'CANCELLED' && r.creatorIp === creatorIp,
+          (r) => r.status !== 'CANCELLED' && r.status !== 'FINISHED' && r.creatorIp === creatorIp,
         ).length;
         assertDomain(
           activeFromIp < ROOM_POLICY.maxRoomsPerIp,

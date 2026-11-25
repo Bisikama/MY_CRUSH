@@ -26,6 +26,7 @@ export default defineConfig({
     {
       command: 'pnpm --filter @duoquest/web start',
       url: 'http://127.0.0.1:3000',
+      env: { QUIZ_IMAGE_CDN_ORIGINS: 'https://quiz-cdn.example.test' },
       reuseExistingServer: false,
       timeout: 60_000,
     },

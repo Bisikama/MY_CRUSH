@@ -43,10 +43,6 @@ function collectAllowedDevOrigins(): string[] {
 
 function buildContentSecurityPolicy(): string {
   const isDev = process.env.NODE_ENV !== 'production';
-  const cdnOrigins = readRootEnv('QUIZ_IMAGE_CDN_ORIGINS')
-    .split(',')
-    .map((origin) => origin.trim())
-    .filter((origin) => origin.startsWith('https://'));
 
   const connectSources = new Set<string>(["'self'", 'wss:']);
   if (isDev) {
@@ -70,7 +66,7 @@ function buildContentSecurityPolicy(): string {
   }
 
   const scriptSrc = isDev ? "'self' 'unsafe-inline' 'unsafe-eval'" : "'self' 'unsafe-inline'";
-  const imgSrc = ["'self'", 'data:', 'blob:', ...cdnOrigins].join(' ');
+  const imgSrc = "'self' data: blob: https:";
 
   return [
     "default-src 'self'",
