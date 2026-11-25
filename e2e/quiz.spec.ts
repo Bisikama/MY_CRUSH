@@ -185,11 +185,8 @@ test('two isolated browsers join a LAN-style room via invite URL and keep answer
     await expect(covered).toBeVisible();
     await expect(b.locator('.question-card').getByRole('img')).toHaveCount(0);
     await expect(a.locator('.question-card').getByRole('img')).toHaveCount(3);
-    await expect(coverVideo).toHaveAttribute('data-playing', 'true', { timeout: 10_000 });
-    await b.reload();
-    await expect(covered).toBeVisible();
     console.log(
-      'VIDEO_DEBUG',
+      'VIDEO_DEBUG_188',
       await coverVideo.evaluate((v: HTMLVideoElement) => ({
         paused: v.paused,
         ended: v.ended,
@@ -202,6 +199,9 @@ test('two isolated browsers join a LAN-style room via invite URL and keep answer
         error: v.error ? { code: v.error.code, msg: v.error.message } : null,
       })),
     );
+    await expect(coverVideo).toHaveAttribute('data-playing', 'true', { timeout: 10_000 });
+    await b.reload();
+    await expect(covered).toBeVisible();
     await expect(coverVideo).toHaveAttribute('data-playing', 'true', { timeout: 10_000 });
     expect(
       await coverVideo.evaluate((video: HTMLVideoElement) => video.currentTime),
