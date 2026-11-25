@@ -36,7 +36,11 @@ export function QuestionCover({
     Math.max(0, (Date.now() + clockOffset - start) / 1000),
   );
   const setInitialMute = useEffectEvent((video: HTMLVideoElement) => {
-    video.muted = !soundEnabled;
+    const blockedByAutoplay =
+      typeof navigator !== 'undefined' &&
+      'userActivation' in navigator &&
+      !navigator.userActivation.hasBeenActive;
+    video.muted = !soundEnabled || blockedByAutoplay;
   });
 
   useLayoutEffect(() => {
@@ -47,7 +51,11 @@ export function QuestionCover({
     const start = startsAt;
     let stopped = false;
     function seekToElapsed() {
-      if (video) video.currentTime = elapsedSeconds(start);
+      if (!video) return;
+      const target = elapsedSeconds(start);
+      if (Math.abs(video.currentTime - target) > 0.25) {
+        video.currentTime = target;
+      }
     }
 
     const showVideo = () => {
@@ -57,14 +65,21 @@ export function QuestionCover({
       delete video.dataset.playing;
     };
     const showIfPlaying = () => {
-      if (!stopped && !video.paused && !video.ended) showVideo();
+      if (!stopped && !video.paused && !video.ended) {
+        showVideo();
+      }
+    };
+    const handleWaiting = () => {
+      if (!video.seeking) showPoster();
     };
 
-    if (video.readyState >= HTMLMediaElement.HAVE_METADATA) seekToElapsed();
-    else video.addEventListener('loadedmetadata', seekToElapsed, { once: true });
+    if (video.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) seekToElapsed();
+    else video.addEventListener('canplay', seekToElapsed, { once: true });
     video.addEventListener('playing', showVideo);
+    video.addEventListener('canplay', showIfPlaying);
     video.addEventListener('seeked', showIfPlaying);
-    video.addEventListener('waiting', showPoster);
+    video.addEventListener('timeupdate', showIfPlaying);
+    video.addEventListener('waiting', handleWaiting);
     video.addEventListener('error', showPoster);
     video.addEventListener('ended', showPoster);
 
@@ -75,7 +90,7 @@ export function QuestionCover({
       .catch((error: unknown) => {
         if (stopped || !(error instanceof DOMException) || error.name !== 'NotAllowedError') return;
         video.muted = true;
-        if (video.readyState >= HTMLMediaElement.HAVE_METADATA) seekToElapsed();
+        if (video.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) seekToElapsed();
         void video.play().then(showIfPlaying).catch(showPoster);
       });
 
@@ -83,10 +98,12 @@ export function QuestionCover({
       stopped = true;
       video.pause();
       showPoster();
-      video.removeEventListener('loadedmetadata', seekToElapsed);
+      video.removeEventListener('canplay', seekToElapsed);
       video.removeEventListener('playing', showVideo);
+      video.removeEventListener('canplay', showIfPlaying);
       video.removeEventListener('seeked', showIfPlaying);
-      video.removeEventListener('waiting', showPoster);
+      video.removeEventListener('timeupdate', showIfPlaying);
+      video.removeEventListener('waiting', handleWaiting);
       video.removeEventListener('error', showPoster);
       video.removeEventListener('ended', showPoster);
     };

@@ -47,7 +47,7 @@ class QuizAudioController {
     delayMs = 0,
   ) {
     const ctx = this.ensureContext();
-    if (!ctx) return;
+    if (!ctx || ctx.state !== 'running') return;
     try {
       const startAt = ctx.currentTime + delayMs / 1000;
       const stopAt = startAt + durationMs / 1000;
