@@ -170,21 +170,20 @@ describe('Quiz Skills', () => {
     expect(() => use(state, 'p1', 'FIFTY_FIFTY')).toThrow('50/50');
   });
 
-  it('applies interference only to the target, blocks overlap and still allows an answer', () => {
+  it('applies interference immediately at question start, targets opponent only, blocks overlap and still allows an answer', () => {
     const state = setup('DUEL');
-    expect(() => use(state, 'p1', 'BLUR', 5999)).toThrow('5 giây');
-    const blurred = use(state, 'p1', 'BLUR', 6000);
-    expect(engine.getPlayerView(blurred, ['p1'], 6000).interference).toBeNull();
-    expect(engine.getPlayerView(blurred, ['p2'], 6000).interference).toEqual({
+    const blurred = use(state, 'p1', 'BLUR', 1000);
+    expect(engine.getPlayerView(blurred, ['p1'], 1000).interference).toBeNull();
+    expect(engine.getPlayerView(blurred, ['p2'], 1000).interference).toEqual({
       skill: 'BLUR',
-      until: 9000,
+      until: 4000,
     });
-    expect(() => use(blurred, 'p1', 'COVER', 6500)).toThrow('đang có hiệu ứng');
-    expect(engine.getPlayerView(blurred, ['p2'], 9000).interference).toBeNull();
-    const answered = answer(blurred, 'p2', 'B', 7000);
+    expect(() => use(blurred, 'p1', 'COVER', 1500)).toThrow('đang có hiệu ứng');
+    expect(engine.getPlayerView(blurred, ['p2'], 4000).interference).toBeNull();
+    const answered = answer(blurred, 'p2', 'B', 2000);
     expect(answered.answers.p2).toBe('B');
-    expect(engine.getPlayerView(answered, ['p2'], 7000).interference?.skill).toBe('BLUR');
-    expect(() => use(setup('DUEL', 'SHARED_SCREEN'), 'p1', 'BLUR', 6000)).toThrow('chế độ');
+    expect(engine.getPlayerView(answered, ['p2'], 2000).interference?.skill).toBe('BLUR');
+    expect(() => use(setup('DUEL', 'SHARED_SCREEN'), 'p1', 'BLUR', 1000)).toThrow('chế độ');
   });
 
   it('ends Cover when the target answers, while the other player can keep playing', () => {

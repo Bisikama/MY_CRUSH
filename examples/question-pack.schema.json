@@ -24,11 +24,7 @@
         },
         "knowledgeType": {
           "type": "string",
-          "enum": [
-            "academic",
-            "practical",
-            "discovery"
-          ]
+          "enum": ["academic", "practical", "discovery"]
         },
         "category": {
           "type": "string",
@@ -56,11 +52,7 @@
                 "maxLength": 4000
               }
             },
-            "required": [
-              "category",
-              "topic",
-              "reason"
-            ],
+            "required": ["category", "topic", "reason"],
             "additionalProperties": false
           },
           "maxItems": 12
@@ -84,11 +76,7 @@
               },
               "difficulty": {
                 "type": "string",
-                "enum": [
-                  "easy",
-                  "medium",
-                  "hard"
-                ]
+                "enum": ["easy", "medium", "hard"]
               },
               "prompt": {
                 "$ref": "#/definitions/QuestionPack/properties/relatedKnowledge/items/properties/reason"
@@ -109,10 +97,7 @@
                       "maxLength": 300
                     }
                   },
-                  "required": [
-                    "src",
-                    "alt"
-                  ],
+                  "required": ["src", "alt"],
                   "additionalProperties": false
                 },
                 "maxItems": 4
@@ -124,21 +109,13 @@
                   "properties": {
                     "id": {
                       "type": "string",
-                      "enum": [
-                        "A",
-                        "B",
-                        "C",
-                        "D"
-                      ]
+                      "enum": ["A", "B", "C", "D"]
                     },
                     "text": {
                       "$ref": "#/definitions/QuestionPack/properties/relatedKnowledge/items/properties/reason"
                     }
                   },
-                  "required": [
-                    "id",
-                    "text"
-                  ],
+                  "required": ["id", "text"],
                   "additionalProperties": false
                 },
                 "minItems": 4,
@@ -190,14 +167,7 @@
           "maxItems": 500
         }
       },
-      "required": [
-        "schemaVersion",
-        "packId",
-        "title",
-        "language",
-        "category",
-        "questions"
-      ],
+      "required": ["schemaVersion", "packId", "title", "language", "category", "questions"],
       "additionalProperties": false
     }
   },

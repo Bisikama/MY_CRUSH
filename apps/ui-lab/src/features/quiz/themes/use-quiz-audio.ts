@@ -93,4 +93,3 @@ export function useQuizAudio({
     prevInterferenceKeyRef.current = interferenceKey;
   }, [game, skillSfxEnabled, theme]);
 }
-

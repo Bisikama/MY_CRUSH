@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react';
 import { Button, Card } from '@duoquest/ui';
 import { QUIZ_SKILLS, type QuizSkill, type RoomView } from '@duoquest/shared-types';
-import { formatRoomSetupSummary, getPlayerNickname } from './quiz-stage.utils';
+import { formatRoomSetupSummary } from './quiz-stage.utils';
+import type { QuizThemeDefinition } from './themes/quiz-theme-registry';
 
 interface LobbyHeaderProps {
   activeRoom: RoomView;
@@ -89,6 +90,7 @@ interface LobbyCardProps {
   busy: boolean;
   identityPlayerId: string;
   activeSkills: readonly QuizSkill[];
+  theme: QuizThemeDefinition;
   onHome: () => void;
   onCommand: (event: 'room:ready' | 'match:start') => Promise<void>;
 }
@@ -100,6 +102,7 @@ export function QuizLobby({
   busy,
   identityPlayerId,
   activeSkills,
+  theme,
   onHome,
   onCommand,
 }: LobbyCardProps) {
@@ -118,7 +121,7 @@ export function QuizLobby({
 
   return (
     <Card className="lobby">
-      <span className="tag">PHÒNG CHỜ</span>
+      <span className="tag">PHÒNG CHỜ · CHỦ ĐỀ: {theme.name.toLocaleUpperCase('vi')}</span>
       <h1>{activeRoom.status === 'READY' ? 'Sẵn sàng khám phá?' : 'Đợi nhau một chút.'}</h1>
       <p>
         {activeRoom.mode === 'SOLO' || activeRoom.layout === 'SHARED_SCREEN'
@@ -169,5 +172,3 @@ export function QuizLobby({
     </Card>
   );
 }
-
-export { getPlayerNickname };

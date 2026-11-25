@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from 'react';
+import { useEffect, useState, type CSSProperties, type ReactNode } from 'react';
 import {
   QUIZ_SKILLS,
   QUIZ_SKILL_TIMING,
@@ -57,6 +57,34 @@ export function QuizArena({
   onLeave,
   onAction,
 }: Props) {
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    const syncFullscreen = () => {
+      setIsFullscreen(Boolean(document.fullscreenElement));
+    };
+    syncFullscreen();
+    document.addEventListener('fullscreenchange', syncFullscreen);
+    return () => {
+      document.removeEventListener('fullscreenchange', syncFullscreen);
+      if (document.fullscreenElement && typeof document.exitFullscreen === 'function') {
+        void document.exitFullscreen().catch(() => undefined);
+      }
+    };
+  }, []);
+
+  const toggleFullscreen = async () => {
+    try {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen();
+      } else {
+        await document.documentElement.requestFullscreen();
+      }
+    } catch {
+      // Browser may block fullscreen if not triggered by user gesture or unsupported
+    }
+  };
+
   const playerName = (id: string | null) => getPlayerNickname(activeRoom.players, id);
   const seconds = Math.max(0, Math.ceil((game.deadline - serverTime) / 1000));
   const controlled = activeRoom.controlledPlayerIds;
@@ -303,14 +331,23 @@ export function QuizArena({
             ))}
       </div>
 
-      <Button
-        className={styles.leaveMatch}
-        disabled={busy || !connected}
-        onClick={() => void onLeave()}
-      >
-        Rời phòng
-      </Button>
+      <div className={styles.arenaActions}>
+        <Button
+          type="button"
+          className={styles.fullscreenBtn}
+          aria-pressed={isFullscreen}
+          onClick={() => void toggleFullscreen()}
+        >
+          {isFullscreen ? 'Thoát toàn màn hình' : 'Toàn màn hình'}
+        </Button>
+        <Button
+          className={styles.leaveMatch}
+          disabled={busy || !connected}
+          onClick={() => void onLeave()}
+        >
+          Rời phòng
+        </Button>
+      </div>
     </Card>
   );
 }
-

@@ -37,11 +37,7 @@
         "Bài có tên cả hai nghệ sĩ trong credit.",
         "Một trong hai nghệ sĩ là Dangrangto."
       ],
-      "tags": [
-        "nhac-viet",
-        "dangrangto",
-        "wrong-times"
-      ],
+      "tags": ["nhac-viet", "dangrangto", "wrong-times"],
       "timeLimitSeconds": 25
     },
     {
@@ -75,11 +71,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "sơn-tùng-m-tp"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "sơn-tùng-m-tp"],
       "timeLimitSeconds": 22
     },
     {
@@ -113,11 +105,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "obito"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "obito"],
       "timeLimitSeconds": 30
     },
     {
@@ -151,11 +139,7 @@
         "Xác định danh sách nghệ sĩ của bản phát hành.",
         "Chỉ một lựa chọn có trong credit được đối chiếu."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "b-ray"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "b-ray"],
       "timeLimitSeconds": 32
     },
     {
@@ -189,11 +173,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "obito"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "obito"],
       "timeLimitSeconds": 30
     },
     {
@@ -227,11 +207,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "tăng-duy-tân"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "tăng-duy-tân"],
       "timeLimitSeconds": 22
     },
     {
@@ -265,11 +241,7 @@
         "Xác định danh sách nghệ sĩ của bản phát hành.",
         "Chỉ một lựa chọn có trong credit được đối chiếu."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "obito"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "obito"],
       "timeLimitSeconds": 32
     },
     {
@@ -303,11 +275,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "tuấn-hưng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "tuấn-hưng"],
       "timeLimitSeconds": 22
     },
     {
@@ -341,11 +309,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "b-ray"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "b-ray"],
       "timeLimitSeconds": 29
     },
     {
@@ -379,11 +343,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "lyly"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "lyly"],
       "timeLimitSeconds": 29
     },
     {
@@ -417,11 +377,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "dương-domic"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "dương-domic"],
       "timeLimitSeconds": 30
     },
     {
@@ -455,11 +411,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "lyly"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "lyly"],
       "timeLimitSeconds": 29
     },
     {
@@ -493,11 +445,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "thanh-hưng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "thanh-hưng"],
       "timeLimitSeconds": 22
     },
     {
@@ -531,11 +479,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "obito"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "obito"],
       "timeLimitSeconds": 30
     },
     {
@@ -569,11 +513,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "thanh-hưng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "thanh-hưng"],
       "timeLimitSeconds": 30
     },
     {
@@ -607,11 +547,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "obito"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "obito"],
       "timeLimitSeconds": 30
     },
     {
@@ -645,11 +581,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "thanh-hưng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "thanh-hưng"],
       "timeLimitSeconds": 22
     },
     {
@@ -683,11 +615,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "quang-hùng-masterd"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "quang-hùng-masterd"],
       "timeLimitSeconds": 22
     },
     {
@@ -721,11 +649,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "phùng-khánh-linh"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "phùng-khánh-linh"],
       "timeLimitSeconds": 22
     },
     {
@@ -759,11 +683,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "dương-domic"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "dương-domic"],
       "timeLimitSeconds": 22
     },
     {
@@ -797,11 +717,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hieuthuhai"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hieuthuhai"],
       "timeLimitSeconds": 30
     },
     {
@@ -835,11 +751,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "buitruonglinh"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "buitruonglinh"],
       "timeLimitSeconds": 22
     },
     {
@@ -873,11 +785,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "obito"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "obito"],
       "timeLimitSeconds": 29
     },
     {
@@ -911,11 +819,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "amee"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "amee"],
       "timeLimitSeconds": 22
     },
     {
@@ -949,11 +853,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "justatee"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "justatee"],
       "timeLimitSeconds": 29
     },
     {
@@ -987,11 +887,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "thanh-hưng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "thanh-hưng"],
       "timeLimitSeconds": 22
     },
     {
@@ -1025,11 +921,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hngle"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hngle"],
       "timeLimitSeconds": 30
     },
     {
@@ -1063,11 +955,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hngle"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hngle"],
       "timeLimitSeconds": 22
     },
     {
@@ -1101,11 +989,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "b-ray"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "b-ray"],
       "timeLimitSeconds": 30
     },
     {
@@ -1139,11 +1023,7 @@
         "Phân biệt tên bài hát với tên album hoặc EP.",
         "So sánh tên album với danh mục chính thức của nghệ sĩ."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "amee"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "amee"],
       "timeLimitSeconds": 34
     },
     {
@@ -1177,11 +1057,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "vũ."
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "vũ."],
       "timeLimitSeconds": 22
     },
     {
@@ -1215,11 +1091,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "quang-hùng-masterd"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "quang-hùng-masterd"],
       "timeLimitSeconds": 22
     },
     {
@@ -1253,11 +1125,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "rhyder"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "rhyder"],
       "timeLimitSeconds": 30
     },
     {
@@ -1291,11 +1159,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "sơn-tùng-m-tp"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "sơn-tùng-m-tp"],
       "timeLimitSeconds": 30
     },
     {
@@ -1329,11 +1193,7 @@
         "Xác định danh sách nghệ sĩ của bản phát hành.",
         "Chỉ một lựa chọn có trong credit được đối chiếu."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "binz"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "binz"],
       "timeLimitSeconds": 32
     },
     {
@@ -1367,11 +1227,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "justatee"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "justatee"],
       "timeLimitSeconds": 30
     },
     {
@@ -1405,11 +1261,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "obito"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "obito"],
       "timeLimitSeconds": 29
     },
     {
@@ -1443,11 +1295,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "thanh-hưng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "thanh-hưng"],
       "timeLimitSeconds": 22
     },
     {
@@ -1481,11 +1329,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "amee"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "amee"],
       "timeLimitSeconds": 30
     },
     {
@@ -1519,11 +1363,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hngle"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hngle"],
       "timeLimitSeconds": 22
     },
     {
@@ -1557,11 +1397,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "negav"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "negav"],
       "timeLimitSeconds": 22
     },
     {
@@ -1595,11 +1431,7 @@
         "Phân biệt tên bài hát với tên album hoặc EP.",
         "So sánh tên album với danh mục chính thức của nghệ sĩ."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hoàng-dũng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hoàng-dũng"],
       "timeLimitSeconds": 34
     },
     {
@@ -1633,11 +1465,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "vũ."
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "vũ."],
       "timeLimitSeconds": 29
     },
     {
@@ -1671,11 +1499,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hoàng-dũng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hoàng-dũng"],
       "timeLimitSeconds": 30
     },
     {
@@ -1709,11 +1533,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "binz"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "binz"],
       "timeLimitSeconds": 30
     },
     {
@@ -1747,11 +1567,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hà-an-huy"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hà-an-huy"],
       "timeLimitSeconds": 30
     },
     {
@@ -1785,11 +1601,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "amee"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "amee"],
       "timeLimitSeconds": 22
     },
     {
@@ -1823,11 +1635,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "tăng-duy-tân"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "tăng-duy-tân"],
       "timeLimitSeconds": 22
     },
     {
@@ -1861,11 +1669,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hurrykng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hurrykng"],
       "timeLimitSeconds": 29
     },
     {
@@ -1899,11 +1703,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "negav"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "negav"],
       "timeLimitSeconds": 29
     },
     {
@@ -1937,11 +1737,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "sơn-tùng-m-tp"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "sơn-tùng-m-tp"],
       "timeLimitSeconds": 30
     },
     {
@@ -1975,11 +1771,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "binz"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "binz"],
       "timeLimitSeconds": 29
     },
     {
@@ -2013,11 +1805,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "tuấn-hưng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "tuấn-hưng"],
       "timeLimitSeconds": 22
     },
     {
@@ -2051,11 +1839,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "quang-hùng-masterd"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "quang-hùng-masterd"],
       "timeLimitSeconds": 29
     },
     {
@@ -2089,11 +1873,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "thanh-hưng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "thanh-hưng"],
       "timeLimitSeconds": 30
     },
     {
@@ -2127,11 +1907,7 @@
         "Xác định danh sách nghệ sĩ của bản phát hành.",
         "Chỉ một lựa chọn có trong credit được đối chiếu."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "rhyder"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "rhyder"],
       "timeLimitSeconds": 32
     },
     {
@@ -2165,11 +1941,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "lyly"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "lyly"],
       "timeLimitSeconds": 30
     },
     {
@@ -2203,11 +1975,7 @@
         "Phân biệt tên bài hát với tên album hoặc EP.",
         "So sánh tên album với danh mục chính thức của nghệ sĩ."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hieuthuhai"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hieuthuhai"],
       "timeLimitSeconds": 34
     },
     {
@@ -2241,11 +2009,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "sơn-tùng-m-tp"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "sơn-tùng-m-tp"],
       "timeLimitSeconds": 30
     },
     {
@@ -2279,11 +2043,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hoàng-dũng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hoàng-dũng"],
       "timeLimitSeconds": 29
     },
     {
@@ -2317,11 +2077,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "sơn-tùng-m-tp"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "sơn-tùng-m-tp"],
       "timeLimitSeconds": 30
     },
     {
@@ -2355,11 +2111,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "b-ray"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "b-ray"],
       "timeLimitSeconds": 22
     },
     {
@@ -2393,11 +2145,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "sơn-tùng-m-tp"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "sơn-tùng-m-tp"],
       "timeLimitSeconds": 30
     },
     {
@@ -2431,11 +2179,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "quang-hùng-masterd"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "quang-hùng-masterd"],
       "timeLimitSeconds": 29
     },
     {
@@ -2469,11 +2213,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hurrykng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hurrykng"],
       "timeLimitSeconds": 29
     },
     {
@@ -2507,11 +2247,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "binz"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "binz"],
       "timeLimitSeconds": 30
     },
     {
@@ -2545,11 +2281,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "quang-hùng-masterd"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "quang-hùng-masterd"],
       "timeLimitSeconds": 29
     },
     {
@@ -2583,11 +2315,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hieuthuhai"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hieuthuhai"],
       "timeLimitSeconds": 22
     },
     {
@@ -2621,11 +2349,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "obito"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "obito"],
       "timeLimitSeconds": 30
     },
     {
@@ -2659,11 +2383,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "rhyder"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "rhyder"],
       "timeLimitSeconds": 30
     },
     {
@@ -2697,11 +2417,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hoàng-dũng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hoàng-dũng"],
       "timeLimitSeconds": 29
     },
     {
@@ -2735,11 +2451,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hieuthuhai"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hieuthuhai"],
       "timeLimitSeconds": 29
     },
     {
@@ -2773,11 +2485,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "rhyder"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "rhyder"],
       "timeLimitSeconds": 22
     },
     {
@@ -2811,11 +2519,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "quang-hùng-masterd"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "quang-hùng-masterd"],
       "timeLimitSeconds": 30
     },
     {
@@ -2849,11 +2553,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "buitruonglinh"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "buitruonglinh"],
       "timeLimitSeconds": 30
     },
     {
@@ -2887,11 +2587,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "đạt-g"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "đạt-g"],
       "timeLimitSeconds": 29
     },
     {
@@ -2925,11 +2621,7 @@
         "Phân biệt tên bài hát với tên album hoặc EP.",
         "So sánh tên album với danh mục chính thức của nghệ sĩ."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hurrykng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hurrykng"],
       "timeLimitSeconds": 34
     },
     {
@@ -2963,11 +2655,7 @@
         "Xác định danh sách nghệ sĩ của bản phát hành.",
         "Chỉ một lựa chọn có trong credit được đối chiếu."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "obito"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "obito"],
       "timeLimitSeconds": 32
     },
     {
@@ -3001,11 +2689,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "b-ray"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "b-ray"],
       "timeLimitSeconds": 29
     },
     {
@@ -3039,11 +2723,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "sơn-tùng-m-tp"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "sơn-tùng-m-tp"],
       "timeLimitSeconds": 30
     },
     {
@@ -3077,11 +2757,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hieuthuhai"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hieuthuhai"],
       "timeLimitSeconds": 22
     },
     {
@@ -3115,11 +2791,7 @@
         "Phân biệt tên bài hát với tên album hoặc EP.",
         "So sánh tên album với danh mục chính thức của nghệ sĩ."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "buitruonglinh"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "buitruonglinh"],
       "timeLimitSeconds": 34
     },
     {
@@ -3153,11 +2825,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "amee"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "amee"],
       "timeLimitSeconds": 29
     },
     {
@@ -3191,11 +2859,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "lyly"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "lyly"],
       "timeLimitSeconds": 22
     },
     {
@@ -3229,11 +2893,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "dangrangto"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "dangrangto"],
       "timeLimitSeconds": 29
     },
     {
@@ -3267,11 +2927,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "buitruonglinh"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "buitruonglinh"],
       "timeLimitSeconds": 29
     },
     {
@@ -3305,11 +2961,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "binz"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "binz"],
       "timeLimitSeconds": 29
     },
     {
@@ -3343,11 +2995,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "binz"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "binz"],
       "timeLimitSeconds": 29
     },
     {
@@ -3381,11 +3029,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "lyly"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "lyly"],
       "timeLimitSeconds": 22
     },
     {
@@ -3419,11 +3063,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hieuthuhai"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hieuthuhai"],
       "timeLimitSeconds": 30
     },
     {
@@ -3457,11 +3097,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "buitruonglinh"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "buitruonglinh"],
       "timeLimitSeconds": 22
     },
     {
@@ -3495,11 +3131,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "negav"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "negav"],
       "timeLimitSeconds": 22
     },
     {
@@ -3533,11 +3165,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "dương-domic"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "dương-domic"],
       "timeLimitSeconds": 30
     },
     {
@@ -3571,11 +3199,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hurrykng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hurrykng"],
       "timeLimitSeconds": 29
     },
     {
@@ -3609,11 +3233,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "amee"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "amee"],
       "timeLimitSeconds": 22
     },
     {
@@ -3647,11 +3267,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hieuthuhai"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hieuthuhai"],
       "timeLimitSeconds": 30
     },
     {
@@ -3685,11 +3301,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "obito"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "obito"],
       "timeLimitSeconds": 29
     },
     {
@@ -3723,11 +3335,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hieuthuhai"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hieuthuhai"],
       "timeLimitSeconds": 29
     },
     {
@@ -3761,11 +3369,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "phùng-khánh-linh"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "phùng-khánh-linh"],
       "timeLimitSeconds": 29
     },
     {
@@ -3799,11 +3403,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "justatee"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "justatee"],
       "timeLimitSeconds": 29
     },
     {
@@ -3837,11 +3437,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "đạt-g"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "đạt-g"],
       "timeLimitSeconds": 29
     },
     {
@@ -3875,11 +3471,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "tuấn-hưng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "tuấn-hưng"],
       "timeLimitSeconds": 22
     },
     {
@@ -3913,11 +3505,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "rhyder"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "rhyder"],
       "timeLimitSeconds": 29
     },
     {
@@ -3951,11 +3539,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "thanh-hưng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "thanh-hưng"],
       "timeLimitSeconds": 22
     },
     {
@@ -3989,11 +3573,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hoàng-dũng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hoàng-dũng"],
       "timeLimitSeconds": 22
     },
     {
@@ -4027,11 +3607,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "justatee"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "justatee"],
       "timeLimitSeconds": 22
     },
     {
@@ -4065,11 +3641,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "dương-domic"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "dương-domic"],
       "timeLimitSeconds": 22
     },
     {
@@ -4103,11 +3675,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "thanh-hưng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "thanh-hưng"],
       "timeLimitSeconds": 30
     },
     {
@@ -4141,11 +3709,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hoàng-dũng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hoàng-dũng"],
       "timeLimitSeconds": 29
     },
     {
@@ -4179,11 +3743,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "dangrangto"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "dangrangto"],
       "timeLimitSeconds": 29
     },
     {
@@ -4217,11 +3777,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hngle"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hngle"],
       "timeLimitSeconds": 29
     },
     {
@@ -4255,11 +3811,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "đạt-g"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "đạt-g"],
       "timeLimitSeconds": 22
     },
     {
@@ -4293,11 +3845,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "dương-domic"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "dương-domic"],
       "timeLimitSeconds": 22
     },
     {
@@ -4331,11 +3879,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "b-ray"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "b-ray"],
       "timeLimitSeconds": 30
     },
     {
@@ -4369,11 +3913,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "obito"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "obito"],
       "timeLimitSeconds": 29
     },
     {
@@ -4407,11 +3947,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "phùng-khánh-linh"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "phùng-khánh-linh"],
       "timeLimitSeconds": 22
     },
     {
@@ -4445,11 +3981,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "dương-domic"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "dương-domic"],
       "timeLimitSeconds": 29
     },
     {
@@ -4483,11 +4015,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "dương-domic"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "dương-domic"],
       "timeLimitSeconds": 22
     },
     {
@@ -4521,11 +4049,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "sơn-tùng-m-tp"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "sơn-tùng-m-tp"],
       "timeLimitSeconds": 22
     },
     {
@@ -4559,11 +4083,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "buitruonglinh"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "buitruonglinh"],
       "timeLimitSeconds": 30
     },
     {
@@ -4597,11 +4117,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "dangrangto"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "dangrangto"],
       "timeLimitSeconds": 30
     },
     {
@@ -4635,11 +4151,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "sơn-tùng-m-tp"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "sơn-tùng-m-tp"],
       "timeLimitSeconds": 30
     },
     {
@@ -4673,11 +4185,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "lyly"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "lyly"],
       "timeLimitSeconds": 29
     },
     {
@@ -4711,11 +4219,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hoàng-dũng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hoàng-dũng"],
       "timeLimitSeconds": 30
     },
     {
@@ -4749,11 +4253,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "dangrangto"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "dangrangto"],
       "timeLimitSeconds": 29
     },
     {
@@ -4787,11 +4287,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hngle"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hngle"],
       "timeLimitSeconds": 22
     },
     {
@@ -4825,11 +4321,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hà-an-huy"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hà-an-huy"],
       "timeLimitSeconds": 29
     },
     {
@@ -4863,11 +4355,7 @@
         "Xác định danh sách nghệ sĩ của bản phát hành.",
         "Chỉ một lựa chọn có trong credit được đối chiếu."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "b-ray"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "b-ray"],
       "timeLimitSeconds": 32
     },
     {
@@ -4901,11 +4389,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "b-ray"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "b-ray"],
       "timeLimitSeconds": 29
     },
     {
@@ -4939,11 +4423,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "justatee"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "justatee"],
       "timeLimitSeconds": 30
     },
     {
@@ -4977,11 +4457,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "binz"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "binz"],
       "timeLimitSeconds": 30
     },
     {
@@ -5015,11 +4491,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hoàng-dũng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hoàng-dũng"],
       "timeLimitSeconds": 30
     },
     {
@@ -5053,11 +4525,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "rhyder"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "rhyder"],
       "timeLimitSeconds": 22
     },
     {
@@ -5091,11 +4559,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hoàng-dũng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hoàng-dũng"],
       "timeLimitSeconds": 30
     },
     {
@@ -5129,11 +4593,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "dangrangto"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "dangrangto"],
       "timeLimitSeconds": 22
     },
     {
@@ -5167,11 +4627,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "sơn-tùng-m-tp"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "sơn-tùng-m-tp"],
       "timeLimitSeconds": 30
     },
     {
@@ -5205,11 +4661,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "justatee"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "justatee"],
       "timeLimitSeconds": 30
     },
     {
@@ -5243,11 +4695,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "rhyder"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "rhyder"],
       "timeLimitSeconds": 29
     },
     {
@@ -5281,11 +4729,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hurrykng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hurrykng"],
       "timeLimitSeconds": 29
     },
     {
@@ -5319,11 +4763,7 @@
         "Phân biệt tên bài hát với tên album hoặc EP.",
         "So sánh tên album với danh mục chính thức của nghệ sĩ."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "sơn-tùng-m-tp"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "sơn-tùng-m-tp"],
       "timeLimitSeconds": 34
     },
     {
@@ -5357,11 +4797,7 @@
         "Xác định danh sách nghệ sĩ của bản phát hành.",
         "Chỉ một lựa chọn có trong credit được đối chiếu."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hurrykng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hurrykng"],
       "timeLimitSeconds": 32
     },
     {
@@ -5395,11 +4831,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "thanh-hưng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "thanh-hưng"],
       "timeLimitSeconds": 30
     },
     {
@@ -5433,11 +4865,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "phùng-khánh-linh"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "phùng-khánh-linh"],
       "timeLimitSeconds": 22
     },
     {
@@ -5471,11 +4899,7 @@
         "Phân biệt tên bài hát với tên album hoặc EP.",
         "So sánh tên album với danh mục chính thức của nghệ sĩ."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "obito"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "obito"],
       "timeLimitSeconds": 34
     },
     {
@@ -5509,11 +4933,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "vũ."
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "vũ."],
       "timeLimitSeconds": 22
     },
     {
@@ -5547,11 +4967,7 @@
         "Xác định danh sách nghệ sĩ của bản phát hành.",
         "Chỉ một lựa chọn có trong credit được đối chiếu."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "dangrangto"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "dangrangto"],
       "timeLimitSeconds": 32
     },
     {
@@ -5585,11 +5001,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "tăng-duy-tân"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "tăng-duy-tân"],
       "timeLimitSeconds": 22
     },
     {
@@ -5623,11 +5035,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "sơn-tùng-m-tp"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "sơn-tùng-m-tp"],
       "timeLimitSeconds": 22
     },
     {
@@ -5661,11 +5069,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "quang-hùng-masterd"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "quang-hùng-masterd"],
       "timeLimitSeconds": 30
     },
     {
@@ -5699,11 +5103,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hoàng-dũng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hoàng-dũng"],
       "timeLimitSeconds": 29
     },
     {
@@ -5737,11 +5137,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "justatee"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "justatee"],
       "timeLimitSeconds": 29
     },
     {
@@ -5775,11 +5171,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "rhyder"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "rhyder"],
       "timeLimitSeconds": 30
     },
     {
@@ -5813,11 +5205,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hà-an-huy"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hà-an-huy"],
       "timeLimitSeconds": 29
     },
     {
@@ -5851,11 +5239,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "quang-hùng-masterd"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "quang-hùng-masterd"],
       "timeLimitSeconds": 30
     },
     {
@@ -5889,11 +5273,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "rhyder"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "rhyder"],
       "timeLimitSeconds": 22
     },
     {
@@ -5927,11 +5307,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hieuthuhai"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hieuthuhai"],
       "timeLimitSeconds": 22
     },
     {
@@ -5965,11 +5341,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hoàng-dũng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hoàng-dũng"],
       "timeLimitSeconds": 29
     },
     {
@@ -6003,11 +5375,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "phùng-khánh-linh"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "phùng-khánh-linh"],
       "timeLimitSeconds": 30
     },
     {
@@ -6041,11 +5409,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "justatee"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "justatee"],
       "timeLimitSeconds": 29
     },
     {
@@ -6079,11 +5443,7 @@
         "Xác định danh sách nghệ sĩ của bản phát hành.",
         "Chỉ một lựa chọn có trong credit được đối chiếu."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "đạt-g"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "đạt-g"],
       "timeLimitSeconds": 32
     },
     {
@@ -6117,11 +5477,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hieuthuhai"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hieuthuhai"],
       "timeLimitSeconds": 30
     },
     {
@@ -6155,11 +5511,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "quang-hùng-masterd"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "quang-hùng-masterd"],
       "timeLimitSeconds": 30
     },
     {
@@ -6193,11 +5545,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "đạt-g"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "đạt-g"],
       "timeLimitSeconds": 29
     },
     {
@@ -6231,11 +5579,7 @@
         "Xác định danh sách nghệ sĩ của bản phát hành.",
         "Chỉ một lựa chọn có trong credit được đối chiếu."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "buitruonglinh"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "buitruonglinh"],
       "timeLimitSeconds": 32
     },
     {
@@ -6269,11 +5613,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hieuthuhai"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hieuthuhai"],
       "timeLimitSeconds": 30
     },
     {
@@ -6307,11 +5647,7 @@
         "Phân biệt tên bài hát với tên album hoặc EP.",
         "So sánh tên album với danh mục chính thức của nghệ sĩ."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hoàng-dũng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hoàng-dũng"],
       "timeLimitSeconds": 34
     },
     {
@@ -6345,11 +5681,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "quang-hùng-masterd"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "quang-hùng-masterd"],
       "timeLimitSeconds": 30
     },
     {
@@ -6383,11 +5715,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "vũ."
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "vũ."],
       "timeLimitSeconds": 22
     },
     {
@@ -6421,11 +5749,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "tăng-duy-tân"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "tăng-duy-tân"],
       "timeLimitSeconds": 22
     },
     {
@@ -6459,11 +5783,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "phùng-khánh-linh"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "phùng-khánh-linh"],
       "timeLimitSeconds": 22
     },
     {
@@ -6497,11 +5817,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "amee"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "amee"],
       "timeLimitSeconds": 29
     },
     {
@@ -6535,11 +5851,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "quang-hùng-masterd"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "quang-hùng-masterd"],
       "timeLimitSeconds": 22
     },
     {
@@ -6573,11 +5885,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "dương-domic"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "dương-domic"],
       "timeLimitSeconds": 30
     },
     {
@@ -6611,11 +5919,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "thanh-hưng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "thanh-hưng"],
       "timeLimitSeconds": 22
     },
     {
@@ -6649,11 +5953,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "đạt-g"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "đạt-g"],
       "timeLimitSeconds": 22
     },
     {
@@ -6687,11 +5987,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "obito"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "obito"],
       "timeLimitSeconds": 29
     },
     {
@@ -6725,11 +6021,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hà-an-huy"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hà-an-huy"],
       "timeLimitSeconds": 29
     },
     {
@@ -6763,11 +6055,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "sơn-tùng-m-tp"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "sơn-tùng-m-tp"],
       "timeLimitSeconds": 29
     },
     {
@@ -6801,11 +6089,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "đạt-g"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "đạt-g"],
       "timeLimitSeconds": 30
     },
     {
@@ -6839,11 +6123,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "phùng-khánh-linh"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "phùng-khánh-linh"],
       "timeLimitSeconds": 22
     },
     {
@@ -6877,11 +6157,7 @@
         "Phân biệt tên bài hát với tên album hoặc EP.",
         "So sánh tên album với danh mục chính thức của nghệ sĩ."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "binz"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "binz"],
       "timeLimitSeconds": 34
     },
     {
@@ -6915,11 +6191,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "sơn-tùng-m-tp"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "sơn-tùng-m-tp"],
       "timeLimitSeconds": 29
     },
     {
@@ -6953,11 +6225,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "amee"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "amee"],
       "timeLimitSeconds": 30
     },
     {
@@ -6991,11 +6259,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hngle"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hngle"],
       "timeLimitSeconds": 22
     },
     {
@@ -7029,11 +6293,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "quang-hùng-masterd"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "quang-hùng-masterd"],
       "timeLimitSeconds": 30
     },
     {
@@ -7067,11 +6327,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "justatee"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "justatee"],
       "timeLimitSeconds": 29
     },
     {
@@ -7105,11 +6361,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hngle"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hngle"],
       "timeLimitSeconds": 30
     },
     {
@@ -7143,11 +6395,7 @@
         "Phân biệt tên bài hát với tên album hoặc EP.",
         "So sánh tên album với danh mục chính thức của nghệ sĩ."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "obito"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "obito"],
       "timeLimitSeconds": 34
     },
     {
@@ -7181,11 +6429,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "negav"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "negav"],
       "timeLimitSeconds": 22
     },
     {
@@ -7219,11 +6463,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "thanh-hưng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "thanh-hưng"],
       "timeLimitSeconds": 30
     },
     {
@@ -7257,11 +6497,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "binz"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "binz"],
       "timeLimitSeconds": 22
     },
     {
@@ -7295,11 +6531,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "dangrangto"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "dangrangto"],
       "timeLimitSeconds": 29
     },
     {
@@ -7333,11 +6565,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "rhyder"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "rhyder"],
       "timeLimitSeconds": 30
     },
     {
@@ -7371,11 +6599,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "sơn-tùng-m-tp"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "sơn-tùng-m-tp"],
       "timeLimitSeconds": 22
     },
     {
@@ -7409,11 +6633,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "hngle"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "hngle"],
       "timeLimitSeconds": 29
     },
     {
@@ -7447,11 +6667,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "tuấn-hưng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "tuấn-hưng"],
       "timeLimitSeconds": 22
     },
     {
@@ -7485,11 +6701,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "binz"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "binz"],
       "timeLimitSeconds": 29
     },
     {
@@ -7523,11 +6735,7 @@
         "So sánh từng phương án; chú ý các nghệ sĩ có màu nhạc tương tự.",
         "Chọn phương án khớp thông tin phát hành, không dựa vào suy đoán về phong cách."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "tuấn-hưng"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "tuấn-hưng"],
       "timeLimitSeconds": 22
     },
     {
@@ -7561,11 +6769,7 @@
         "Một số ca khúc là sản phẩm hợp tác giữa nhiều nghệ sĩ.",
         "Hãy chọn đầy đủ danh sách nghệ sĩ, không chỉ một tên."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "b-ray"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "b-ray"],
       "timeLimitSeconds": 29
     },
     {
@@ -7599,11 +6803,7 @@
         "Quan sát cấu trúc các từ còn lại trong tên bài.",
         "Chọn từ giúp khôi phục chính xác tựa đề đã phát hành."
       ],
-      "tags": [
-        "nhac-viet",
-        "do-vui-am-nhac",
-        "dangrangto"
-      ],
+      "tags": ["nhac-viet", "do-vui-am-nhac", "dangrangto"],
       "timeLimitSeconds": 30
     }
   ]

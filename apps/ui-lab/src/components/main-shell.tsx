@@ -16,22 +16,22 @@ export function MainShell({ children, fonts }: { children: ReactNode; fonts: str
     : undefined;
 
   return (
-      <div
-        className={`${matchFocused ? styles.focused : 'lavender-shell-bg'} ${fonts}`}
-        style={shellStyle}
-      >
-        {!matchFocused && <SiteHeader />}
-        <div className={matchFocused ? styles.match : 'app-shell'}>
-          {!matchFocused && <ActiveRoomBanner />}
-          <main>{children}</main>
-          {!matchFocused && (
-            <footer>
-              DuoQuest <span>Học một chút. Chơi một trận. Kết nối nhiều hơn.</span>
-              <span>DUOQUEST HUB · V1</span>
-            </footer>
-          )}
-        </div>
-        <LeaveMatchDialog />
+    <div
+      className={`${matchFocused ? styles.focused : 'lavender-shell-bg'} ${fonts}`}
+      style={shellStyle}
+    >
+      {!matchFocused && <SiteHeader />}
+      <div className={matchFocused ? styles.match : 'app-shell'}>
+        {!matchFocused && <ActiveRoomBanner />}
+        <main>{children}</main>
+        {!matchFocused && (
+          <footer>
+            DuoQuest <span>Học một chút. Chơi một trận. Kết nối nhiều hơn.</span>
+            <span>DUOQUEST HUB · V1</span>
+          </footer>
+        )}
       </div>
-      );
+      <LeaveMatchDialog />
+    </div>
+  );
 }

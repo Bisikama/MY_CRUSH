@@ -197,7 +197,7 @@ describe('quiz-stage.utils', () => {
       }),
     ).toEqual({ disabled: true, usage: 'Hết gợi ý' });
 
-    // Interference skills are locked in the first 5 seconds
+    // Interference skills are available immediately when the question opens
     expect(
       getSkillButtonState({
         skill: 'COVER',
@@ -207,9 +207,9 @@ describe('quiz-stage.utils', () => {
         mode: 'DUEL',
         answerer: 'p1',
         canUseSkills: true,
-        serverTime: 14_000,
+        serverTime: 10_000,
       }),
-    ).toEqual({ disabled: true, usage: 'Miễn phí' });
+    ).toEqual({ disabled: false, usage: 'Miễn phí' });
 
     // Support skills close in the final 3 seconds; BLUR requires at least 3 seconds left
     expect(

@@ -3,6 +3,7 @@ import { useQuizPreferencesStore } from './quiz-preferences.store';
 import {
   DEFAULT_QUIZ_THEME_ID,
   getQuizTheme,
+  getStandardThemeAudioUrls,
   isQuizThemeId,
   QUIZ_THEMES,
 } from './quiz-theme-registry';
@@ -12,14 +13,36 @@ describe('quiz-theme-registry & preferences store', () => {
     useQuizPreferencesStore.getState().resetQuizPreferences();
   });
 
-  it('defines forest, christmas and tropical themes with visuals and 3-channel synth presets', () => {
-    expect(QUIZ_THEMES.map((theme) => theme.id)).toEqual(['forest', 'christmas', 'tropical']);
+  it('defines forest, christmas, beach and tropical themes with visuals and 3-channel synth presets', () => {
+    expect(QUIZ_THEMES.map((theme) => theme.id)).toEqual([
+      'forest',
+      'christmas',
+      'beach',
+      'tropical',
+    ]);
     for (const theme of QUIZ_THEMES) {
       expect(theme.visuals.arenaBgImage).toContain('/images/quiz/');
       expect(theme.audio.synth.lobbyNotes.length).toBeGreaterThan(0);
       expect(theme.audio.synth.matchNotes.length).toBeGreaterThan(0);
-      expect(theme.audio.synth.skillPitchMultiplier).toBeGreaterThan(0);
+      expect(theme.audio.synth.skillPitchMultiplier).toBe(1);
     }
+    expect(getQuizTheme('christmas').audio.lobbyBgmUrl).toBe(
+      '/audio/quiz/themes/christmas/lobby.wav',
+    );
+    expect(getQuizTheme('christmas').audio.matchBgmUrl).toBe(
+      '/audio/quiz/themes/christmas/match.wav',
+    );
+    expect(getQuizTheme('beach').audio.matchBgmUrl).toBe('/audio/quiz/themes/beach/match.wav');
+    expect(getStandardThemeAudioUrls('christmas')).toEqual({
+      lobbyBgmUrl: '/audio/quiz/themes/christmas/lobby.wav',
+      matchBgmUrl: '/audio/quiz/themes/christmas/match.wav',
+      skillSfxUrls: {
+        HINT: '/audio/quiz/themes/christmas/skill-hint.wav',
+        FIFTY_FIFTY: '/audio/quiz/themes/christmas/skill-fifty-fifty.wav',
+        COVER: '/audio/quiz/themes/christmas/skill-cover.wav',
+        BLUR: '/audio/quiz/themes/christmas/skill-blur.wav',
+      },
+    });
   });
 
   it('resolves valid theme ids and falls back to default forest theme', () => {
@@ -59,4 +82,3 @@ describe('quiz-theme-registry & preferences store', () => {
     });
   });
 });
-

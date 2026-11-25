@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="jungleSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0b3b36" />
+      <stop offset="45%" stop-color="#145c4c" />
+      <stop offset="100%" stop-color="#0d332a" />
+    </linearGradient>
+    <radialGradient id="sunbeam" cx="50%" cy="18%" r="60%">
+      <stop offset="0%" stop-color="#ffe885" stop-opacity="0.48" />
+      <stop offset="48%" stop-color="#4fd19b" stop-opacity="0.22" />
+      <stop offset="100%" stop-color="#0b3b36" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="lagoon" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2ec4b6" stop-opacity="0.72" />
+      <stop offset="100%" stop-color="#0f4c45" stop-opacity="0.95" />
+    </linearGradient>
+    <linearGradient id="palmLeaf" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#52b788" />
+      <stop offset="100%" stop-color="#1b4332" />
+    </linearGradient>
+    <linearGradient id="palmLeafBright" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#95d5b2" />
+      <stop offset="100%" stop-color="#2d6a4f" />
+    </linearGradient>
+    <radialGradient id="firefly" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fff89e" stop-opacity="0.95" />
+      <stop offset="45%" stop-color="#aacc00" stop-opacity="0.45" />
+      <stop offset="100%" stop-color="#aacc00" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#jungleSky)" />
+  <rect width="1920" height="1080" fill="url(#sunbeam)" />
+
+  <!-- Sunbeams through canopy -->
+  <g fill="#fff3b0" opacity="0.09">
+    <polygon points="580,0 760,0 420,1080 180,1080" />
+    <polygon points="900,0 1080,0 960,1080 720,1080" />
+    <polygon points="1220,0 1390,0 1680,1080 1440,1080" />
+  </g>
+
+  <!-- Distant misty hills & waterfall -->
+  <path d="M0 730 Q360 560 760 700 T1520 660 L1920 730 L1920 1080 L0 1080 Z" fill="#12453b" opacity="0.75" />
+  <path d="M0 840 Q520 770 960 830 T1920 820 L1920 1080 L0 1080 Z" fill="url(#lagoon)" />
+
+  <!-- Hanging Jungle Vines -->
+  <g fill="none" stroke="#1e563f" stroke-width="7" stroke-linecap="round">
+    <path d="M180,0 Q210,180 155,340 Q120,450 165,560" />
+    <path d="M360,0 Q330,140 380,270" />
+    <path d="M1560,0 Q1590,150 1540,290" />
+    <path d="M1740,0 Q1700,190 1755,360 Q1790,470 1740,580" />
+  </g>
+
+  <!-- Left Tropical Palm & Monstera -->
+  <g>
+    <path d="M-40,20 Q210,50 380,180 Q210,160 -40,130 Z" fill="url(#palmLeaf)" />
+    <path d="M-30,110 Q240,160 350,310 Q170,260 -30,220 Z" fill="url(#palmLeafBright)" opacity="0.9" />
+    <path d="M-20,760 Q190,690 340,780 Q190,890 -20,900 Z" fill="url(#palmLeaf)" />
+    <path d="M20,900 Q250,820 430,930 Q240,1040 20,1040 Z" fill="url(#palmLeafBright)" />
+    <!-- Tropical Hibiscus / Blossoms -->
+    <circle cx="145" cy="835" r="20" fill="#ff758f" />
+    <circle cx="145" cy="835" r="7" fill="#ffe066" />
+    <circle cx="255" cy="915" r="16" fill="#ff9f1c" />
+    <circle cx="255" cy="915" r="5" fill="#fff3b0" />
+  </g>
+
+  <!-- Right Tropical Palm & Monstera -->
+  <g>
+    <path d="M1960,20 Q1710,50 1540,180 Q1710,160 1960,130 Z" fill="url(#palmLeaf)" />
+    <path d="M1950,110 Q1680,160 1570,310 Q1750,260 1950,220 Z" fill="url(#palmLeafBright)" opacity="0.9" />
+    <path d="M1940,760 Q1730,690 1580,780 Q1730,890 1940,900 Z" fill="url(#palmLeaf)" />
+    <path d="M1900,900 Q1670,820 1490,930 Q1680,1040 1900,1040 Z" fill="url(#palmLeafBright)" />
+    <circle cx="1775" cy="835" r="20" fill="#ff758f" />
+    <circle cx="1775" cy="835" r="7" fill="#ffe066" />
+    <circle cx="1665" cy="915" r="16" fill="#ff9f1c" />
+    <circle cx="1665" cy="915" r="5" fill="#fff3b0" />
+  </g>
+
+  <!-- Glowing Fireflies -->
+  <g>
+    <circle cx="260" cy="420" r="22" fill="url(#firefly)" />
+    <circle cx="260" cy="420" r="4" fill="#fff9b0" />
+    <circle cx="430" cy="240" r="18" fill="url(#firefly)" />
+    <circle cx="430" cy="240" r="3.5" fill="#fff9b0" />
+    <circle cx="1490" cy="250" r="20" fill="url(#firefly)" />
+    <circle cx="1490" cy="250" r="4" fill="#fff9b0" />
+    <circle cx="1670" cy="440" r="22" fill="url(#firefly)" />
+    <circle cx="1670" cy="440" r="4" fill="#fff9b0" />
+    <circle cx="340" cy="660" r="18" fill="url(#firefly)" />
+    <circle cx="1580" cy="650" r="18" fill="url(#firefly)" />
+    <circle cx="720" cy="150" r="16" fill="url(#firefly)" />
+    <circle cx="1210" cy="160" r="16" fill="url(#firefly)" />
+  </g>
+</svg>
+

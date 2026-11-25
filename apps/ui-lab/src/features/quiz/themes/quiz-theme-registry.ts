@@ -1,6 +1,6 @@
 import type { QuizSkill } from '@duoquest/shared-types';
 
-export type QuizThemeId = 'forest' | 'christmas' | 'tropical';
+export type QuizThemeId = 'forest' | 'christmas' | 'beach' | 'tropical';
 
 export interface QuizThemeDefinition {
   id: QuizThemeId;
@@ -16,8 +16,8 @@ export interface QuizThemeDefinition {
   };
   audio: {
     /**
-     * Optional static audio file URLs under `/audio/quiz/themes/<id>/...`.
-     * When omitted, the audio controller synthesizes the theme melody via Web Audio API.
+     * Đường dẫn file nhạc tĩnh trong `/audio/quiz/themes/<id>/...` (hỗ trợ cả `.wav`, `.mp3`, `.ogg`).
+     * Khi chưa có file cho kênh nào, bộ điều khiển âm thanh sẽ tự động phát giai điệu dự phòng.
      */
     lobbyBgmUrl?: string;
     matchBgmUrl?: string;
@@ -34,6 +34,27 @@ export interface QuizThemeDefinition {
 }
 
 export const DEFAULT_QUIZ_THEME_ID: QuizThemeId = 'forest';
+
+/**
+ * Helper tạo bộ đường dẫn âm thanh chuẩn cho một chủ đề trong `public/audio/quiz/themes/<themeId>/`.
+ * Hỗ trợ truyền đuôi file (`'wav' | 'mp3' | 'ogg'`, mặc định `'wav'`).
+ */
+export function getStandardThemeAudioUrls(
+  themeId: QuizThemeId,
+  ext: 'wav' | 'mp3' | 'ogg' = 'wav',
+) {
+  const base = `/audio/quiz/themes/${themeId}`;
+  return {
+    lobbyBgmUrl: `${base}/lobby.${ext}`,
+    matchBgmUrl: `${base}/match.${ext}`,
+    skillSfxUrls: {
+      HINT: `${base}/skill-hint.${ext}`,
+      FIFTY_FIFTY: `${base}/skill-fifty-fifty.${ext}`,
+      COVER: `${base}/skill-cover.${ext}`,
+      BLUR: `${base}/skill-blur.${ext}`,
+    } satisfies Record<QuizSkill, string>,
+  };
+}
 
 export const QUIZ_THEMES: readonly QuizThemeDefinition[] = [
   {
@@ -67,18 +88,44 @@ export const QUIZ_THEMES: readonly QuizThemeDefinition[] = [
     visuals: {
       shellBgColor: '#102536',
       arenaBgColor: '#1b3b52',
-      arenaBgImage: "url('/images/quiz/themes/christmas-arena.svg')",
-      thumbnailUrl: '/images/quiz/themes/christmas-arena.svg',
+      arenaBgImage: "url('/images/quiz/christmas-arena.png')",
+      thumbnailUrl: '/images/quiz/christmas-arena.png',
       accentColor: '#ffd166',
     },
     audio: {
+      lobbyBgmUrl: '/audio/quiz/themes/christmas/lobby.wav',
+      matchBgmUrl: '/audio/quiz/themes/christmas/match.wav',
       synth: {
         lobbyNotes: [329.63, 392.0, 523.25, 493.88, 392.0, 440.0, 392.0, 329.63],
         lobbyStepMs: 460,
         matchNotes: [329.63, 329.63, 329.63, 392.0, 523.25, 392.0, 440.0, 523.25],
         matchStepMs: 260,
         waveform: 'sine',
-        skillPitchMultiplier: 1.18,
+        skillPitchMultiplier: 1,
+      },
+    },
+  },
+  {
+    id: 'beach',
+    name: 'Bãi biển nắng vàng',
+    tagline: 'Sóng biển rì rào, cát trắng nắng ấm và giai điệu mùa hè.',
+    badge: 'Mùa hè',
+    visuals: {
+      shellBgColor: '#0e3647',
+      arenaBgColor: '#1d5b73',
+      arenaBgImage: "url('/images/quiz/beach-arena.png')",
+      thumbnailUrl: '/images/quiz/beach-arena.png',
+      accentColor: '#48cae4',
+    },
+    audio: {
+      matchBgmUrl: '/audio/quiz/themes/beach/match.wav',
+      synth: {
+        lobbyNotes: [261.63, 329.63, 392.0, 523.25, 392.0, 329.63],
+        lobbyStepMs: 480,
+        matchNotes: [293.66, 369.99, 440.0, 587.33, 440.0, 369.99],
+        matchStepMs: 250,
+        waveform: 'triangle',
+        skillPitchMultiplier: 1,
       },
     },
   },
@@ -101,17 +148,16 @@ export const QUIZ_THEMES: readonly QuizThemeDefinition[] = [
         matchNotes: [329.63, 392.0, 440.0, 493.88, 587.33, 493.88, 440.0, 392.0],
         matchStepMs: 230,
         waveform: 'triangle',
-        skillPitchMultiplier: 1.08,
+        skillPitchMultiplier: 1,
       },
     },
   },
 ] as const;
 
 export function isQuizThemeId(value: unknown): value is QuizThemeId {
-  return value === 'forest' || value === 'christmas' || value === 'tropical';
+  return value === 'forest' || value === 'christmas' || value === 'beach' || value === 'tropical';
 }
 
 export function getQuizTheme(themeId?: string | null): QuizThemeDefinition {
   return QUIZ_THEMES.find((theme) => theme.id === themeId) ?? QUIZ_THEMES[0]!;
 }
-

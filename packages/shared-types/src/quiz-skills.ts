@@ -6,7 +6,7 @@ export type QuizSkill = z.infer<typeof skillSchema>;
 /** Playtest timings in milliseconds, shared by action validation and the Quiz UI. */
 export const QUIZ_SKILL_TIMING = {
   supportCutoffMs: 3000,
-  interferenceDelayMs: 5000,
+  interferenceDelayMs: 0,
   COVER: 10_027,
   BLUR: 3000,
 } as const;

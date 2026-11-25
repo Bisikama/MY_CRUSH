@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="nightSky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0b1d2e" />
+      <stop offset="48%" stop-color="#15324a" />
+      <stop offset="100%" stop-color="#1e445e" />
+    </linearGradient>
+    <radialGradient id="auroraGlow" cx="50%" cy="28%" r="55%">
+      <stop offset="0%" stop-color="#ffe7a3" stop-opacity="0.32" />
+      <stop offset="45%" stop-color="#5ec2b7" stop-opacity="0.16" />
+      <stop offset="100%" stop-color="#0b1d2e" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="snowHillBack" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#274f6b" />
+      <stop offset="100%" stop-color="#173347" />
+    </linearGradient>
+    <linearGradient id="snowHillFront" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d8eef8" />
+      <stop offset="40%" stop-color="#9bc5dc" />
+      <stop offset="100%" stop-color="#355f7c" />
+    </linearGradient>
+    <linearGradient id="pineDark" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1f4d3d" />
+      <stop offset="100%" stop-color="#0f2922" />
+    </linearGradient>
+    <linearGradient id="pineSnow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#eef9ff" />
+      <stop offset="100%" stop-color="#8cb8ce" />
+    </linearGradient>
+    <radialGradient id="warmLamp" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fff4b8" stop-opacity="0.95" />
+      <stop offset="40%" stop-color="#ffbe55" stop-opacity="0.55" />
+      <stop offset="100%" stop-color="#ff9933" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#nightSky)" />
+  <rect width="1920" height="1080" fill="url(#auroraGlow)" />
+
+  <!-- Moon & Starlight -->
+  <circle cx="1580" cy="180" r="88" fill="url(#warmLamp)" />
+  <circle cx="1580" cy="180" r="46" fill="#fff9dc" opacity="0.92" />
+
+  <!-- Distant snowy mountains -->
+  <path d="M0 760 L260 540 L520 710 L860 490 L1210 700 L1540 510 L1920 720 L1920 1080 L0 1080 Z" fill="url(#snowHillBack)" opacity="0.65" />
+
+  <!-- Midground pine forest silhouettes -->
+  <g fill="#14332b" opacity="0.8">
+    <polygon points="90,520 20,780 160,780" />
+    <polygon points="180,470 95,790 265,790" />
+    <polygon points="310,540 240,800 380,800" />
+    <polygon points="1610,530 1535,790 1685,790" />
+    <polygon points="1740,460 1650,790 1830,790" />
+    <polygon points="1850,510 1775,800 1925,800" />
+  </g>
+
+  <!-- Snow hills -->
+  <path d="M0 820 Q480 730 960 815 T1920 790 L1920 1080 L0 1080 Z" fill="url(#snowHillFront)" opacity="0.9" />
+
+  <!-- Left Christmas Pine Tree -->
+  <g transform="translate(130, 350)">
+    <polygon points="110,0 10,180 210,180" fill="url(#pineDark)" />
+    <polygon points="110,95 -15,310 235,310" fill="url(#pineDark)" />
+    <polygon points="110,210 -40,470 260,470" fill="url(#pineDark)" />
+    <path d="M110,0 L65,82 Q110,98 155,82 Z" fill="url(#pineSnow)" />
+    <path d="M110,95 L42,200 Q110,220 178,200 Z" fill="url(#pineSnow)" />
+    <!-- Ornaments & warm lights -->
+    <circle cx="85" cy="150" r="9" fill="#ff5a5f" />
+    <circle cx="140" cy="165" r="8" fill="#ffd166" />
+    <circle cx="65" cy="275" r="10" fill="#ffd166" />
+    <circle cx="150" cy="260" r="9" fill="#ff5a5f" />
+    <circle cx="105" cy="360" r="11" fill="#4ea8de" />
+    <circle cx="50" cy="395" r="9" fill="#ff5a5f" />
+    <circle cx="165" cy="390" r="10" fill="#ffd166" />
+    <!-- Top Star -->
+    <polygon points="110,-28 118,-6 142,-6 122,8 130,30 110,16 90,30 98,8 78,-6 102,-6" fill="#ffe066" />
+    <circle cx="110" cy="2" r="38" fill="url(#warmLamp)" />
+  </g>
+
+  <!-- Right Christmas Pine Tree -->
+  <g transform="translate(1570, 360)">
+    <polygon points="110,0 15,175 205,175" fill="url(#pineDark)" />
+    <polygon points="110,95 -10,305 230,305" fill="url(#pineDark)" />
+    <polygon points="110,210 -35,465 255,465" fill="url(#pineDark)" />
+    <path d="M110,0 L68,80 Q110,96 152,80 Z" fill="url(#pineSnow)" />
+    <path d="M110,95 L45,196 Q110,216 175,196 Z" fill="url(#pineSnow)" />
+    <circle cx="90" cy="145" r="8" fill="#ffd166" />
+    <circle cx="135" cy="245" r="10" fill="#ff5a5f" />
+    <circle cx="75" cy="270" r="9" fill="#4ea8de" />
+    <circle cx="155" cy="370" r="10" fill="#ffd166" />
+    <circle cx="65" cy="385" r="9" fill="#ff5a5f" />
+    <polygon points="110,-26 117,-6 139,-6 121,7 128,28 110,15 92,28 99,7 81,-6 103,-6" fill="#ffe066" />
+    <circle cx="110" cy="2" r="35" fill="url(#warmLamp)" />
+  </g>
+
+  <!-- Festive Garland Lights at Top -->
+  <path d="M0,40 Q480,140 960,55 Q1440,140 1920,40" fill="none" stroke="#204e3d" stroke-width="8" />
+  <g>
+    <circle cx="220" cy="78" r="24" fill="url(#warmLamp)" />
+    <circle cx="220" cy="78" r="7" fill="#ffe89e" />
+    <circle cx="480" cy="96" r="24" fill="url(#warmLamp)" />
+    <circle cx="480" cy="96" r="7" fill="#ff6b6b" />
+    <circle cx="740" cy="80" r="24" fill="url(#warmLamp)" />
+    <circle cx="740" cy="80" r="7" fill="#ffe89e" />
+    <circle cx="960" cy="58" r="26" fill="url(#warmLamp)" />
+    <circle cx="960" cy="58" r="8" fill="#72efdd" />
+    <circle cx="1180" cy="80" r="24" fill="url(#warmLamp)" />
+    <circle cx="1180" cy="80" r="7" fill="#ffe89e" />
+    <circle cx="1440" cy="96" r="24" fill="url(#warmLamp)" />
+    <circle cx="1440" cy="96" r="7" fill="#ff6b6b" />
+    <circle cx="1700" cy="78" r="24" fill="url(#warmLamp)" />
+    <circle cx="1700" cy="78" r="7" fill="#ffe89e" />
+  </g>
+
+  <!-- Gentle Snowflakes -->
+  <g fill="#ffffff" opacity="0.78">
+    <circle cx="140" cy="190" r="4" />
+    <circle cx="330" cy="140" r="3" />
+    <circle cx="420" cy="260" r="5" />
+    <circle cx="620" cy="170" r="3.5" />
+    <circle cx="820" cy="130" r="4" />
+    <circle cx="1090" cy="150" r="3" />
+    <circle cx="1310" cy="220" r="4.5" />
+    <circle cx="1490" cy="310" r="3.5" />
+    <circle cx="1790" cy="230" r="4" />
+    <circle cx="290" cy="640" r="4" />
+    <circle cx="1630" cy="620" r="4" />
+    <circle cx="520" cy="890" r="3.5" />
+    <circle cx="1380" cy="910" r="4" />
+  </g>
+</svg>
+

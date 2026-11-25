@@ -1,5 +1,6 @@
 'use client';
-import { useEffect, useState, type ReactNode } from 'react';
+
+import type { ReactNode } from 'react';
 import { Button } from '@duoquest/ui';
 import { allowedQuizSkills, type QuizAction, type RoomView } from '@duoquest/shared-types';
 import { PreloadQuestionCover } from './question-cover';
@@ -7,6 +8,8 @@ import { QuizArena } from './quiz-arena';
 import { QuizLobby, QuizRoomOverview } from './quiz-lobby';
 import { QuizResult } from './quiz-result';
 import styles from './quiz-arena.module.css';
+import { useActiveQuizTheme, useQuizPreferencesStore } from './themes/quiz-preferences.store';
+import { useQuizAudio } from './themes/use-quiz-audio';
 
 interface Props {
   activeRoom: RoomView;
@@ -24,7 +27,7 @@ interface Props {
   onAction: (playerId: string, payload: QuizAction) => Promise<void>;
 }
 
-/** Coordinate Quiz Battle room stages (lobby, active arena, and match result). */
+/** Coordinate Quiz Battle room stages (lobby, active arena, and match result) with theme & audio. */
 export function QuizStage({
   activeRoom,
   connected,
@@ -44,21 +47,25 @@ export function QuizStage({
   const playing = activeRoom.status === 'IN_PROGRESS' && Boolean(game);
   const activeSkills = allowedQuizSkills(activeRoom.mode, activeRoom.layout);
   const hasCover = activeSkills.includes('COVER');
-  const [coverSound, setCoverSound] = useState(true);
 
-  useEffect(() => {
-    setCoverSound(localStorage.getItem('quiz-cover-sound') !== 'off');
-  }, []);
+  const theme = useActiveQuizTheme();
+  const { lobbyBgmEnabled, matchBgmEnabled, skillSfxEnabled, setSkillSfxEnabled } =
+    useQuizPreferencesStore();
+
+  useQuizAudio({
+    activeRoom,
+    theme,
+    lobbyBgmEnabled,
+    matchBgmEnabled,
+    skillSfxEnabled,
+  });
 
   const coverSoundButton = hasCover && (
     <Button
       variant="outline"
       className={playing ? styles.coverSound : undefined}
-      aria-pressed={coverSound}
-      onClick={() => {
-        localStorage.setItem('quiz-cover-sound', coverSound ? 'off' : 'on');
-        setCoverSound(!coverSound);
-      }}
+      aria-pressed={skillSfxEnabled}
+      onClick={() => setSkillSfxEnabled(!skillSfxEnabled)}
     >
       Tiếng sét
     </Button>
@@ -85,6 +92,7 @@ export function QuizStage({
           busy={busy}
           identityPlayerId={identityPlayerId}
           activeSkills={activeSkills}
+          theme={theme}
           onHome={onHome}
           onCommand={onCommand}
         />
@@ -109,8 +117,9 @@ export function QuizStage({
           notice={notice}
           activeSkills={activeSkills}
           hasCover={hasCover}
-          coverSound={coverSound}
+          coverSound={skillSfxEnabled}
           coverSoundButton={coverSoundButton}
+          theme={theme}
           onLeave={onLeave}
           onAction={onAction}
         />

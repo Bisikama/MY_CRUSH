@@ -146,13 +146,13 @@ class QuizAudioController {
     this.playSynthSkillSfx(skill, theme);
   }
 
-  private playSynthSkillSfx(skill: QuizSkill, theme: QuizThemeDefinition) {
+  private playSynthSkillSfx(skill: QuizSkill, _theme: QuizThemeDefinition) {
+    // Tạm thời dùng chung bộ hiệu ứng âm thanh Skill mặc định của Rừng nguyên sinh cho mọi chủ đề
     const baseNotes = SKILL_BASE_FREQUENCIES[skill];
-    const multiplier = theme.audio.synth.skillPitchMultiplier;
     const waveform: OscillatorType =
-      skill === 'COVER' ? 'sawtooth' : skill === 'BLUR' ? 'sine' : theme.audio.synth.waveform;
+      skill === 'COVER' ? 'sawtooth' : skill === 'BLUR' ? 'sine' : 'triangle';
     baseNotes.forEach((freq, idx) => {
-      this.playTone(freq * multiplier, 140, waveform, 0.06, idx * 90);
+      this.playTone(freq, 140, waveform, 0.06, idx * 90);
     });
   }
 

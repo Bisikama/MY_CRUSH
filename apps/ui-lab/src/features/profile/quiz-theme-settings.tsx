@@ -98,24 +98,27 @@ export function QuizThemeSettings() {
                   <div className={styles.previewRow}>
                     <button
                       type="button"
-                      className={`${styles.previewBtn} ${previewing === `${theme.id}:lobby` ? styles.previewBtnActive : ''
-                        }`}
+                      className={`${styles.previewBtn} ${
+                        previewing === `${theme.id}:lobby` ? styles.previewBtnActive : ''
+                      }`}
                       onClick={() => handlePreview(theme, 'lobby')}
                     >
                       {previewing === `${theme.id}:lobby` ? 'Dừng thử' : 'Nghe nhạc sảnh'}
                     </button>
                     <button
                       type="button"
-                      className={`${styles.previewBtn} ${previewing === `${theme.id}:match` ? styles.previewBtnActive : ''
-                        }`}
+                      className={`${styles.previewBtn} ${
+                        previewing === `${theme.id}:match` ? styles.previewBtnActive : ''
+                      }`}
                       onClick={() => handlePreview(theme, 'match')}
                     >
                       {previewing === `${theme.id}:match` ? 'Dừng thử' : 'Nghe nhạc trận'}
                     </button>
                     <button
                       type="button"
-                      className={`${styles.previewBtn} ${previewing === `${theme.id}:skill` ? styles.previewBtnActive : ''
-                        }`}
+                      className={`${styles.previewBtn} ${
+                        previewing === `${theme.id}:skill` ? styles.previewBtnActive : ''
+                      }`}
                       onClick={() => handlePreview(theme, 'skill')}
                     >
                       {previewing === `${theme.id}:skill` ? 'Dừng thử' : 'Nghe âm skill'}

@@ -1,5 +1,5 @@
 .focused {
-  background: #183f2b;
+  background: var(--quiz-shell-bg, #183f2b);
 }
 
 .match > main {

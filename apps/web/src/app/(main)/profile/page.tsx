@@ -9,6 +9,7 @@ import {
   formatProfileMatchTime,
   getProfileModeDescriptor,
 } from '../../../features/profile/profile.utils';
+import { QuizThemeSettings } from '../../../features/profile/quiz-theme-settings';
 
 interface Profile {
   id: string;
@@ -349,7 +350,10 @@ export default function ProfilePage() {
             )}
           </section>
 
-          {/* 4. TITLES / BADGES ("Bộ sưu tập danh hiệu" — Future Concept Placeholders) */}
+          {/* 4. THEME & AUDIO SETTINGS ("Chủ đề & Âm thanh phòng chơi") */}
+          <QuizThemeSettings />
+
+          {/* 5. TITLES / BADGES ("Bộ sưu tập danh hiệu" — Future Concept Placeholders) */}
           <section className="profile-section-card" aria-labelledby="profile-titles-heading">
             <div className="profile-section-header">
               <h2 id="profile-titles-heading" className="profile-section-title">
@@ -428,8 +432,14 @@ export default function ProfilePage() {
             </div>
           </section>
 
-          {/* 5. ACCOUNT SECURITY ("Bảo mật tài khoản") */}
+          {/* 6. ACCOUNT SECURITY ("Bảo mật tài khoản") */}
           {identity && <AccountSettings identity={identity} />}
+        </div>
+      )}
+
+      {!profile && (
+        <div className="profile-stack">
+          <QuizThemeSettings />
         </div>
       )}
     </div>

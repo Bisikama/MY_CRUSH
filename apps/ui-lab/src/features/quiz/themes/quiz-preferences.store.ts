@@ -42,4 +42,3 @@ export function useActiveQuizTheme(): QuizThemeDefinition {
   const themeId = useQuizPreferencesStore((state) => state.themeId);
   return getQuizTheme(themeId);
 }
-

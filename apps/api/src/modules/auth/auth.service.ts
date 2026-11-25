@@ -241,13 +241,15 @@ export class AuthService {
 
   private notifyPasswordChanged(email: string) {
     const message = passwordChangedEmail();
-    void this.mail.send(email, message.subject, message.text, message.html).catch((error: unknown) =>
-      this.logger.warn(
-        JSON.stringify({
-          event: 'auth:passwordChangedMail',
-          error: serializeErrorForLog(error),
-        }),
-      ),
-    );
+    void this.mail
+      .send(email, message.subject, message.text, message.html)
+      .catch((error: unknown) =>
+        this.logger.warn(
+          JSON.stringify({
+            event: 'auth:passwordChangedMail',
+            error: serializeErrorForLog(error),
+          }),
+        ),
+      );
   }
 }

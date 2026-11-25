@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useEffect, useState, type CSSProperties, type ReactNode } from 'react';
 import { Button, Card } from '@duoquest/ui';
 import {
   QUIZ_SKILLS,
@@ -19,6 +19,7 @@ import {
   partitionQuizSkills,
   resolveAnswerer,
 } from './quiz-stage.utils';
+import type { QuizThemeDefinition } from './themes/quiz-theme-registry';
 
 interface Props {
   activeRoom: RoomView;
@@ -33,11 +34,12 @@ interface Props {
   hasCover: boolean;
   coverSound: boolean;
   coverSoundButton: ReactNode;
+  theme: QuizThemeDefinition;
   onLeave: () => Promise<void>;
   onAction: (playerId: string, payload: QuizAction) => Promise<void>;
 }
 
-/** Fullscreen Forest Arena match view with player HUD, question panel and dual skill columns. */
+/** Fullscreen Arena match view with player HUD, question panel and dual skill columns. */
 export function QuizArena({
   activeRoom,
   game,
@@ -51,9 +53,38 @@ export function QuizArena({
   hasCover,
   coverSound,
   coverSoundButton,
+  theme,
   onLeave,
   onAction,
 }: Props) {
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    const syncFullscreen = () => {
+      setIsFullscreen(Boolean(document.fullscreenElement));
+    };
+    syncFullscreen();
+    document.addEventListener('fullscreenchange', syncFullscreen);
+    return () => {
+      document.removeEventListener('fullscreenchange', syncFullscreen);
+      if (document.fullscreenElement && typeof document.exitFullscreen === 'function') {
+        void document.exitFullscreen().catch(() => undefined);
+      }
+    };
+  }, []);
+
+  const toggleFullscreen = async () => {
+    try {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen();
+      } else {
+        await document.documentElement.requestFullscreen();
+      }
+    } catch {
+      // Browser may block fullscreen if not triggered by user gesture or unsupported
+    }
+  };
+
   const playerName = (id: string | null) => getPlayerNickname(activeRoom.players, id);
   const seconds = Math.max(0, Math.ceil((game.deadline - serverTime) / 1000));
   const controlled = activeRoom.controlledPlayerIds;
@@ -101,8 +132,18 @@ export function QuizArena({
     !game.answeredPlayerIds.includes(answerer!);
   const answerStatus = getAnswerStatusText(activeRoom.mode, game, answerer);
 
+  const arenaStyle = {
+    '--quiz-arena-bg-color': theme.visuals.arenaBgColor,
+    '--quiz-arena-bg-image': theme.visuals.arenaBgImage,
+  } as CSSProperties;
+
   return (
-    <Card className={`question-card ${styles.arena}`} aria-label="Sân đấu Quiz Battle">
+    <Card
+      className={`question-card ${styles.arena}`}
+      aria-label="Sân đấu Quiz Battle"
+      data-quiz-theme={theme.id}
+      style={arenaStyle}
+    >
       <div className={styles.playerHud}>
         {activeRoom.players.map((player, index) => (
           <div
@@ -262,7 +303,7 @@ export function QuizArena({
                       </p>
                     )}
                     {column.skills.map((skill) => {
-                      const state = getSkillButtonState({
+                      const { disabled, usage } = getSkillButtonState({
                         skill,
                         isSupport: column.support,
                         slot,
@@ -276,8 +317,8 @@ export function QuizArena({
                         <QuizSkillButton
                           key={skill}
                           skill={skill}
-                          disabled={state.disabled}
-                          usage={state.usage}
+                          disabled={disabled}
+                          usage={usage}
                           onActivate={() =>
                             void onAction(slot.playerId, { type: 'USE_SKILL', skill })
                           }
@@ -290,13 +331,23 @@ export function QuizArena({
             ))}
       </div>
 
-      <Button
-        className={styles.leaveMatch}
-        disabled={busy || !connected}
-        onClick={() => void onLeave()}
-      >
-        Rời phòng
-      </Button>
+      <div className={styles.arenaActions}>
+        <Button
+          type="button"
+          className={styles.fullscreenBtn}
+          aria-pressed={isFullscreen}
+          onClick={() => void toggleFullscreen()}
+        >
+          {isFullscreen ? 'Thoát toàn màn hình' : 'Toàn màn hình'}
+        </Button>
+        <Button
+          className={styles.leaveMatch}
+          disabled={busy || !connected}
+          onClick={() => void onLeave()}
+        >
+          Rời phòng
+        </Button>
+      </div>
     </Card>
   );
 }
