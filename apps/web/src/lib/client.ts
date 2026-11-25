@@ -52,8 +52,7 @@ async function readResponse<T>(response: Response): Promise<T> {
       requestId,
     );
   }
-  const record =
-    typeof data === 'object' && data !== null ? (data as Record<string, unknown>) : {};
+  const record = typeof data === 'object' && data !== null ? (data as Record<string, unknown>) : {};
   if (!response.ok)
     throw new ApiError(
       response.status,
@@ -149,7 +148,11 @@ export function onAuthChanged(callback: () => void) {
 }
 
 export function isLocalAccountHost() {
-  return ['localhost', '127.0.0.1', '[::1]'].includes(window.location.hostname);
+  if (['localhost', '127.0.0.1', '[::1]'].includes(window.location.hostname)) return true;
+  return (
+    process.env.NEXT_PUBLIC_ALLOW_PUBLIC_ACCOUNT_AUTH === 'true' &&
+    window.location.protocol === 'https:'
+  );
 }
 
 export const roomStorageKey = (playerId: string) => `duoquest.room.v1:${playerId}`;

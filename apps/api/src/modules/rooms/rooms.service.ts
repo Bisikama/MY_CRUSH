@@ -34,6 +34,7 @@ interface Participant extends PlayerSlot {
 interface LiveRoom {
   code: string;
   hostPlayerId: string;
+  creatorIp?: string;
   mode: GameMode;
   layout: GameLayout;
   status: RoomStatus;
@@ -45,7 +46,12 @@ interface LiveRoom {
   touchedAt: number;
 }
 // PROPOSAL: continue clocks during reconnect; cancel without rewards after 30s offline.
-export const ROOM_POLICY = { reconnectGraceMs: 30_000, idleTtlMs: 15 * 60_000, maxRooms: 128 };
+export const ROOM_POLICY = {
+  reconnectGraceMs: 30_000,
+  idleTtlMs: 15 * 60_000,
+  maxRooms: 128,
+  maxRoomsPerIp: 4,
+};
 @Injectable()
 export class RoomsService implements OnModuleInit, OnModuleDestroy {
   readonly events = new EventEmitter();
@@ -132,6 +138,7 @@ export class RoomsService implements OnModuleInit, OnModuleDestroy {
     player: PlayerRecord,
     input: import('zod').infer<typeof createRoomSchema>,
     check?: () => Promise<void>,
+    creatorIp?: string,
   ) {
     return this.queue.run('__membership__', async () => {
       await check?.();
@@ -140,6 +147,16 @@ export class RoomsService implements OnModuleInit, OnModuleDestroy {
         'RATE_LIMITED',
         'Host đã đạt giới hạn phòng',
       );
+      if (creatorIp) {
+        const activeFromIp = [...this.rooms.values()].filter(
+          (r) => r.status !== 'CANCELLED' && r.creatorIp === creatorIp,
+        ).length;
+        assertDomain(
+          activeFromIp < ROOM_POLICY.maxRoomsPerIp,
+          'RATE_LIMITED',
+          'IP của bạn đã đạt giới hạn số phòng hoạt động cùng lúc',
+        );
+      }
       assertDomain(
         ![...this.rooms.values()].some(
           (r) => r.status !== 'CANCELLED' && r.players.some((p) => p.controllerId === player.id),
@@ -185,6 +202,7 @@ export class RoomsService implements OnModuleInit, OnModuleDestroy {
       const room: LiveRoom = {
         code,
         hostPlayerId: player.id,
+        creatorIp,
         mode: input.mode,
         layout: input.layout,
         status: 'WAITING',

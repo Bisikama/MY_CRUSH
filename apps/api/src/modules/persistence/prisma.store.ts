@@ -97,6 +97,8 @@ export class PrismaStore extends PlatformStore {
     return rows.map((row) => row.questionKey);
   }
   async savePack(pack: QuestionPack, ownerId: string): Promise<PackSummary> {
+    const MAX_PACKS_PER_OWNER = 10;
+    const MAX_PACK_VERSIONS_PER_OWNER = 30;
     return serialTransaction(this.db, async (tx) => {
       const existing = await tx.quizQuestionPack.findFirst({
         where: { packId: pack.packId },
@@ -104,6 +106,23 @@ export class PrismaStore extends PlatformStore {
       });
       if (existing && existing.ownerId !== ownerId)
         throw new DomainError('FORBIDDEN', 'packId thuộc thư viện hoặc người chơi khác');
+      const totalVersions = await tx.quizQuestionPack.count({ where: { ownerId } });
+      if (totalVersions >= MAX_PACK_VERSIONS_PER_OWNER)
+        throw new DomainError(
+          'RATE_LIMITED',
+          `Bạn đã đạt giới hạn tối đa ${MAX_PACK_VERSIONS_PER_OWNER} phiên bản bộ đề riêng.`,
+        );
+      if (!existing) {
+        const ownedPackIds = await tx.quizQuestionPack.groupBy({
+          by: ['packId'],
+          where: { ownerId },
+        });
+        if (ownedPackIds.length >= MAX_PACKS_PER_OWNER)
+          throw new DomainError(
+            'RATE_LIMITED',
+            `Bạn đã đạt giới hạn tối đa ${MAX_PACKS_PER_OWNER} bộ đề riêng.`,
+          );
+      }
       const created = await tx.quizQuestionPack.create({
         data: {
           packId: pack.packId,

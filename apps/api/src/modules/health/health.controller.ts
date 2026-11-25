@@ -11,6 +11,8 @@ import { serializeErrorForLog } from '../../common/error-utils';
 @ApiTags('Health')
 export class HealthController {
   private readonly logger = new Logger(HealthController.name);
+  private readyOkUntil = 0;
+  private readyCheckInFlight?: Promise<{ status: 'ok'; database: 'up' }>;
   constructor(@Inject(PrismaService) private readonly db: PrismaService) {}
   @ApiEndpoint({
     summary: 'Kiểm tra API đang chạy',
@@ -27,21 +29,31 @@ export class HealthController {
   })
   @Get('ready')
   async ready() {
-    try {
-      await this.db.$queryRaw`SELECT 1`;
-      return { status: 'ok', database: 'up' };
-    } catch (error) {
-      this.logger.error(
-        JSON.stringify({
-          event: 'health:ready',
+    const now = Date.now();
+    if (now < this.readyOkUntil) return { status: 'ok' as const, database: 'up' as const };
+    if (this.readyCheckInFlight) return this.readyCheckInFlight;
+    this.readyCheckInFlight = (async () => {
+      try {
+        await this.db.$queryRaw`SELECT 1`;
+        this.readyOkUntil = Date.now() + 3_000;
+        return { status: 'ok' as const, database: 'up' as const };
+      } catch (error) {
+        this.readyOkUntil = 0;
+        this.logger.error(
+          JSON.stringify({
+            event: 'health:ready',
+            code: 'SERVICE_UNAVAILABLE',
+            error: serializeErrorForLog(error),
+          }),
+        );
+        throw new ServiceUnavailableException({
           code: 'SERVICE_UNAVAILABLE',
-          error: serializeErrorForLog(error),
-        }),
-      );
-      throw new ServiceUnavailableException({
-        code: 'SERVICE_UNAVAILABLE',
-        message: 'PostgreSQL chưa sẵn sàng',
-      });
-    }
+          message: 'PostgreSQL chưa sẵn sàng',
+        });
+      } finally {
+        this.readyCheckInFlight = undefined;
+      }
+    })();
+    return this.readyCheckInFlight;
   }
 }

@@ -18,29 +18,30 @@
 
 ## Danh mục và nơi lưu
 
-| Nhóm             | Tài liệu                                                   | Dùng để làm gì                                                                            |
-| ---------------- | ---------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| Sản phẩm         | [Phạm vi](product/scope.md)                                | Mục tiêu V1, mode/layout, giới hạn sản phẩm.                                              |
-| Kiến trúc        | [Tổng quan](architecture/overview.md)                      | Stack, module và ranh giới workspace.                                                     |
-| Kiến trúc        | [Dữ liệu](architecture/data-model.md)                      | Mô hình dữ liệu, persistence và transaction.                                              |
-| Kiến trúc        | [Quyết định](architecture/decisions.md)                    | Nguồn chính của LOCKED / PROPOSAL / OPEN.                                                 |
-| Kiến trúc        | [Contracts](architecture/contracts.md)                     | REST, Socket.IO và dữ liệu giao tiếp.                                                     |
-| Tính năng        | [Quiz](features/quiz.md)                                   | Luật Quiz theo mode.                                                                      |
-| Tính năng        | [Room, realtime, LAN](features/rooms-realtime-lan.md)      | Lifecycle phòng, phân quyền slot, reconnect và LAN.                                       |
-| Tính năng        | [Kinh tế, vật phẩm](features/economy-items.md)             | Game Score, Coins, XP, shop và item.                                                      |
-| Tính năng        | [Bộ câu hỏi](features/question-packs.md)                   | Định dạng JSON, validation và import.                                                     |
-| Tính năng        | [Auth và phân quyền](features/auth.md)                     | Email OTP, phiên, guest/account và role.                                                  |
-| Dự án            | [Roadmap và chất lượng](project/roadmap-quality.md)        | Mốc triển khai, backlog và lệnh kiểm thử.                                                 |
-| Dự án            | [Hiện trạng theo mốc](project/current-state.md)            | Ảnh chụp source, phần đã có và phần còn mở.                                               |
-| Kiểm chứng       | [Kết quả kiểm chứng](quality/verification.md)              | Lệnh, kết quả, thời điểm và giới hạn bằng chứng.                                          |
-| Stitch / Auth    | [Brief ban đầu](stitch/auth/design-brief.md)               | Tham khảo lịch sử; đã có brief tối giản mới hơn.                                          |
-| Stitch / Auth    | [Brief tối giản và screen ID](stitch/auth/minimal-auth.md) | Thiết kế được đề xuất, tài nguyên và lịch sử kiểm tra canvas.                             |
-| Prompt           | [Task triển khai](prompts/implement-task.md)               | Mẫu giao việc cho coding agent.                                                           |
-| Stitch / Account | [Hồ sơ desktop](stitch/account/account-profile.md)         | Prompt, concept pastel và kết quả kiểm tra màn tài khoản.                                 |
-| Stitch / Hub     | [Màn chọn game](stitch/game-hub/design-brief.md)           | Brief Matcha Meadow và bản tích hợp Pastel Lavender (`7d9066eeafb84b979a3266c355b4f90e`). |
-| Prompt           | [Tạo bộ câu hỏi](prompts/generate-question-pack.md)        | Prompt soạn JSON đúng schema.                                                             |
-| Quản lý          | [Quy định tài liệu](documentation-guide.md)                | Phân loại, tên file, metadata và vòng đời tài liệu.                                       |
-| Mẫu              | [Tài liệu mới](templates/document.md)                      | Khung tối thiểu cho một tài liệu mới.                                                     |
+| Nhóm             | Tài liệu                                                                | Dùng để làm gì                                                                            |
+| ---------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| Sản phẩm         | [Phạm vi](product/scope.md)                                             | Mục tiêu V1, mode/layout, giới hạn sản phẩm.                                              |
+| Kiến trúc        | [Tổng quan](architecture/overview.md)                                   | Stack, module và ranh giới workspace.                                                     |
+| Kiến trúc        | [Dữ liệu](architecture/data-model.md)                                   | Mô hình dữ liệu, persistence và transaction.                                              |
+| Kiến trúc        | [Quyết định](architecture/decisions.md)                                 | Nguồn chính của LOCKED / PROPOSAL / OPEN.                                                 |
+| Kiến trúc        | [Contracts](architecture/contracts.md)                                  | REST, Socket.IO và dữ liệu giao tiếp.                                                     |
+| Tính năng        | [Quiz](features/quiz.md)                                                | Luật Quiz theo mode.                                                                      |
+| Tính năng        | [Room, realtime, LAN](features/rooms-realtime-lan.md)                   | Lifecycle phòng, phân quyền slot, reconnect và LAN.                                       |
+| Tính năng        | [Kinh tế, vật phẩm](features/economy-items.md)                          | Game Score, Coins, XP, shop và item.                                                      |
+| Tính năng        | [Bộ câu hỏi](features/question-packs.md)                                | Định dạng JSON, validation và import.                                                     |
+| Tính năng        | [Auth và phân quyền](features/auth.md)                                  | Email OTP, phiên, guest/account và role.                                                  |
+| Dự án            | [Roadmap và chất lượng](project/roadmap-quality.md)                     | Mốc triển khai, backlog và lệnh kiểm thử.                                                 |
+| Dự án            | [Hiện trạng theo mốc](project/current-state.md)                         | Ảnh chụp source, phần đã có và phần còn mở.                                               |
+| Kiểm chứng       | [Kết quả kiểm chứng](quality/verification.md)                           | Lệnh, kết quả, thời điểm và giới hạn bằng chứng.                                          |
+| Stitch / Auth    | [Brief ban đầu](stitch/auth/design-brief.md)                            | Tham khảo lịch sử; đã có brief tối giản mới hơn.                                          |
+| Stitch / Auth    | [Brief tối giản và screen ID](stitch/auth/minimal-auth.md)              | Thiết kế được đề xuất, tài nguyên và lịch sử kiểm tra canvas.                             |
+| Prompt           | [Task triển khai](prompts/implement-task.md)                            | Mẫu giao việc cho coding agent.                                                           |
+| Stitch / Account | [Hồ sơ desktop](stitch/account/account-profile.md)                      | Prompt, concept pastel và kết quả kiểm tra màn tài khoản.                                 |
+| Stitch / Hub     | [Màn chọn game](stitch/game-hub/design-brief.md)                        | Brief Matcha Meadow và bản tích hợp Pastel Lavender (`7d9066eeafb84b979a3266c355b4f90e`). |
+| Prompt           | [Tạo bộ câu hỏi](prompts/generate-question-pack.md)                     | Prompt soạn JSON đúng schema.                                                             |
+| Quản lý          | [Quy định tài liệu](documentation-guide.md)                             | Phân loại, tên file, metadata và vòng đời tài liệu.                                       |
+| Vận hành         | [Cloudflare Tunnel & bảo mật](operations/cloudflare-tunnel-security.md) | Cấu hình same-origin tunnel, HTTPS account auth, rate limit và Cloudflare WAF.            |
+| Mẫu              | [Tài liệu mới](templates/document.md)                                   | Khung tối thiểu cho một tài liệu mới.                                                     |
 
 `README.md` và `AGENTS.md` ở root là điểm vào dự án và quy định agent. Skill vẫn nằm trong `.agents/skills/`, không chuyển vào kho tài liệu. `doc/` chứa bản Word gốc cục bộ và đang bị Git bỏ qua; người clone repo có thể không có thư mục này.
 

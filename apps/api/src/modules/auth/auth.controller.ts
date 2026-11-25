@@ -4,6 +4,7 @@ import { nicknameSchema } from '@duoquest/shared-types';
 import type { Response } from 'express';
 import { z } from 'zod';
 import { ApiEndpoint } from '../../common/api-endpoint';
+import { resolveClientIp } from '../../common/client-ip';
 import { AllowGuest, csrfToken, LocalAccount, Public, type AuthRequest } from './auth-guard';
 import {
   clearFlow,
@@ -37,7 +38,7 @@ const flow = z.object({
   resendAt: z.string().datetime(),
 });
 const localPublic = () => applyDecorators(LocalAccount(), Public());
-const ip = (request: AuthRequest) => request.socket.remoteAddress ?? 'unknown';
+const ip = (request: AuthRequest) => resolveClientIp(request.socket.remoteAddress, request.headers);
 
 @Controller('auth')
 @ApiTags('Auth')

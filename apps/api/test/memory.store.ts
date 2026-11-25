@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { DomainError } from '@duoquest/game-core';
 import {
   questionPackSchema,
   summarizePack,
@@ -73,8 +74,29 @@ export class MemoryStore extends PlatformStore {
   async askedQuestionKeys(hostPlayerId: string, keys: string[]) {
     return keys.filter((key) => this.questionHistory.get(hostPlayerId)?.has(key));
   }
-  async savePack(pack: QuestionPack, _ownerId: string) {
-    return summarizePack(randomUUID(), pack, false);
+  async savePack(pack: QuestionPack, ownerId: string) {
+    const owned = this.extraPacks.filter((entry) => entry.ownerId === ownerId);
+    const existing = owned.find((entry) => entry.content.packId === pack.packId);
+    if (
+      [this.pack, ...this.extraPacks].some(
+        (entry) => entry.content.packId === pack.packId && entry.ownerId !== ownerId,
+      )
+    )
+      throw new DomainError('FORBIDDEN', 'packId thuộc thư viện hoặc người chơi khác');
+    if (owned.length >= 30)
+      throw new DomainError('RATE_LIMITED', 'Bạn đã đạt giới hạn tối đa 30 phiên bản bộ đề riêng.');
+    const distinctOwned = new Set(owned.map((entry) => entry.content.packId));
+    if (!existing && distinctOwned.size >= 10)
+      throw new DomainError('RATE_LIMITED', 'Bạn đã đạt giới hạn tối đa 10 bộ đề riêng.');
+    const id = randomUUID();
+    this.extraPacks.push({
+      id,
+      content: pack,
+      trusted: false,
+      ownerId,
+      version: owned.filter((entry) => entry.content.packId === pack.packId).length + 1,
+    });
+    return summarizePack(id, pack, false);
   }
   async createSession(session: SessionRecord) {
     this.sessions.set(session.id, structuredClone(session));

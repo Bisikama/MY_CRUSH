@@ -10,7 +10,8 @@ import { Reflector } from '@nestjs/core';
 import type { Request } from 'express';
 import type { Response } from 'express';
 import type { AccountRole } from '@prisma/client';
-import { webOrigins, env } from '../../common/config';
+import { authWebOrigin, webOrigins, env } from '../../common/config';
+import { isLoopbackAddress } from '../../common/client-ip';
 import { AuthSessions, type Principal } from './auth-session.service';
 import { equal, fail, flowNonce, mac, readCookie, SESSION_COOKIE } from './auth-security';
 
@@ -53,13 +54,40 @@ export class AuthGuard implements CanActivate {
     ];
     const mutating = !['GET', 'HEAD', 'OPTIONS'].includes(request.method);
     const localAccount = this.reflector.getAllAndOverride<boolean>('dq:local-account', targets);
-    if (
-      localAccount &&
-      (!['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(request.socket.remoteAddress ?? '') ||
-        !['localhost', '127.0.0.1', '::1', '[::1]'].includes(request.hostname) ||
-        (origin ? !localOrigins.includes(origin) : mutating))
-    )
-      fail(403, 'FORBIDDEN', 'Auth tài khoản hiện chỉ hỗ trợ localhost.');
+    if (localAccount) {
+      const isLocalRequest =
+        isLoopbackAddress(request.socket.remoteAddress) &&
+        ['localhost', '127.0.0.1', '::1', '[::1]'].includes(request.hostname) &&
+        (origin ? localOrigins.includes(origin) : !mutating);
+
+      const allowPublic =
+        process.env.ALLOW_PUBLIC_ACCOUNT_AUTH !== undefined
+          ? process.env.ALLOW_PUBLIC_ACCOUNT_AUTH === 'true' ||
+            process.env.ALLOW_PUBLIC_ACCOUNT_AUTH === '1'
+          : env.ALLOW_PUBLIC_ACCOUNT_AUTH;
+
+      if (allowPublic) {
+        let configuredOrigin = authWebOrigin;
+        if (process.env.AUTH_WEB_ORIGIN) {
+          try {
+            configuredOrigin = new URL(process.env.AUTH_WEB_ORIGIN).origin;
+          } catch {
+            configuredOrigin = '';
+          }
+        }
+        const allowedHost = configuredOrigin
+          ? new URL(configuredOrigin).hostname.toLowerCase()
+          : '';
+        const isPublicHttpsRequest =
+          configuredOrigin.startsWith('https://') &&
+          request.hostname.toLowerCase() === allowedHost &&
+          (origin ? origin === configuredOrigin : !mutating);
+        if (!isLocalRequest && !isPublicHttpsRequest)
+          fail(403, 'FORBIDDEN', 'Origin không được phép sử dụng Auth tài khoản.');
+      } else if (!isLocalRequest) {
+        fail(403, 'FORBIDDEN', 'Auth tài khoản hiện chỉ hỗ trợ localhost.');
+      }
+    }
 
     const needsPrincipal =
       mode !== 'public' ||

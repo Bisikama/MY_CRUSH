@@ -1,5 +1,6 @@
 import { AllowGuest, CurrentPlayer } from '../auth/auth-guard';
-import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
+import { AuthThrottle } from '../auth/auth-throttle';
+import { Body, Controller, Get, Inject, Optional, Post } from '@nestjs/common';
 import { questionPackSchema, casualCatalogSchema } from '@duoquest/shared-types';
 import { z } from 'zod';
 import { ApiTags } from '@nestjs/swagger';
@@ -9,12 +10,19 @@ import { PlatformStore } from '../persistence/store';
 import { QuizPreparationService } from './quiz-preparation.service';
 import { parseQuestionPack } from './parse-question-pack';
 
+const PACK_RATE_LIMITS = {
+  windowMs: 15 * 60_000,
+  previewLimit: 30,
+  saveLimit: 10,
+} as const;
+
 @Controller('question-packs')
 @ApiTags('Question packs')
 export class QuestionPacksController {
   constructor(
     @Inject(PlatformStore) private readonly store: PlatformStore,
     @Inject(QuizPreparationService) private readonly preparation: QuizPreparationService,
+    @Optional() @Inject(AuthThrottle) private readonly throttle?: AuthThrottle,
   ) {}
   @AllowGuest()
   @ApiEndpoint({
@@ -45,9 +53,18 @@ export class QuestionPacksController {
     body: questionPackSchema,
     response: z.object({ pack: questionPackSchema, warning: z.string() }),
     status: 201,
+    errors: [429],
   })
   @Post('preview')
-  preview(@Body() body: unknown) {
+  async preview(@CurrentPlayer() playerId: string, @Body() body: unknown) {
+    if (this.throttle) {
+      await this.throttle.reserve(
+        'pack-preview',
+        playerId,
+        PACK_RATE_LIMITS.previewLimit,
+        PACK_RATE_LIMITS.windowMs,
+      );
+    }
     return {
       pack: parseQuestionPack(body),
       warning: 'Hãy duyệt tính chính xác của câu hỏi. Bộ đề tự nhập không nhận Coins/XP.',
@@ -61,10 +78,18 @@ export class QuestionPacksController {
     body: questionPackSchema,
     response: packSummarySchema,
     status: 201,
-    errors: [403],
+    errors: [403, 429],
   })
   @Post()
   async save(@CurrentPlayer() playerId: string, @Body() body: unknown) {
+    if (this.throttle) {
+      await this.throttle.reserve(
+        'pack-save',
+        playerId,
+        PACK_RATE_LIMITS.saveLimit,
+        PACK_RATE_LIMITS.windowMs,
+      );
+    }
     return this.store.savePack(parseQuestionPack(body), playerId);
   }
 }

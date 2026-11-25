@@ -41,6 +41,8 @@
 
 - Ảnh câu hỏi (2026-11-11). QuestionPack v1 nhận tối đa bốn tham chiếu ảnh mỗi câu, dùng file local hoặc CDN HTTPS theo allowlist khi nhập. Pack và snapshot giữ `src` và `alt` trong JSON hiện có. Khóa lịch sử của câu có ảnh kết hợp đề bài và tập đường dẫn. Kế hoạch mở rộng dùng object storage, nén trước khi phát hành và cache URL theo nội dung. [Nguồn ảnh và lưu trữ](../features/question-packs.md#câu-hỏi-có-ảnh)
 
+- Gia cố bảo mật cho triển khai Cloudflare Tunnel (2026-11-25). Bổ sung cấu hình `TRUST_PROXY_MODE=cloudflare` (chỉ đọc `CF-Connecting-IP` khi peer TCP là loopback), tự tắt Swagger khi `NODE_ENV=production` (`ENABLE_SWAGGER`), HTTP Security Headers cho cả API và Next.js, cờ `ALLOW_PUBLIC_ACCOUNT_AUTH` + `NEXT_PUBLIC_ALLOW_PUBLIC_ACCOUNT_AUTH` cho phép đăng ký/đăng nhập tài khoản qua đúng `AUTH_WEB_ORIGIN` HTTPS để nâng cấp Guest giữ nguyên tiến trình DB, cùng bộ rate limit/quota chống DoS cho Guest, QuestionPack, Socket.IO, Room theo IP và cache 3 giây cho `/api/health/ready`. Chi tiết tại [hướng dẫn Cloudflare Tunnel](../operations/cloudflare-tunnel-security.md).
+
 ## OPEN cần quyết định trước module liên quan
 
 - Khôi phục guest đã mất cookie, gộp hai Player hiện có và quyền sở hữu tiến trình người chơi 2 chung màn hình.

@@ -13,16 +13,24 @@ import {
   type ServerToClientEvents,
 } from '@duoquest/shared-types';
 import { webOrigins } from '../../common/config';
+import { resolveClientIp } from '../../common/client-ip';
 import { formatZodError, serializeErrorForLog } from '../../common/error-utils';
 import { AuthSessions, type Principal, type Revocation } from '../auth/auth-session.service';
 import { readCookie, SESSION_COOKIE } from '../auth/auth-security';
 import { RoomsService } from '../rooms/rooms.service';
 
+const SOCKET_LIMITS = {
+  maxPerPlayer: 4,
+  maxPerIp: 20,
+  roomCreateLimitPerIp: 15,
+  roomCreateWindowMs: 15 * 60_000,
+} as const;
+
 type GameSocket = Socket<
   ClientToServerEvents,
   ServerToClientEvents,
   Record<string, never>,
-  { principal: Principal; credential: string; revoked?: boolean }
+  { principal: Principal; credential: string; clientIp: string; revoked?: boolean }
 >;
 @WebSocketGateway({
   cors: { origin: webOrigins, credentials: true },
@@ -36,6 +44,9 @@ export class GameGateway implements OnGatewayInit, OnModuleDestroy {
   private readonly logger = new Logger(GameGateway.name);
   private readonly cache = new Map<string, { principal: Principal; until: number }>();
   private readonly pending = new Map<string, Promise<Principal>>();
+  private readonly socketsByIp = new Map<string, Set<string>>();
+  private readonly socketsByPlayer = new Map<string, Set<string>>();
+  private readonly roomCreateLimits = new Map<string, { count: number; resetAt: number }>();
   private generation = 0;
   private expiryTimer?: ReturnType<typeof setInterval>;
 
@@ -111,14 +122,61 @@ export class GameGateway implements OnGatewayInit, OnModuleDestroy {
     @Inject(AuthSessions) private readonly sessions: AuthSessions,
     @Inject(RoomsService) private readonly rooms: RoomsService,
   ) {}
+  private trackSocket(map: Map<string, Set<string>>, key: string, socketId: string) {
+    const group = map.get(key) ?? new Set<string>();
+    group.add(socketId);
+    map.set(key, group);
+  }
+
+  private untrackSocket(map: Map<string, Set<string>>, key: string, socketId: string) {
+    const group = map.get(key);
+    if (!group) return;
+    group.delete(socketId);
+    if (group.size === 0) map.delete(key);
+  }
+
+  private reserveRoomCreate(clientIp: string) {
+    const now = Date.now();
+    const current = this.roomCreateLimits.get(clientIp);
+    if (!current || current.resetAt <= now) {
+      this.roomCreateLimits.set(clientIp, {
+        count: 1,
+        resetAt: now + SOCKET_LIMITS.roomCreateWindowMs,
+      });
+      return;
+    }
+    if (current.count >= SOCKET_LIMITS.roomCreateLimitPerIp) {
+      throw new DomainError('RATE_LIMITED', 'Tạo phòng quá nhanh. Hãy đợi rồi thử lại.');
+    }
+    current.count++;
+  }
+
   afterInit(server: Server<ClientToServerEvents, ServerToClientEvents>) {
     server.use((socket, next) => {
       const credential = readCookie(socket.handshake.headers.cookie, SESSION_COOKIE);
       if (!credential) return next(new Error('UNAUTHORIZED'));
+      const clientIp = resolveClientIp(socket.handshake.address, socket.handshake.headers);
+      if ((this.socketsByIp.get(clientIp)?.size ?? 0) >= SOCKET_LIMITS.maxPerIp) {
+        this.logger.warn(JSON.stringify({ event: 'ws:handshake', code: 'RATE_LIMITED', clientIp }));
+        return next(new Error('RATE_LIMITED'));
+      }
       void this.authenticate(credential, false).then(
         (principal) => {
+          if (
+            (this.socketsByPlayer.get(principal.playerId)?.size ?? 0) >= SOCKET_LIMITS.maxPerPlayer
+          ) {
+            this.logger.warn(
+              JSON.stringify({
+                event: 'ws:handshake',
+                code: 'RATE_LIMITED',
+                playerId: principal.playerId,
+              }),
+            );
+            return next(new Error('RATE_LIMITED'));
+          }
           socket.data.principal = principal;
           socket.data.credential = credential;
+          socket.data.clientIp = clientIp;
           next();
         },
         (error: unknown) => {
@@ -137,11 +195,14 @@ export class GameGateway implements OnGatewayInit, OnModuleDestroy {
     });
     this.sessions.events.on('revoked', this.revoke);
     this.expiryTimer = setInterval(() => {
+      const now = Date.now();
       for (const [credential, entry] of this.cache)
-        if (entry.until <= Date.now()) this.cache.delete(credential);
+        if (entry.until <= now) this.cache.delete(credential);
+      for (const [ipKey, entry] of this.roomCreateLimits)
+        if (entry.resetAt <= now) this.roomCreateLimits.delete(ipKey);
       for (const raw of server.sockets.sockets.values()) {
         const socket = raw as GameSocket;
-        if (socket.data.principal.validUntil <= Date.now()) socket.disconnect(true);
+        if (socket.data.principal.validUntil <= now) socket.disconnect(true);
       }
     }, 30_000);
     this.expiryTimer.unref();
@@ -165,10 +226,16 @@ export class GameGateway implements OnGatewayInit, OnModuleDestroy {
     this.sessions.events.off('revoked', this.revoke);
     clearInterval(this.expiryTimer);
     this.cache.clear();
+    this.socketsByIp.clear();
+    this.socketsByPlayer.clear();
+    this.roomCreateLimits.clear();
   }
   private async bind(socket: GameSocket) {
     const principal = socket.data.principal;
+    const clientIp = socket.data.clientIp ?? 'unknown';
     const player = { id: principal.playerId, nickname: principal.nickname, tokenHash: null };
+    this.trackSocket(this.socketsByIp, clientIp, socket.id);
+    this.trackSocket(this.socketsByPlayer, player.id, socket.id);
     const check = async () => {
       if (socket.data.revoked || !socket.connected)
         throw new DomainError('UNAUTHORIZED', 'Phiên socket đã đóng.');
@@ -228,7 +295,8 @@ export class GameGateway implements OnGatewayInit, OnModuleDestroy {
     };
     socket.on('room:create', (data, ack) => {
       void execute('room:create', ack, async () => {
-        const view = await this.rooms.create(player, createRoomSchema.parse(data), check);
+        this.reserveRoomCreate(clientIp);
+        const view = await this.rooms.create(player, createRoomSchema.parse(data), check, clientIp);
         await socket.join(view.code);
         return view;
       });
@@ -281,6 +349,8 @@ export class GameGateway implements OnGatewayInit, OnModuleDestroy {
       );
     });
     socket.on('disconnect', () => {
+      this.untrackSocket(this.socketsByIp, clientIp, socket.id);
+      this.untrackSocket(this.socketsByPlayer, player.id, socket.id);
       void this.rooms.disconnect(player.id, socket.id).catch((error: unknown) =>
         this.logger.error(
           JSON.stringify({

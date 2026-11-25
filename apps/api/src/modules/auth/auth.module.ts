@@ -21,6 +21,6 @@ import { AuthService } from './auth.service';
     AuthService,
     { provide: APP_GUARD, useClass: AuthGuard },
   ],
-  exports: [AuthService, AuthSessions],
+  exports: [AuthService, AuthSessions, AuthThrottle],
 })
 export class AuthModule {}

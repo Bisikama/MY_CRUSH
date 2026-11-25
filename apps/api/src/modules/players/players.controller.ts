@@ -1,11 +1,13 @@
 import type { Response } from 'express';
 import { AuthService } from '../auth/auth.service';
 import { AuthSessions, publicIdentity } from '../auth/auth-session.service';
+import { AuthThrottle } from '../auth/auth-throttle';
 import { sessionCookie } from '../auth/auth-security';
 import { AllowGuest, CurrentPlayer, Public, type AuthRequest } from '../auth/auth-guard';
-import { Body, Controller, Get, Inject, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Optional, Post, Req, Res } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiEndpoint } from '../../common/api-endpoint';
+import { resolveClientIp } from '../../common/client-ip';
 import {
   guestRequestSchema,
   guestResponseSchema,
@@ -14,6 +16,13 @@ import {
 } from '../../common/rest-schemas';
 import { PlatformStore } from '../persistence/store';
 
+const GUEST_RATE_LIMITS = {
+  shortWindowMs: 15 * 60_000,
+  shortLimit: 20,
+  dayWindowMs: 24 * 60 * 60_000,
+  dayLimit: 60,
+} as const;
+
 @Controller('players')
 @ApiTags('Players')
 export class PlayersController {
@@ -21,6 +30,7 @@ export class PlayersController {
     @Inject(AuthService) private readonly auth: AuthService,
     @Inject(AuthSessions) private readonly sessions: AuthSessions,
     @Inject(PlatformStore) private readonly store: PlatformStore,
+    @Optional() @Inject(AuthThrottle) private readonly throttle?: AuthThrottle,
   ) {}
   @Public()
   @ApiEndpoint({
@@ -29,6 +39,7 @@ export class PlayersController {
     example: { nickname: 'Minh' },
     response: guestResponseSchema,
     status: 201,
+    errors: [429],
   })
   @Post('guest')
   async create(
@@ -36,7 +47,23 @@ export class PlayersController {
     @Req() request: AuthRequest,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const value = await this.auth.guest(guestRequestSchema.parse(body).nickname, request.principal);
+    const data = guestRequestSchema.parse(body);
+    if (this.throttle) {
+      const clientIp = resolveClientIp(request.socket.remoteAddress, request.headers);
+      await this.throttle.reserve(
+        'guest-ip-15m',
+        clientIp,
+        GUEST_RATE_LIMITS.shortLimit,
+        GUEST_RATE_LIMITS.shortWindowMs,
+      );
+      await this.throttle.reserve(
+        'guest-ip-day',
+        clientIp,
+        GUEST_RATE_LIMITS.dayLimit,
+        GUEST_RATE_LIMITS.dayWindowMs,
+      );
+    }
+    const value = await this.auth.guest(data.nickname, request.principal);
     sessionCookie(response, value);
     return publicIdentity(await this.sessions.require(value));
   }

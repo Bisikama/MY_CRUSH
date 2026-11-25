@@ -7,6 +7,7 @@ import { AppModule } from './app.module';
 import { env, webOrigins } from './common/config';
 import { requestIdMiddleware, serializeErrorForLog } from './common/error-utils';
 import { HttpErrorFilter } from './common/http-error.filter';
+import { securityHeadersMiddleware } from './common/security-headers';
 import { setupSwagger } from './common/swagger';
 
 const processLogger = new Logger('Process');
@@ -23,13 +24,18 @@ process.on('uncaughtException', (error: Error) => {
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bodyParser: false });
+  const httpServer = app.getHttpAdapter().getInstance() as {
+    disable?: (setting: string) => void;
+  };
+  httpServer.disable?.('x-powered-by');
+  app.use(securityHeadersMiddleware);
   app.use(requestIdMiddleware);
   app.use(json({ limit: '1mb' }));
   app.setGlobalPrefix('api');
   app.enableCors({ origin: webOrigins, credentials: true });
   app.useGlobalFilters(new HttpErrorFilter());
   app.enableShutdownHooks();
-  setupSwagger(app);
+  if (env.ENABLE_SWAGGER) setupSwagger(app);
   await app.listen(env.API_PORT, env.API_HOST);
   console.log(`DuoQuest API listening on ${env.API_HOST}:${env.API_PORT}`);
 }
