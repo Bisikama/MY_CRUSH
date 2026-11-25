@@ -632,7 +632,9 @@ test('registers, changes and resets a sample account in one tab', async ({ page 
   await expect(page).toHaveURL('/');
 
   await page.getByRole('link', { name: 'Đăng nhập', exact: true }).click();
+  await expect(page).toHaveURL('/login');
   await page.getByRole('link', { name: /Quên mật khẩu/ }).click();
+  await expect(page).toHaveURL('/forgot-password');
   await page.getByLabel('Email', { exact: true }).fill(email);
   await page.getByRole('button', { name: 'Gửi mã', exact: true }).click();
   await otp.fill('123456');
@@ -642,6 +644,7 @@ test('registers, changes and resets a sample account in one tab', async ({ page 
   await page.getByRole('button', { name: 'Lưu mật khẩu', exact: true }).click();
   await expect(page.getByText(/Mật khẩu đã được đặt lại/)).toBeVisible();
   await page.getByRole('link', { name: 'Đăng nhập', exact: true }).click();
+  await expect(page).toHaveURL('/login');
   await page.getByLabel('Email', { exact: true }).fill(email);
   await page.getByLabel('Mật khẩu', { exact: true }).fill('LabAccount!3');
   await page.getByRole('button', { name: 'Đăng nhập', exact: true }).click();
