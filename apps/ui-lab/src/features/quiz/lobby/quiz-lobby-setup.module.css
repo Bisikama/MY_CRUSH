@@ -1,0 +1,1068 @@
+/* ============================================================================
+ * Quiz Lobby Setup — Variant 2B Polished ("Vibrant Rainbow Toybox")
+ * Glossy 3D toy buttons, puffy cloud hero with mascots, centered chunky mode
+ * tiles, 3-step numbered setup card, and scalloped pastel invite ticket (3x2).
+ * ============================================================================ */
+
+.lobbyShell {
+  position: relative;
+  min-height: calc(100vh - 84px);
+  padding: 6px 0 44px;
+}
+
+.lobbyContent {
+  position: relative;
+  z-index: 2;
+  max-width: 1120px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ---------- Resume Banner ---------- */
+.resumeCard {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 20px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.94);
+  border: 2px solid #ffffff;
+  box-shadow: 0 10px 24px rgba(40, 114, 186, 0.16);
+  backdrop-filter: blur(12px);
+}
+
+.resumeTitle {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #1f3354;
+}
+
+.resumeActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* ---------- Puffy Cloud Hero with Mascots ---------- */
+.heroCloudRow {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding-top: 2px;
+}
+
+.heroMetaStrip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.heroEyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.78);
+  border: 1.5px solid rgba(255, 255, 255, 0.96);
+  color: #214c7e;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  margin: 0;
+  box-shadow: 0 4px 12px rgba(42, 118, 194, 0.12);
+}
+
+.motionToggleBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.8);
+  color: #1f558e;
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(42, 118, 194, 0.12);
+  transition:
+    transform 140ms ease,
+    background-color 140ms ease;
+}
+
+.motionToggleBtn:hover {
+  background: #ffffff;
+  transform: translateY(-1px);
+}
+
+.cloudHeroWrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: min(460px, 92vw);
+  padding: 20px 58px 22px;
+}
+
+.cloudHeroSvg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 12px 24px rgba(42, 118, 194, 0.2));
+  pointer-events: none;
+}
+
+.cloudHeroTitle {
+  position: relative;
+  z-index: 2;
+  margin: 0;
+  font-size: clamp(1.55rem, 2.5vw, 2.05rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: #17274d;
+  text-shadow: 0 2px 0 rgba(255, 255, 255, 0.95);
+}
+
+.mascotBadge {
+  position: absolute;
+  z-index: 3;
+  width: 68px;
+  height: 68px;
+  display: grid;
+  place-items: center;
+  filter: drop-shadow(0 8px 14px rgba(34, 86, 152, 0.24));
+  animation: mascotBob 4.2s ease-in-out infinite;
+}
+
+.mascotLeft {
+  left: -10px;
+  top: 50%;
+  transform: translateY(-54%);
+}
+
+.mascotRight {
+  right: -12px;
+  top: 50%;
+  transform: translateY(-48%);
+  animation-delay: 1.4s;
+}
+
+/* ---------- Centered 3D Toybox Mode Tiles ---------- */
+.modeRow {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 18px;
+  margin: 2px 0 4px;
+}
+
+.modeCard {
+  position: relative;
+  width: 158px;
+  min-height: 126px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 18px 14px 16px;
+  border-radius: 26px;
+  border: 3px solid #ffffff;
+  border-bottom: 7px solid #d4e4f7;
+  background: linear-gradient(180deg, #ffffff 0%, #f1f7ff 100%);
+  text-align: center;
+  cursor: pointer;
+  box-shadow:
+    0 12px 24px rgba(37, 108, 182, 0.16),
+    inset 0 2px 0 #ffffff;
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    border-color 160ms ease;
+}
+
+.modeCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 30px rgba(37, 108, 182, 0.22);
+}
+
+.modeCard:active {
+  transform: translateY(1px);
+}
+
+.modeCardSelected {
+  transform: translateY(-5px) scale(1.03);
+  background: linear-gradient(180deg, #fffdf0 0%, #ffefc2 100%);
+  border: 3px solid #a778ff;
+  border-bottom: 7px solid #7d4fe0;
+  box-shadow:
+    0 0 0 4px rgba(255, 224, 102, 0.92),
+    0 16px 32px rgba(125, 79, 224, 0.3),
+    inset 0 2px 0 rgba(255, 255, 255, 0.95);
+}
+
+.modeSelectedPill {
+  position: absolute;
+  top: -13px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 3px 11px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #ffe97d 0%, #ffca3a 100%);
+  border: 1.5px solid #ffffff;
+  color: #5b3200;
+  font-size: 0.66rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  box-shadow: 0 4px 10px rgba(214, 134, 0, 0.3);
+}
+
+.modeSelectedSpark {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  font-size: 1rem;
+  color: #f4a3ff;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.95);
+  pointer-events: none;
+}
+
+.modeNumber {
+  font-size: 2.35rem;
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: #5d6e96;
+}
+
+.modeCardSelected .modeNumber {
+  color: #6c4362;
+}
+
+.modeTitle {
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: #1c2c4f;
+}
+
+.modeSubtitle {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #5a7299;
+  line-height: 1.25;
+}
+
+/* ---------- Main 2-Column Workspace (Setup Card + Scalloped Invite Ticket) ---------- */
+.workspaceGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.95fr) minmax(280px, 0.95fr);
+  gap: 20px;
+  align-items: start;
+}
+
+/* ---------- 3-Step Match Setup Card ---------- */
+.setupPanel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 22px;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.94);
+  border: 2.5px solid #ffffff;
+  box-shadow:
+    0 20px 42px rgba(34, 108, 179, 0.18),
+    inset 0 2px 0 #ffffff;
+  backdrop-filter: blur(14px);
+}
+
+.stepRow {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.stepRowCenter {
+  align-items: center;
+}
+
+.stepNumBadge {
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-size: 0.96rem;
+  font-weight: 900;
+  color: #ffffff;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  box-shadow:
+    0 6px 14px rgba(0, 0, 0, 0.14),
+    inset 0 2px 0 rgba(255, 255, 255, 0.45);
+  margin-top: 2px;
+}
+
+.stepNumPink {
+  background: linear-gradient(180deg, #ff8ab2 0%, #f05a8e 100%);
+  border-bottom: 3px solid #c9396b;
+}
+
+.stepNumSky {
+  background: linear-gradient(180deg, #62c4ff 0%, #2d9bf0 100%);
+  border-bottom: 3px solid #1673c2;
+}
+
+.stepNumMint {
+  background: linear-gradient(180deg, #5ce0a8 0%, #24b47e 100%);
+  border-bottom: 3px solid #14855a;
+}
+
+/* Zone 1: Dual Glossy 3D Toy Buttons */
+.dualSelectorGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 1px minmax(0, 1fr);
+  gap: 16px;
+  align-items: stretch;
+}
+
+.dualDivider {
+  background: linear-gradient(180deg, transparent 0%, #dbe9f8 20%, #dbe9f8 80%, transparent 100%);
+}
+
+.selectorGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.selectorGroupLabel {
+  font-size: 0.96rem;
+  font-weight: 900;
+  color: #1c2f52;
+  letter-spacing: -0.01em;
+}
+
+.tilePair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 11px;
+}
+
+.choiceTile {
+  position: relative;
+  min-height: 92px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 14px 10px 12px;
+  border-radius: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-bottom-width: 6px;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease,
+    filter 150ms ease;
+  box-shadow:
+    0 10px 20px rgba(32, 82, 138, 0.16),
+    inset 0 3px 0 rgba(255, 255, 255, 0.52);
+}
+
+.choiceTile::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 10px;
+  right: 10px;
+  height: 26%;
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.42) 0%, rgba(255, 255, 255, 0) 100%);
+  pointer-events: none;
+}
+
+.choiceTile:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.03);
+}
+
+.choiceTile:active {
+  transform: translateY(2px);
+}
+
+.tileSelectedPill {
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #ffeb80 0%, #ffc838 100%);
+  border: 1.5px solid #ffffff;
+  color: #5b3200;
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  box-shadow: 0 4px 10px rgba(212, 132, 0, 0.32);
+}
+
+.tileIconWrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 34px;
+}
+
+.keycapsCluster {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.keycap {
+  width: 21px;
+  height: 21px;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #7c2aa3;
+  font-size: 0.7rem;
+  font-weight: 900;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 2px 0 rgba(72, 18, 98, 0.35);
+}
+
+.tileTitle {
+  position: relative;
+  z-index: 1;
+  font-size: 0.88rem;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+/* 4 Glossy Semantic Toy Colors */
+.tileApricot {
+  background: linear-gradient(180deg, #ffdc73 0%, #f9b23c 100%);
+  border-color: #ffe8a3;
+  border-bottom-color: #d68216;
+  color: #592e00;
+}
+
+.tileApricot.tileActive {
+  box-shadow:
+    0 0 0 3px rgba(255, 218, 99, 0.72),
+    0 12px 24px rgba(235, 148, 16, 0.35),
+    inset 0 3px 0 rgba(255, 255, 255, 0.65);
+}
+
+.tileEmerald {
+  background: linear-gradient(180deg, #54e5b9 0%, #15b284 100%);
+  border-color: #9df7dc;
+  border-bottom-color: #0b815f;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(7, 82, 58, 0.35);
+}
+
+.tileEmerald.tileActive {
+  box-shadow:
+    0 0 0 3px rgba(100, 240, 198, 0.68),
+    0 12px 24px rgba(18, 168, 122, 0.38),
+    inset 0 3px 0 rgba(255, 255, 255, 0.62);
+}
+
+.tileAzure {
+  background: linear-gradient(180deg, #8fd6ff 0%, #44a6ff 100%);
+  border-color: #c2e8ff;
+  border-bottom-color: #1f74d1;
+  color: #0e3566;
+}
+
+.tileAzure.tileActive {
+  box-shadow:
+    0 0 0 3px rgba(133, 210, 255, 0.75),
+    0 12px 24px rgba(38, 140, 242, 0.34),
+    inset 0 3px 0 rgba(255, 255, 255, 0.65);
+}
+
+.tileBerry {
+  background: linear-gradient(180deg, #e580eb 0%, #b545c9 100%);
+  border-color: #f4b8f7;
+  border-bottom-color: #842399;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(82, 16, 98, 0.35);
+}
+
+.tileBerry.tileActive {
+  box-shadow:
+    0 0 0 3px rgba(232, 140, 242, 0.7),
+    0 12px 24px rgba(176, 63, 198, 0.36),
+    inset 0 3px 0 rgba(255, 255, 255, 0.62);
+}
+
+.soloLayoutBox {
+  min-height: 92px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #eef8ff 0%, #e1f1ff 100%);
+  border: 2px dashed #9ccdf7;
+  color: #245482;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Zone 2: Soft Sky-Blue Filter Tray */
+.filterTray {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, #dff1ff 0%, #eaf6ff 100%);
+  border: 1.5px solid #bfe0fc;
+  box-shadow: inset 0 2px 6px rgba(64, 140, 212, 0.08);
+}
+
+.filterRowFour {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.filterRowTwo {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 12px;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fieldGroup label {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #2c5480;
+  padding-left: 6px;
+}
+
+.fieldGroup select,
+.fieldGroup input {
+  width: 100%;
+  margin: 0;
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1.5px solid #b8daf7;
+  background: #ffffff;
+  color: #1a3052;
+  font-size: 0.86rem;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(34, 102, 173, 0.08);
+  transition:
+    border-color 140ms ease,
+    box-shadow 140ms ease;
+}
+
+.fieldGroup select:focus,
+.fieldGroup input:focus {
+  outline: none;
+  border-color: #2f98f5;
+  box-shadow: 0 0 0 3px rgba(47, 152, 245, 0.22);
+}
+
+.packSelectWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.packSelectIcon {
+  position: absolute;
+  left: 12px;
+  font-size: 1rem;
+  pointer-events: none;
+}
+
+.packSelectInput {
+  padding-left: 36px !important;
+}
+
+.casualMethodPills {
+  display: inline-flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.methodPill {
+  padding: 7px 15px;
+  border-radius: 999px;
+  border: 2px solid #b9dcfa;
+  border-bottom-width: 4px;
+  background: #ffffff;
+  color: #2c527a;
+  font-size: 0.84rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 140ms ease;
+}
+
+.methodPillActive {
+  border-color: #2c96f0;
+  border-bottom-color: #186db8;
+  background: linear-gradient(180deg, #54b8ff 0%, #248ae6 100%);
+  color: #ffffff;
+  box-shadow: 0 6px 14px rgba(36, 138, 230, 0.28);
+}
+
+.helperNote {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: #395c85;
+  padding-left: 4px;
+}
+
+.relatedList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.relatedChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 1px solid #cae2f8;
+  font-size: 0.76rem;
+  color: #35547a;
+}
+
+.relatedChipBtn {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: #196bc4;
+  font-weight: 800;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* Zone 3: Wide Honey-Gold 3D CTA + Connected Pill */
+.setupFooter {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+}
+
+.createCta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 52px;
+  padding: 0 28px;
+  border-radius: 999px;
+  border: 2px solid #ffe07d;
+  border-bottom: 6px solid #c97306;
+  background: linear-gradient(180deg, #ffdf6b 0%, #f9ac2f 100%);
+  color: #4a2700;
+  font-size: 1.08rem;
+  font-weight: 900;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  box-shadow:
+    0 12px 24px rgba(242, 152, 17, 0.34),
+    inset 0 3px 0 rgba(255, 255, 255, 0.58);
+  transition:
+    transform 140ms ease,
+    box-shadow 140ms ease,
+    filter 140ms ease;
+}
+
+.createCta:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.03);
+  box-shadow:
+    0 16px 28px rgba(242, 152, 17, 0.44),
+    inset 0 3px 0 rgba(255, 255, 255, 0.68);
+}
+
+.createCta:active:not(:disabled) {
+  transform: translateY(2px);
+}
+
+.createCta:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.statusCluster {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.serverPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.serverPillOnline {
+  background: #dff9ec;
+  border: 1.5px solid #96e5be;
+  color: #0e7a52;
+}
+
+.serverPillOffline {
+  background: #fff2d1;
+  border: 1.5px solid #ffd57a;
+  color: #9a5b00;
+}
+
+.serverSubNote {
+  margin: 0;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: #546e90;
+  white-space: nowrap;
+}
+
+/* ---------- Right Column: Scalloped Pastel Invite Ticket (3x2 Tiles) ---------- */
+.inviteTicketOuter {
+  position: sticky;
+  top: 92px;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 14px 18px;
+  border-radius: 26px;
+  background: linear-gradient(180deg, #f3bdf0 0%, #d3c2ff 54%, #b9c8ff 100%);
+  box-shadow:
+    0 20px 38px rgba(96, 74, 184, 0.22),
+    inset 0 2px 0 rgba(255, 255, 255, 0.72);
+  /* Scalloped ticket top & bottom notches via CSS radial-gradient mask */
+  -webkit-mask-image:
+    radial-gradient(circle at 12px 0, transparent 6px, #000 6.5px),
+    radial-gradient(circle at 12px 100%, transparent 6px, #000 6.5px);
+  -webkit-mask-size: 24px 51%;
+  -webkit-mask-position: top, bottom;
+  -webkit-mask-repeat: repeat-x;
+  mask-image:
+    radial-gradient(circle at 12px 0, transparent 6px, #000 6.5px),
+    radial-gradient(circle at 12px 100%, transparent 6px, #000 6.5px);
+  mask-size: 24px 51%;
+  mask-position: top, bottom;
+  mask-repeat: repeat-x;
+}
+
+.inviteTicketInner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 22px 18px 20px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8f6ff 100%);
+  box-shadow:
+    0 6px 16px rgba(88, 66, 168, 0.12),
+    inset 0 1px 0 #ffffff;
+}
+
+/* Side semicircular ticket notches */
+.inviteTicketInner::before,
+.inviteTicketInner::after {
+  content: '';
+  position: absolute;
+  top: 42%;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #d8c3ff;
+  pointer-events: none;
+}
+
+.inviteTicketInner::before {
+  left: -10px;
+}
+
+.inviteTicketInner::after {
+  right: -10px;
+}
+
+.inviteHeaderTag {
+  display: inline-flex;
+  align-self: center;
+  margin-top: -8px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #efe7ff 0%, #dfd2ff 100%);
+  border: 1.5px solid #ffffff;
+  color: #5332a8;
+  font-size: 0.7rem;
+  font-weight: 900;
+  letter-spacing: 0.07em;
+  box-shadow: 0 4px 10px rgba(96, 66, 184, 0.16);
+}
+
+.inviteTitle {
+  margin: 0;
+  text-align: center;
+  font-size: 1.32rem;
+  line-height: 1.2;
+  font-weight: 900;
+  color: #1f1b42;
+}
+
+.inviteDesc {
+  margin: 0;
+  text-align: center;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: #625688;
+}
+
+.inviteForm {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.codeTilesWrap {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  padding: 2px 4px;
+}
+
+.codeOverlayInput {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: text;
+  z-index: 2;
+  margin: 0;
+}
+
+.codeTile {
+  aspect-ratio: 1 / 0.92;
+  min-height: 58px;
+  border-radius: 16px;
+  border: 2px solid #d7ddf8;
+  border-bottom: 5px solid #bcc6ee;
+  background: linear-gradient(180deg, #f3f6ff 0%, #e7ecff 100%);
+  display: grid;
+  place-items: center;
+  font-size: 1.55rem;
+  font-weight: 900;
+  color: #1f2a56;
+  box-shadow:
+    0 5px 12px rgba(72, 88, 168, 0.12),
+    inset 0 2px 0 #ffffff;
+  transition:
+    border-color 140ms ease,
+    transform 140ms ease,
+    box-shadow 140ms ease,
+    background-color 140ms ease;
+}
+
+.codeTileFilled {
+  border-color: #8b7cf6;
+  border-bottom-color: #6454d6;
+  background: linear-gradient(180deg, #ffffff 0%, #efeaff 100%);
+  color: #362080;
+}
+
+.codeTileFocused {
+  border-color: #6d4aff;
+  border-bottom-color: #4f2fd6;
+  box-shadow:
+    0 0 0 3px rgba(124, 92, 240, 0.28),
+    0 6px 14px rgba(102, 72, 224, 0.2);
+  transform: translateY(-2px);
+}
+
+.codeTilePlaceholder {
+  color: #6d7aa8;
+  opacity: 0.45;
+}
+
+.joinCta {
+  position: relative;
+  height: 48px;
+  border-radius: 999px;
+  border: 2px solid #b5c3ff;
+  border-bottom: 5px solid #5360cf;
+  background: linear-gradient(180deg, #98adff 0%, #6d7ef2 100%);
+  color: #ffffff;
+  font-size: 0.98rem;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow:
+    0 10px 20px rgba(96, 112, 232, 0.34),
+    inset 0 3px 0 rgba(255, 255, 255, 0.46);
+  transition:
+    transform 140ms ease,
+    box-shadow 140ms ease,
+    filter 140ms ease;
+}
+
+.joinCta:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.04);
+  box-shadow:
+    0 14px 24px rgba(96, 112, 232, 0.42),
+    inset 0 3px 0 rgba(255, 255, 255, 0.56);
+}
+
+.joinCta:active:not(:disabled) {
+  transform: translateY(2px);
+}
+
+.joinCta:disabled {
+  opacity: 0.58;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ---------- Animations ---------- */
+@keyframes mascotBob {
+  0%,
+  100% {
+    transform: translateY(-52%);
+  }
+  50% {
+    transform: translateY(-60%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mascotBadge {
+    animation: none;
+  }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1080px) {
+  .workspaceGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .filterRowFour {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .inviteTicketOuter {
+    position: relative;
+    top: auto;
+    max-width: 440px;
+    width: 100%;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 820px) {
+  .dualSelectorGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .dualDivider {
+    height: 1px;
+  }
+
+  .modeRow {
+    gap: 12px;
+  }
+
+  .modeCard {
+    width: 132px;
+    min-height: 112px;
+  }
+
+  .mascotBadge {
+    width: 54px;
+    height: 54px;
+  }
+}
+
+@media (max-width: 560px) {
+  .setupPanel {
+    padding: 16px 14px;
+  }
+
+  .stepRow {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .setupFooter {
+    grid-template-columns: 1fr;
+  }
+
+  .filterRowFour,
+  .filterRowTwo {
+    grid-template-columns: 1fr;
+  }
+
+  .modeRow {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .modeCard {
+    width: auto;
+    padding: 14px 8px 12px;
+  }
+
+  .modeNumber {
+    font-size: 1.85rem;
+  }
+
+  .mascotLeft,
+  .mascotRight {
+    display: none;
+  }
+}

@@ -26,6 +26,7 @@
 | Kiến trúc        | [Quyết định](architecture/decisions.md)                                 | Nguồn chính của LOCKED / PROPOSAL / OPEN.                                                 |
 | Kiến trúc        | [Contracts](architecture/contracts.md)                                  | REST, Socket.IO và dữ liệu giao tiếp.                                                     |
 | Tính năng        | [Quiz](features/quiz.md)                                                | Luật Quiz theo mode.                                                                      |
+| Tính năng        | [Giao diện Sảnh chờ Quiz](features/quiz-lobby-ui.md)                    | Kiến trúc module Variant 2B, animation bầu trời và hướng dẫn bảo trì Sảnh chờ Quiz.       |
 | Tính năng        | [Room, realtime, LAN](features/rooms-realtime-lan.md)                   | Lifecycle phòng, phân quyền slot, reconnect và LAN.                                       |
 | Tính năng        | [Kinh tế, vật phẩm](features/economy-items.md)                          | Game Score, Coins, XP, shop và item.                                                      |
 | Tính năng        | [Bộ câu hỏi](features/question-packs.md)                                | Định dạng JSON, validation và import.                                                     |

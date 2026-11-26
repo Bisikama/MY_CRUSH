@@ -1,0 +1,317 @@
+/* ============================================================================
+ * Quiz Lobby Sky — Variant 2B Polished ("Vibrant Rainbow Toybox")
+ * Bright azure sky, layered glowing pastel sun with halo rings, vibrant arched
+ * rainbow sweeping from left clouds over the cloud hero, and puffy 3D clouds.
+ * ============================================================================ */
+
+.skyBackdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    #49b6ff 0%,
+    #6ecaff 32%,
+    #a5e1ff 64%,
+    #d6f3ff 86%,
+    #eefaff 100%
+  );
+}
+
+.skyGlowOverlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(640px 420px at 84% 16%, rgba(255, 236, 140, 0.56), transparent 66%),
+    radial-gradient(540px 360px at 18% 20%, rgba(255, 255, 255, 0.34), transparent 70%),
+    radial-gradient(960px 320px at 50% 100%, rgba(255, 255, 255, 0.72), transparent 76%);
+}
+
+/* ---------- Animated Pastel Sun with Concentric Halo Rings ---------- */
+.sunCluster {
+  position: absolute;
+  top: 64px;
+  right: clamp(28px, 8vw, 130px);
+  width: clamp(148px, 15vw, 206px);
+  height: clamp(148px, 15vw, 206px);
+  display: grid;
+  place-items: center;
+}
+
+.sunHaloOuter {
+  position: absolute;
+  inset: -34%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 239, 153, 0.44) 0%,
+    rgba(255, 239, 153, 0.16) 52%,
+    rgba(255, 239, 153, 0) 74%
+  );
+  animation: sunBreathe 6.5s ease-in-out infinite;
+}
+
+.sunHaloRing {
+  position: absolute;
+  inset: -6%;
+  border-radius: 50%;
+  border: 14px solid rgba(255, 240, 156, 0.24);
+  box-shadow: 0 0 0 18px rgba(255, 242, 173, 0.14);
+  animation: sunBreathe 6.5s ease-in-out infinite reverse;
+}
+
+.sunRays {
+  position: absolute;
+  inset: -14%;
+  width: 128%;
+  height: 128%;
+  animation: sunSpin 56s linear infinite;
+  transform-origin: center;
+}
+
+.sunCore {
+  position: relative;
+  width: 52%;
+  height: 52%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 36% 32%, #fffbe0 0%, #ffe066 54%, #f9b83a 100%);
+  box-shadow:
+    0 0 36px rgba(255, 214, 79, 0.85),
+    inset 0 -8px 14px rgba(240, 146, 12, 0.28);
+  animation: sunFloat 7s ease-in-out infinite;
+}
+
+/* ---------- Vibrant Pastel Rainbow Arc (Sweeping Left -> Top Center) ---------- */
+.rainbowWrap {
+  position: absolute;
+  top: 28px;
+  left: 36%;
+  width: min(1160px, 110vw);
+  transform: translateX(-50%) rotate(-6deg);
+  opacity: 0.95;
+  filter: drop-shadow(0 10px 24px rgba(255, 255, 255, 0.5));
+  animation: rainbowPulse 9s ease-in-out infinite;
+}
+
+.rainbowSvg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.rainbowShimmer {
+  animation: rainbowGlow 7s ease-in-out infinite;
+}
+
+/* ---------- Puffy 3D Cloud Framing ---------- */
+.cloudLayer {
+  position: absolute;
+  inset: 0;
+}
+
+.cloud {
+  position: absolute;
+  will-change: transform;
+  filter: drop-shadow(0 14px 24px rgba(48, 128, 204, 0.16));
+}
+
+.cloudFarA {
+  top: 98px;
+  left: -10%;
+  width: clamp(230px, 23vw, 350px);
+  opacity: 0.84;
+  animation: cloudDriftRight 56s linear infinite;
+}
+
+.cloudFarB {
+  top: 215px;
+  left: 62%;
+  width: clamp(160px, 15vw, 230px);
+  opacity: 0.9;
+  animation: cloudDriftLeft 64s linear infinite;
+}
+
+.cloudFrameLeft {
+  top: 230px;
+  left: -6%;
+  width: clamp(290px, 28vw, 430px);
+  opacity: 0.97;
+  animation: cloudBob 12s ease-in-out infinite;
+}
+
+.cloudFrameRight {
+  top: 220px;
+  right: -7%;
+  width: clamp(300px, 29vw, 440px);
+  opacity: 0.98;
+  animation: cloudBob 14s ease-in-out infinite reverse;
+}
+
+.cloudBankBottom {
+  position: absolute;
+  left: -4%;
+  right: -4%;
+  bottom: -22px;
+  height: clamp(145px, 20vh, 225px);
+  opacity: 0.98;
+  animation: cloudBankSway 17s ease-in-out infinite;
+}
+
+/* ---------- Floating Sun Motes & Sparkles ---------- */
+.sparkle {
+  position: absolute;
+  color: #fffbe0;
+  filter: drop-shadow(0 0 8px rgba(255, 246, 173, 0.95));
+  animation: sparkleTwinkle 4.2s ease-in-out infinite;
+}
+
+.sparkle1 {
+  top: 122px;
+  left: 16%;
+  width: 18px;
+  animation-delay: 0s;
+}
+
+.sparkle2 {
+  top: 92px;
+  left: 33%;
+  width: 14px;
+  animation-delay: 1.1s;
+}
+
+.sparkle3 {
+  top: 165px;
+  right: 28%;
+  width: 22px;
+  animation-delay: 2s;
+}
+
+.sparkle4 {
+  top: 265px;
+  left: 11%;
+  width: 16px;
+  animation-delay: 0.7s;
+}
+
+.sparkle5 {
+  top: 270px;
+  right: 12%;
+  width: 17px;
+  animation-delay: 2.7s;
+}
+
+/* ---------- Motion Pause / Reduced Motion ---------- */
+.motionPaused * {
+  animation-play-state: paused !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skyBackdrop * {
+    animation: none !important;
+  }
+}
+
+@keyframes sunSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes sunBreathe {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
+
+@keyframes sunFloat {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes rainbowPulse {
+  0%,
+  100% {
+    transform: translateX(-50%) rotate(-6deg) translateY(0px);
+    opacity: 0.92;
+  }
+  50% {
+    transform: translateX(-50%) rotate(-6deg) translateY(-5px);
+    opacity: 1;
+  }
+}
+
+@keyframes rainbowGlow {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.95;
+  }
+}
+
+@keyframes cloudDriftRight {
+  0% {
+    transform: translateX(-18vw);
+  }
+  100% {
+    transform: translateX(118vw);
+  }
+}
+
+@keyframes cloudDriftLeft {
+  0% {
+    transform: translateX(22vw);
+  }
+  100% {
+    transform: translateX(-95vw);
+  }
+}
+
+@keyframes cloudBob {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(14px, -8px, 0);
+  }
+}
+
+@keyframes cloudBankSway {
+  0%,
+  100% {
+    transform: translateX(0px);
+  }
+  50% {
+    transform: translateX(18px);
+  }
+}
+
+@keyframes sparkleTwinkle {
+  0%,
+  100% {
+    transform: scale(0.72) rotate(0deg);
+    opacity: 0.38;
+  }
+  50% {
+    transform: scale(1.22) rotate(24deg);
+    opacity: 1;
+  }
+}
