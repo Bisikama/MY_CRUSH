@@ -84,8 +84,7 @@ export const viShop = {
     refreshFailedAfterPurchase:
       'Đã đổi vật phẩm, nhưng chưa cập nhật được số dư và kho đồ. Hãy tải lại trang.',
     purchaseFailed: 'Không mua được',
-    equipSuccess:
-      'Đã lưu vật phẩm vào loadout. Phần hiển thị skin trong trận còn ở backlog.',
+    equipSuccess: 'Đã lưu vật phẩm vào loadout. Phần hiển thị skin trong trận còn ở backlog.',
     equipFailed: 'Không trang bị được',
   },
 } as const;

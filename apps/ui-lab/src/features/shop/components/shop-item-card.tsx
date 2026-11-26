@@ -84,11 +84,7 @@ export function ShopItemCard({
           <button
             type="button"
             className={`${styles.squishBtn} ${
-              equipped
-                ? styles.squishMint
-                : owned
-                  ? styles.squishOutline
-                  : styles.squishPurple
+              equipped ? styles.squishMint : owned ? styles.squishOutline : styles.squishPurple
             }`}
             disabled={busy || equipped || (!owned && balance < item.price)}
             onClick={(event) => {

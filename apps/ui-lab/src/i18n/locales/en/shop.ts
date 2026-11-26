@@ -69,7 +69,8 @@ export const enShop: TranslationDictionary['shop'] = {
   fairPlay: {
     ariaLabel: 'Shop fair-play rules and sky controls',
     ruleTitle: 'DuoQuest Fair Play:',
-    ruleDesc: 'Sign in with an account to redeem Skills. All transactions are verified by the server.',
+    ruleDesc:
+      'Sign in with an account to redeem Skills. All transactions are verified by the server.',
     spawnMeteor: 'Launch meteors',
     motionOn: 'Clouds & stars: On',
     motionOff: 'Clouds & stars: Off',

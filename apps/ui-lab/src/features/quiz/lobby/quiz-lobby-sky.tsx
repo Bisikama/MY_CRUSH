@@ -15,7 +15,14 @@ function CloudShape({ className }: { className?: string }) {
       aria-hidden="true"
     >
       <defs>
-        <linearGradient id="lobbyPuffyCloudGrad" x1="170" y1="8" x2="170" y2="138" gradientUnits="userSpaceOnUse">
+        <linearGradient
+          id="lobbyPuffyCloudGrad"
+          x1="170"
+          y1="8"
+          x2="170"
+          y2="138"
+          gradientUnits="userSpaceOnUse"
+        >
           <stop offset="0%" stopColor="#FFFFFF" />
           <stop offset="72%" stopColor="#F5FAFF" />
           <stop offset="100%" stopColor="#D7EEFF" />
@@ -68,12 +75,42 @@ export function QuizLobbySky({ motionEnabled }: QuizLobbySkyProps) {
             </mask>
           </defs>
           <g mask="url(#rainbowSoftMask)" strokeLinecap="round" fill="none">
-            <path d="M70 435 A530 390 0 0 1 1130 435" stroke="#FF7AA2" strokeWidth="26" strokeOpacity="0.88" />
-            <path d="M96 435 A504 366 0 0 1 1104 435" stroke="#FFAC6B" strokeWidth="26" strokeOpacity="0.9" />
-            <path d="M122 435 A478 342 0 0 1 1078 435" stroke="#FFE46B" strokeWidth="26" strokeOpacity="0.92" />
-            <path d="M148 435 A452 318 0 0 1 1052 435" stroke="#7AE8B4" strokeWidth="26" strokeOpacity="0.9" />
-            <path d="M174 435 A426 294 0 0 1 1026 435" stroke="#70D0FF" strokeWidth="26" strokeOpacity="0.9" />
-            <path d="M200 435 A400 270 0 0 1 1000 435" stroke="#BA9EFF" strokeWidth="26" strokeOpacity="0.88" />
+            <path
+              d="M70 435 A530 390 0 0 1 1130 435"
+              stroke="#FF7AA2"
+              strokeWidth="26"
+              strokeOpacity="0.88"
+            />
+            <path
+              d="M96 435 A504 366 0 0 1 1104 435"
+              stroke="#FFAC6B"
+              strokeWidth="26"
+              strokeOpacity="0.9"
+            />
+            <path
+              d="M122 435 A478 342 0 0 1 1078 435"
+              stroke="#FFE46B"
+              strokeWidth="26"
+              strokeOpacity="0.92"
+            />
+            <path
+              d="M148 435 A452 318 0 0 1 1052 435"
+              stroke="#7AE8B4"
+              strokeWidth="26"
+              strokeOpacity="0.9"
+            />
+            <path
+              d="M174 435 A426 294 0 0 1 1026 435"
+              stroke="#70D0FF"
+              strokeWidth="26"
+              strokeOpacity="0.9"
+            />
+            <path
+              d="M200 435 A400 270 0 0 1 1000 435"
+              stroke="#BA9EFF"
+              strokeWidth="26"
+              strokeOpacity="0.88"
+            />
             <path
               className={styles.rainbowShimmer}
               d="M122 435 A478 342 0 0 1 1078 435"

@@ -55,10 +55,9 @@ describe('UI Lab i18n architecture', () => {
 
       for (const [key, value] of entries) {
         expect(value.trim().length, `Empty translation for ${locale}:${key}`).toBeGreaterThan(0);
-        expect(
-          extractPlaceholders(value),
-          `Placeholder mismatch for ${locale}:${key}`,
-        ).toEqual(extractPlaceholders(baseMap.get(key)!));
+        expect(extractPlaceholders(value), `Placeholder mismatch for ${locale}:${key}`).toEqual(
+          extractPlaceholders(baseMap.get(key)!),
+        );
       }
     }
   });
@@ -67,9 +66,7 @@ describe('UI Lab i18n architecture', () => {
     expect(interpolate('Xin chào {name} ({count})', { name: 'Minh', count: 3 })).toBe(
       'Xin chào Minh (3)',
     );
-    expect(interpolate('Code {code} {missing}', { code: 'LAB222' })).toBe(
-      'Code LAB222 {missing}',
-    );
+    expect(interpolate('Code {code} {missing}', { code: 'LAB222' })).toBe('Code LAB222 {missing}');
   });
 
   it('translates keys for vi and en using both translate() and createTranslator()', () => {

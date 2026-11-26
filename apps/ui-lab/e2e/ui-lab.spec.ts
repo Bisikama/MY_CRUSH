@@ -687,7 +687,7 @@ test('customizes arena theme and 3 audio channels from profile', async ({ page }
   await expect(page.getByRole('heading', { name: 'Chủ đề & Âm thanh phòng chơi' })).toBeVisible();
 
   const christmasBtn = page.getByRole('button', { name: 'Chọn chủ đề Giáng sinh ấm áp' });
-  const tropicalBtn = page.getByRole('button', { name: 'Chọn chủ đề Rừng rậm nhiệt đới' });
+  const tropicalBtn = page.getByRole('button', { name: 'Chọn chủ đề Nhiệt đới rực rỡ' });
   await expect(christmasBtn).toHaveAttribute('aria-pressed', 'false');
   await tropicalBtn.click();
   await expect(tropicalBtn).toHaveAttribute('aria-pressed', 'true');
@@ -698,7 +698,7 @@ test('customizes arena theme and 3 audio channels from profile', async ({ page }
   const channels = page.getByRole('group', { name: 'Cài đặt 3 kênh âm thanh' });
   const lobbyToggle = channels.getByRole('checkbox', { name: /Nhạc nền sảnh chờ/ });
   const matchToggle = channels.getByRole('checkbox', { name: /Nhạc nền trong trận/ });
-  const skillToggle = channels.getByRole('checkbox', { name: /Âm thanh hiệu ứng Skill/ });
+  const skillToggle = channels.getByRole('checkbox', { name: /Âm thanh kỹ năng/ });
   await expect(lobbyToggle).toBeChecked();
   await expect(matchToggle).toBeChecked();
   await expect(skillToggle).toBeChecked();

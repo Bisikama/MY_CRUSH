@@ -81,9 +81,27 @@ function StudyCapIcon() {
 function LanDevicesIcon() {
   return (
     <svg viewBox="0 0 36 30" width="34" height="28" fill="none" aria-hidden="true">
-      <rect x="3" y="6" width="18" height="13" rx="2.5" stroke="#FFFFFF" strokeWidth="2.4" fill="rgba(255,255,255,0.22)" />
+      <rect
+        x="3"
+        y="6"
+        width="18"
+        height="13"
+        rx="2.5"
+        stroke="#FFFFFF"
+        strokeWidth="2.4"
+        fill="rgba(255,255,255,0.22)"
+      />
       <path d="M9 23H15" stroke="#FFFFFF" strokeWidth="2.4" strokeLinecap="round" />
-      <rect x="24" y="10" width="9" height="14" rx="2" stroke="#FFFFFF" strokeWidth="2.2" fill="rgba(255,255,255,0.26)" />
+      <rect
+        x="24"
+        y="10"
+        width="9"
+        height="14"
+        rx="2"
+        stroke="#FFFFFF"
+        strokeWidth="2.2"
+        fill="rgba(255,255,255,0.26)"
+      />
       <path d="M24 6C26 4 29 4 31 6" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round" />
     </svg>
   );
@@ -92,7 +110,16 @@ function LanDevicesIcon() {
 function SharedScreenIcon() {
   return (
     <svg viewBox="0 0 34 28" width="30" height="26" fill="none" aria-hidden="true">
-      <rect x="2" y="3" width="30" height="19" rx="3.5" stroke="#FFFFFF" strokeWidth="2.4" fill="rgba(255,255,255,0.2)" />
+      <rect
+        x="2"
+        y="3"
+        width="30"
+        height="19"
+        rx="3.5"
+        stroke="#FFFFFF"
+        strokeWidth="2.4"
+        fill="rgba(255,255,255,0.2)"
+      />
       <path d="M17 4V21" stroke="#FFFFFF" strokeWidth="2" strokeDasharray="3 2.5" />
       <path d="M12 26H22" stroke="#FFFFFF" strokeWidth="2.4" strokeLinecap="round" />
     </svg>
@@ -290,9 +317,7 @@ export function QuizMatchSetupCard({
                 id="casual-method"
                 className="sr-only"
                 value={selectionType}
-                onChange={(event) =>
-                  setSelectionType(event.target.value as QuizSelection['type'])
-                }
+                onChange={(event) => setSelectionType(event.target.value as QuizSelection['type'])}
               >
                 <option value="CASUAL_RANDOM">{t('quiz.setup.casualRandom')}</option>
                 <option value="CASUAL_CUSTOM">{t('quiz.setup.casualCustom')}</option>

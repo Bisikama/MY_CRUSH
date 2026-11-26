@@ -6,8 +6,7 @@ export const viAuth = {
   illustrations: {
     loginAlt: 'Thỏ tím và chim xanh bằng đất sét 3D mở cánh cửa nhỏ phát sáng',
     loginCaption: 'Chơi tiếp thôi!',
-    emailAlt:
-      'Minh họa 3D đất sét thỏ tím tìm chìa khóa dưới đệm mây cùng chim xanh cầm phong bì',
+    emailAlt: 'Minh họa 3D đất sét thỏ tím tìm chìa khóa dưới đệm mây cùng chim xanh cầm phong bì',
     emailCaption: 'Tìm lại chìa khóa',
     otpAlt: 'Chim xanh đưa thư xác minh ma thuật cho thỏ tím DuoQuest',
     otpCaption: 'Thư đến rồi!',

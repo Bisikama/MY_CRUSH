@@ -1,8 +1,7 @@
 export const viHub = {
   eyebrow: 'DuoQuest Hub • Pastel Playfield',
   welcomeTitle: 'Hôm nay, bạn muốn chơi gì?',
-  welcomeSubtitle:
-    'Chọn một trò chơi rồi rủ người ấy vào. Biết đâu hai bạn lại tâm đầu ý hợp!',
+  welcomeSubtitle: 'Chọn một trò chơi rồi rủ người ấy vào. Biết đâu hai bạn lại tâm đầu ý hợp!',
   heroAlt: 'Minh họa đất sét 3D Thỏ Lavender và Chim Xanh trước cánh cửa gỗ nhỏ',
   stickerWithName: '{nickname} & Người ấy',
   stickerDefault: 'Dành cho hai người',
@@ -16,8 +15,7 @@ export const viHub = {
     modesTag: 'Solo · Duel · Co-op',
     layoutTag: 'Chung màn hình / LAN',
     title: 'Quiz Battle',
-    description:
-      'Tự thử sức, so tài với người ấy hoặc xem hai bạn ăn ý đến đâu khi cùng vượt ải.',
+    description: 'Tự thử sức, so tài với người ấy hoặc xem hai bạn ăn ý đến đâu khi cùng vượt ải.',
     cta: 'Vào game',
   },
   futureCard: {

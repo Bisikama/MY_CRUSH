@@ -56,7 +56,6 @@ export const ShopSkyCanvas = forwardRef<ShopSkyCanvasHandle, ShopSkyCanvasProps>
         engineRef.current = null;
       };
       // Initialize engine once; subsequent motionEnabled changes sync via the effect below.
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {

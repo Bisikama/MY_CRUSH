@@ -33,7 +33,8 @@ export function translate(
 }
 
 export function createTranslator(locale: LocaleCode) {
-  return (key: TranslationKey, params?: TranslationParams): string => translate(locale, key, params);
+  return (key: TranslationKey, params?: TranslationParams): string =>
+    translate(locale, key, params);
 }
 
 export function formatLocaleNumber(

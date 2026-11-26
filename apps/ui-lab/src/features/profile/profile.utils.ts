@@ -16,7 +16,11 @@ export function getProfileModeDescriptor(
     case 'DUEL':
       return { title: 'Duel', tag: translate(locale, 'profile.history.modeDuelTag'), tone: 'duel' };
     case 'COOP':
-      return { title: 'Co-op', tag: translate(locale, 'profile.history.modeCoopTag'), tone: 'coop' };
+      return {
+        title: 'Co-op',
+        tag: translate(locale, 'profile.history.modeCoopTag'),
+        tone: 'coop',
+      };
     default:
       return { title: mode, tag: 'Quiz Battle', tone: 'solo' };
   }

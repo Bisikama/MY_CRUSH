@@ -11,7 +11,8 @@ export const enQuiz: TranslationDictionary['quiz'] = {
     cardTag: 'WELCOME NEW PLAYER',
     cardTitle: 'What should we call you?',
     cardDescWithCode: 'Create a guest profile to join invited room {code}.',
-    cardDescDefault: 'Create a guest profile on this device to play Solo, Duel, Co-op and save results.',
+    cardDescDefault:
+      'Create a guest profile on this device to play Solo, Duel, Co-op and save results.',
     nicknameLabel: 'Nickname',
     nicknamePlaceholder: 'e.g. Curious Cat',
     creating: 'Creating…',

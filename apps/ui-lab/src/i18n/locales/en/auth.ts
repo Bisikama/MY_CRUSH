@@ -8,7 +8,8 @@ export const enAuth: TranslationDictionary['auth'] = {
   illustrations: {
     loginAlt: '3D clay lavender rabbit and blue bird opening a glowing small door',
     loginCaption: 'Let’s keep playing!',
-    emailAlt: '3D clay lavender rabbit looking for a key under clouds with blue bird holding a letter',
+    emailAlt:
+      '3D clay lavender rabbit looking for a key under clouds with blue bird holding a letter',
     emailCaption: 'Find your key',
     otpAlt: 'Blue bird delivering a magical verification letter to DuoQuest lavender rabbit',
     otpCaption: 'Mail has arrived!',

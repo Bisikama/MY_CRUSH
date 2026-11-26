@@ -289,7 +289,9 @@ export function QuizArena({
           </div>
           {game.reveal ? (
             <div className="explanation" role="status">
-              <strong>{t('quiz.arena.revealAnswer', { optionId: game.reveal.correctOptionId })}</strong>
+              <strong>
+                {t('quiz.arena.revealAnswer', { optionId: game.reveal.correctOptionId })}
+              </strong>
               <p>{game.reveal.explanation}</p>
             </div>
           ) : answerStatus ? (

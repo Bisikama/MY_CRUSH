@@ -5,12 +5,7 @@ import { useI18n } from '../../../i18n';
 import { actionId, api, loadIdentity } from '../../../lib/client';
 import { usePlatform } from '../../../providers/platform-provider';
 import { groupShopDisplaySections } from '../shop-filter.utils';
-import type {
-  ShopCategoryFilter,
-  ShopInventory,
-  ShopItem,
-  ShopSortOrder,
-} from '../shop.types';
+import type { ShopCategoryFilter, ShopInventory, ShopItem, ShopSortOrder } from '../shop.types';
 
 export interface ShopPurchaseToastState {
   itemName: string;

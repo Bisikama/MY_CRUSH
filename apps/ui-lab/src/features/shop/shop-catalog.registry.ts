@@ -79,7 +79,8 @@ export function resolveShopItemVisual(
   locale: LocaleCode = DEFAULT_LOCALE,
 ): ShopItemVisualMeta {
   const spec =
-    SPEC_BY_ITEM_ID[item.id] ?? (item.kind === 'SKILL' ? GENERIC_SKILL_SPEC : GENERIC_COSMETIC_SPEC);
+    SPEC_BY_ITEM_ID[item.id] ??
+    (item.kind === 'SKILL' ? GENERIC_SKILL_SPEC : GENERIC_COSMETIC_SPEC);
   return {
     artKey: spec.artKey,
     tagLabel: translate(locale, spec.tagKey),

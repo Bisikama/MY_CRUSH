@@ -20,9 +20,23 @@ function LavenderBunnyMascot() {
         </radialGradient>
       </defs>
       {/* Ears */}
-      <ellipse cx="29" cy="21" rx="8" ry="18" transform="rotate(-12 29 21)" fill="url(#bunnyBodyGrad)" />
+      <ellipse
+        cx="29"
+        cy="21"
+        rx="8"
+        ry="18"
+        transform="rotate(-12 29 21)"
+        fill="url(#bunnyBodyGrad)"
+      />
       <ellipse cx="29" cy="22" rx="4" ry="11" transform="rotate(-12 29 22)" fill="#F9B8DA" />
-      <ellipse cx="50" cy="21" rx="8" ry="18" transform="rotate(10 50 21)" fill="url(#bunnyBodyGrad)" />
+      <ellipse
+        cx="50"
+        cy="21"
+        rx="8"
+        ry="18"
+        transform="rotate(10 50 21)"
+        fill="url(#bunnyBodyGrad)"
+      />
       <ellipse cx="50" cy="22" rx="4" ry="11" transform="rotate(10 50 22)" fill="#F9B8DA" />
       {/* Head */}
       <circle cx="40" cy="49" r="23" fill="url(#bunnyBodyGrad)" />
@@ -36,7 +50,12 @@ function LavenderBunnyMascot() {
       <circle cx="47" cy="46.8" r="1.1" fill="#FFFFFF" />
       {/* Nose & Smile */}
       <ellipse cx="40" cy="52" rx="2.4" ry="1.7" fill="#FF79B0" />
-      <path d="M36.5 55.5C38 57.3 42 57.3 43.5 55.5" stroke="#4D2E72" strokeWidth="2" strokeLinecap="round" />
+      <path
+        d="M36.5 55.5C38 57.3 42 57.3 43.5 55.5"
+        stroke="#4D2E72"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
@@ -74,11 +93,7 @@ function BlueBirdMascot() {
 }
 
 /** Puffy cloud-shaped title flanked by 3D pastel mascots (Variant 2B Polished). */
-export function QuizLobbyHero({
-  nickname,
-  motionEnabled,
-  onToggleMotion,
-}: QuizLobbyHeroProps) {
+export function QuizLobbyHero({ nickname, motionEnabled, onToggleMotion }: QuizLobbyHeroProps) {
   const { localeMeta, t } = useI18n();
 
   return (
@@ -99,9 +114,7 @@ export function QuizLobbyHero({
           onClick={onToggleMotion}
         >
           <span aria-hidden="true">{motionEnabled ? '🌈' : '☁'}</span>
-          <span>
-            {motionEnabled ? t('quiz.setup.skyMotionOn') : t('quiz.setup.skyMotionOff')}
-          </span>
+          <span>{motionEnabled ? t('quiz.setup.skyMotionOn') : t('quiz.setup.skyMotionOff')}</span>
         </button>
       </div>
 

@@ -61,7 +61,10 @@ export function QuizInviteTicket({
               onBlur={() => setFocused(false)}
               onChange={(event) =>
                 onJoinCodeChange(
-                  event.target.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 6),
+                  event.target.value
+                    .replace(/[^a-zA-Z0-9]/g, '')
+                    .toUpperCase()
+                    .slice(0, 6),
                 )
               }
               maxLength={6}
