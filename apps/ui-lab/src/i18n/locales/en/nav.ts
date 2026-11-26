@@ -1,0 +1,41 @@
+import type { TranslationDictionary } from '../../types';
+
+export const enNav: TranslationDictionary['nav'] = {
+  ariaMain: 'Main navigation',
+  games: 'Games',
+  quizBattle: 'Quiz Battle',
+  packs: 'Question Packs',
+  shop: 'Shop',
+  loading: 'Loading…',
+  retrySession: 'Retry session',
+  login: 'Sign in',
+  playAsGuest: 'Play as guest',
+  coinsBalanceAria: 'Balance {balance} Coins',
+  coinsLoadingAria: 'Loading Coins balance',
+  upgradeAccount: 'Create account to save progress',
+  profileAria: '{nickname}’s profile',
+  roomAuthWarning: 'Please leave room {code} before signing in or switching identity.',
+  backToRoomCode: 'Back to room {code}',
+  closeWarningAria: 'Dismiss warning',
+  banner: {
+    regionAria: 'Active room',
+    roomCode: 'Room code: {code}',
+    closeAria: 'Dismiss active room banner',
+    liveHeadline: 'Quiz Battle match in progress',
+    liveCta: 'Return to match',
+    finishedHeadline: 'Match completed',
+    finishedCta: 'View result / Room',
+    waitingHeadline: 'You have an open room',
+    waitingCta: 'Back to room',
+  },
+  leaveDialog: {
+    title: 'Confirm leaving room {code}',
+    inProgressLead: 'A match is currently in progress.',
+    inProgressWarning:
+      'Leaving cancels the match for both players, and cancelled matches grant no rewards.',
+    stayButton: 'Stay in match',
+    leaveButton: 'Leave room',
+    leavingButton: 'Leaving room…',
+    closeAria: 'Close leave confirmation',
+  },
+};

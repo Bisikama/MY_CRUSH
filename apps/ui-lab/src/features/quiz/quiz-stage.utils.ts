@@ -5,13 +5,7 @@ import {
   type QuizView,
   type RoomView,
 } from '@duoquest/shared-types';
-
-const DIFFICULTY_LABELS = {
-  easy: 'Dễ',
-  medium: 'Trung bình',
-  hard: 'Khó',
-  mixed: 'Hỗn hợp',
-} as const;
+import { DEFAULT_LOCALE, translate, type LocaleCode } from '../../i18n';
 
 /** Resolve a player's display nickname from the room's player list. */
 export function getPlayerNickname(players: RoomView['players'], id: string | null): string {
@@ -36,12 +30,13 @@ export function getAnswerStatusText(
   mode: GameMode,
   game: QuizView | null,
   answerer: string | undefined,
+  locale: LocaleCode = DEFAULT_LOCALE,
 ): string | null {
   if (answerer && game?.answeredPlayerIds.includes(answerer)) {
-    return 'Đã khóa đáp án. Chờ người còn lại hoặc hết giờ…';
+    return translate(locale, 'quiz.arena.lockedAnswerStatus');
   }
   if (mode === 'COOP' && !answerer) {
-    return 'Cùng thảo luận — chờ đội trưởng khóa đáp án.';
+    return translate(locale, 'quiz.arena.coopDiscussStatus');
   }
   return null;
 }
@@ -49,17 +44,18 @@ export function getAnswerStatusText(
 /** Format lobby setup details (topics and difficulty) into readable labels. */
 export function formatRoomSetupSummary(
   setup: RoomView['setup'],
+  locale: LocaleCode = DEFAULT_LOCALE,
 ): { difficultyLabel: string; topicsLabel: string } | null {
   if (!setup) return null;
   const custom = setup.selection?.type === 'CASUAL_CUSTOM' ? setup.selection : null;
   const difficulty = custom?.difficulty ?? setup.filter.difficulty ?? 'mixed';
   const topicsLabel = custom
     ? custom.topics.map(({ category, topic }) => `${category} / ${topic}`).join(', ') ||
-      'Mọi chủ đề'
-    : (setup.filter.topic ?? 'Mọi đề tài');
+      translate(locale, 'quiz.lobby.allTopicsCustom')
+    : (setup.filter.topic ?? translate(locale, 'quiz.lobby.allTopicsStudy'));
 
   return {
-    difficultyLabel: DIFFICULTY_LABELS[difficulty],
+    difficultyLabel: translate(locale, `common.difficulty.${difficulty}`),
     topicsLabel,
   };
 }
@@ -88,8 +84,19 @@ export function getSkillButtonState(params: {
   answerer: string | undefined;
   canUseSkills: boolean;
   serverTime: number;
+  locale?: LocaleCode;
 }): { disabled: boolean; usage: string } {
-  const { skill, isSupport, slot, game, mode, answerer, canUseSkills, serverTime } = params;
+  const {
+    skill,
+    isSupport,
+    slot,
+    game,
+    mode,
+    answerer,
+    canUseSkills,
+    serverTime,
+    locale = DEFAULT_LOCALE,
+  } = params;
   const free = slot.free.includes(skill);
   const stock = slot.stock[skill] ?? 0;
 
@@ -119,12 +126,12 @@ export function getSkillButtonState(params: {
 
   const usage =
     game.phase === 'REVEAL'
-      ? 'Chờ câu sau'
+      ? translate(locale, 'quiz.arena.usageWaitNext')
       : skill === 'HINT' && unavailable
-        ? 'Hết gợi ý'
+        ? translate(locale, 'quiz.arena.usageOutOfHints')
         : free
-          ? 'Miễn phí'
-          : `${stock} trong kho`;
+          ? translate(locale, 'quiz.arena.usageFree')
+          : translate(locale, 'quiz.arena.usageInStock', { count: stock });
 
   return { disabled, usage };
 }

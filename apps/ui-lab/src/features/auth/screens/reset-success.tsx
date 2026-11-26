@@ -1,8 +1,10 @@
 'use client';
 
 import Link from 'next/link';
+import { useI18n } from '../../../i18n';
 
 export function ResetSuccess() {
+  const { t } = useI18n();
   return (
     <div className="auth-screen-enter auth-success-box">
       <div className="auth-success-badge-wrap">
@@ -25,11 +27,11 @@ export function ResetSuccess() {
         </span>
       </div>
 
-      <h1 className="auth-title">Đã đổi mật khẩu!</h1>
-      <p className="auth-success-desc">Mật khẩu đã được đặt lại. Đăng nhập để chơi tiếp.</p>
+      <h1 className="auth-title">{t('auth.resetSuccess.title')}</h1>
+      <p className="auth-success-desc">{t('auth.resetSuccess.description')}</p>
 
       <Link href="/login" className="auth-submit-btn auth-btn-squish auth-success-cta">
-        <span>Đăng nhập</span>
+        <span>{t('auth.resetSuccess.cta')}</span>
       </Link>
     </div>
   );

@@ -1,0 +1,21 @@
+export const viPacks = {
+  eyebrow: 'THƯ VIỆN CỦA BẠN',
+  titleLine1: 'Mang câu hỏi',
+  titleLine2Prefix: 'của bạn ',
+  titleLine2Em: 'vào cuộc chơi.',
+  lead: 'Dán bộ đề JSON schemaVersion 1, kiểm tra rồi duyệt nội dung trước khi lưu.',
+  jsonLabel: 'Nội dung JSON',
+  validateButton: 'Kiểm tra & xem trước',
+  guestRequiredError: 'Hãy tạo hồ sơ khách tại trang Chơi trước.',
+  invalidJsonError: 'JSON không hợp lệ',
+  savedMessage: 'Đã lưu phiên bản bộ đề. Bạn có thể chọn bộ đề này khi tạo phòng.',
+  saveFailedError: 'Không thể lưu',
+  previewSummary: '{count} câu · {language} · {category} · {knowledgeType}',
+  relatedKnowledgeTitle: 'Kiến thức bổ sung',
+  answerPrefix: 'Đáp án {optionId}:',
+  questionMeta: '{topic} · {difficulty} · {hintsCount} gợi ý',
+  hintsRecommendation: 'Chuẩn soạn đề mới khuyến nghị 3–5 gợi ý.',
+  confirmNote:
+    'Xác nhận bạn đã kiểm tra nội dung. Lưu sẽ tạo phiên bản mới; các trận đang chơi giữ snapshot cũ.',
+  saveButton: 'Xác nhận lưu bộ đề',
+} as const;

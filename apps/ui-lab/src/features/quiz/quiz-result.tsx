@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { QuizView, RoomView } from '@duoquest/shared-types';
+import { useI18n } from '../../i18n';
 import { Button, Card } from '../../ui';
 import { getPlayerNickname } from './quiz-stage.utils';
 
@@ -21,36 +22,39 @@ export function QuizResult({
   identityPlayerId,
   onRematch,
 }: Props) {
+  const { t } = useI18n();
   const playerName = (id: string | null) => getPlayerNickname(activeRoom.players, id);
 
   const headline =
     game.result?.outcome === 'FAILED'
-      ? 'Thử lại cùng nhau nhé!'
+      ? t('quiz.result.headlineFailed')
       : game.result?.outcome === 'DRAW'
-        ? 'Một trận hòa cân sức!'
+        ? t('quiz.result.headlineDraw')
         : activeRoom.mode === 'SOLO'
-          ? 'Thêm một hành trình mới!'
+          ? t('quiz.result.headlineSolo')
           : activeRoom.mode === 'COOP'
-            ? 'Hai bạn ăn ý thật đấy!'
-            : `${game.result?.winnerIds.map(playerName).join(', ')} chiến thắng!`;
+            ? t('quiz.result.headlineCoop')
+            : t('quiz.result.headlineWinner', {
+                winners: (game.result?.winnerIds ?? []).map(playerName).join(', '),
+              });
 
   return (
     <Card className="result">
-      <span className="tag">HOÀN THÀNH VÁN CHƠI</span>
+      <span className="tag">{t('quiz.result.tag')}</span>
       <div className="result-star">✦</div>
       <h1>{headline}</h1>
-      <p>Lịch sử và phần thưởng trong trận chơi thử chỉ có hiệu lực trong UI Lab.</p>
+      <p>{t('quiz.result.labNote')}</p>
       <div className="actions">
         <Button
           disabled={busy || !connected || activeRoom.rematchVotes.includes(identityPlayerId)}
           onClick={() => void onRematch()}
         >
           {activeRoom.rematchVotes.includes(identityPlayerId)
-            ? 'Đang chờ bạn đồng ý…'
-            : 'Chơi thêm một ván →'}
+            ? t('quiz.result.waitingRematch')
+            : t('quiz.result.playAgain')}
         </Button>
         <Button variant="outline" asChild>
-          <Link href="/profile">Xem lịch sử</Link>
+          <Link href="/profile">{t('quiz.result.viewHistory')}</Link>
         </Button>
       </div>
     </Card>

@@ -2,12 +2,14 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import { useI18n } from '../i18n';
 import { demoCode, demoEmail, demoPassword } from '../mock/data';
 import { labScenes, type LabScene } from '../mock/match';
 import { usePlatform } from '../providers/platform-provider';
 import styles from './lab-controls.module.css';
 
 export function LabControls() {
+  const { t } = useI18n();
   const [scene, setScene] = useState<LabScene>('lobby');
   const {
     room,
@@ -38,9 +40,9 @@ export function LabControls() {
       ref={panel}
       className={matchFocused ? `${styles.panel} ${styles.inMatch}` : styles.panel}
     >
-      <summary>UI Lab</summary>
+      <summary>{t('lab.summary')}</summary>
       <div className={styles.controls}>
-        <label htmlFor="lab-scene">Cảnh thử</label>
+        <label htmlFor="lab-scene">{t('lab.sceneLabel')}</label>
         <select
           id="lab-scene"
           value={scene}
@@ -54,21 +56,21 @@ export function LabControls() {
         </select>
         <div className={styles.row}>
           <button type="button" onClick={() => openScene(scene)}>
-            Mở cảnh
+            {t('lab.openScene')}
           </button>
           <button
             type="button"
             disabled={!lastScene}
             onClick={() => lastScene && openScene(lastScene)}
           >
-            Phát lại
+            {t('lab.replay')}
           </button>
           <button type="button" onClick={() => window.location.replace('/')}>
-            Đặt lại
+            {t('lab.reset')}
           </button>
         </div>
         {canSwitch && (
-          <div className={styles.row} role="group" aria-label="Góc nhìn LAN">
+          <div className={styles.row} role="group" aria-label={t('lab.lanPerspectiveAria')}>
             <button
               type="button"
               aria-pressed={perspective === 0}
@@ -89,13 +91,13 @@ export function LabControls() {
         )}
         {room && (
           <button type="button" disabled={previewPending} onClick={toggleConnection}>
-            {connected ? 'Giả lập mất kết nối' : 'Kết nối lại'}
+            {connected ? t('lab.disconnect') : t('lab.reconnect')}
           </button>
         )}
         <p>
-          <Link href="/login">Tài khoản mẫu mặc định</Link> {demoEmail} · {demoPassword}
+          <Link href="/login">{t('lab.demoAccountLink')}</Link> {demoEmail} · {demoPassword}
           <br />
-          Mã xác minh {demoCode}. Chỉ dùng thông tin thử.
+          {t('lab.demoCodeNote', { code: demoCode })}
         </p>
       </div>
     </details>

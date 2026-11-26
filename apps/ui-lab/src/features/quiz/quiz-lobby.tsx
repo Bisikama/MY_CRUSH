@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
-import { QUIZ_SKILLS, type QuizSkill, type RoomView } from '@duoquest/shared-types';
+import type { QuizSkill, RoomView } from '@duoquest/shared-types';
+import { useI18n } from '../../i18n';
 import { Button, Card } from '../../ui';
 import { formatRoomSetupSummary } from './quiz-stage.utils';
 import type { QuizThemeDefinition } from './themes/quiz-theme-registry';
@@ -24,6 +25,7 @@ export function QuizRoomOverview({
   onCopy,
   onLeave,
 }: LobbyHeaderProps) {
+  const { localeMeta, t } = useI18n();
   const game = activeRoom.game;
 
   return (
@@ -32,10 +34,12 @@ export function QuizRoomOverview({
         <div>
           <p className="eyebrow">
             QUIZ BATTLE / {activeRoom.mode} /{' '}
-            {activeRoom.layout === 'SHARED_SCREEN' ? 'CHUNG MÀN HÌNH' : 'LAN'}
+            {activeRoom.layout === 'SHARED_SCREEN'
+              ? t('quiz.lobby.layoutShared')
+              : t('quiz.lobby.layoutLan')}
           </p>
           <h2>
-            Phòng <span className="room-code">{activeRoom.code}</span>
+            {t('quiz.lobby.roomTitle')} <span className="room-code">{activeRoom.code}</span>
           </h2>
         </div>
         <div className="actions">
@@ -46,7 +50,7 @@ export function QuizRoomOverview({
               void onCopy();
             }}
           >
-            Sao chép lời mời
+            {t('quiz.lobby.copyInvite')}
           </Button>
           <Button
             variant="outline"
@@ -55,25 +59,31 @@ export function QuizRoomOverview({
               void onLeave();
             }}
           >
-            Rời phòng
+            {t('quiz.lobby.leaveRoom')}
           </Button>
         </div>
       </div>
       {!connected && (
         <div className="notice" role="status">
-          Mất kết nối. Đang kết nối lại và xin snapshot từ server…
+          {t('quiz.lobby.reconnecting')}
         </div>
       )}
       {notice}
       <div className="scoreboard">
         {activeRoom.players.map((player, index) => (
           <Card key={player.playerId} className={`player-card player-${index}`}>
-            <span className="avatar">{player.nickname.slice(0, 1).toLocaleUpperCase('vi')}</span>
+            <span className="avatar">
+              {player.nickname.slice(0, 1).toLocaleUpperCase(localeMeta.code)}
+            </span>
             <div>
               <strong>{player.nickname}</strong>
               <p className="small muted">
-                {player.connected ? (player.ready ? 'Sẵn sàng' : 'Đã vào phòng') : 'Mất kết nối'}
-                {game?.captainId === player.playerId ? ' · Đội trưởng' : ''}
+                {player.connected
+                  ? player.ready
+                    ? t('quiz.lobby.statusReady')
+                    : t('quiz.lobby.statusJoined')
+                  : t('quiz.lobby.statusDisconnected')}
+                {game?.captainId === player.playerId ? t('quiz.lobby.captainTag') : ''}
               </p>
             </div>
             <span className="score">{game?.scores[player.playerId] ?? 0}</span>
@@ -106,45 +116,60 @@ export function QuizLobby({
   onHome,
   onCommand,
 }: LobbyCardProps) {
+  const { locale, localeMeta, t } = useI18n();
+
   if (activeRoom.status === 'CANCELLED') {
     return (
       <Card className="empty-state">
-        <h2>Phòng đã đóng</h2>
-        <p>Trận bị hủy không nhận thưởng. Bạn có thể trở về để tạo phòng mới.</p>
-        <Button onClick={onHome}>Về sân chơi</Button>
+        <h2>{t('quiz.lobby.cancelledTitle')}</h2>
+        <p>{t('quiz.lobby.cancelledDesc')}</p>
+        <Button onClick={onHome}>{t('quiz.lobby.backToPlay')}</Button>
       </Card>
     );
   }
 
-  const setupSummary = formatRoomSetupSummary(activeRoom.setup);
+  const setupSummary = formatRoomSetupSummary(activeRoom.setup, locale);
   const controlled = activeRoom.controlledPlayerIds;
+  const localizedThemeName = t(`quiz.themes.${theme.id}.name`);
 
   return (
     <Card className="lobby">
-      <span className="tag">PHÒNG CHỜ · CHỦ ĐỀ: {theme.name.toLocaleUpperCase('vi')}</span>
-      <h1>{activeRoom.status === 'READY' ? 'Sẵn sàng khám phá?' : 'Đợi nhau một chút.'}</h1>
+      <span className="tag">
+        {t('quiz.lobby.waitingTag', {
+          theme: localizedThemeName.toLocaleUpperCase(localeMeta.code),
+        })}
+      </span>
+      <h1>
+        {activeRoom.status === 'READY' ? t('quiz.lobby.titleReady') : t('quiz.lobby.titleWaiting')}
+      </h1>
       <p>
         {activeRoom.mode === 'SOLO' || activeRoom.layout === 'SHARED_SCREEN'
-          ? 'Nhấn Ready rồi bắt đầu ván chơi.'
-          : 'Gửi mã phòng cho bạn, sau đó cả hai cùng nhấn Ready.'}
+          ? t('quiz.lobby.hintSoloOrShared')
+          : t('quiz.lobby.hintLan')}
       </p>
       {activeRoom.mode === 'DUEL' && activeRoom.layout === 'SHARED_SCREEN' && (
         <p className="hint">
-          Người chơi 1 nhấn <kbd>A</kbd>, người chơi 2 nhấn <kbd>L</kbd> để giành quyền; sau đó chọn
-          đáp án trên màn hình.
+          {t('quiz.lobby.sharedDuelHintPrefix')}
+          <kbd>A</kbd>
+          {t('quiz.lobby.sharedDuelHintMid')}
+          <kbd>L</kbd>
+          {t('quiz.lobby.sharedDuelHintSuffix')}
         </p>
       )}
       {activeRoom.setup && setupSummary && (
         <p>
           {activeRoom.setup.title} · {activeRoom.setup.category} · {setupSummary.topicsLabel} ·{' '}
-          {setupSummary.difficultyLabel} · {activeRoom.setup.questionCount} câu
+          {setupSummary.difficultyLabel} ·{' '}
+          {t('quiz.lobby.setupQuestionsCount', { count: activeRoom.setup.questionCount })}
         </p>
       )}
       <p className="small">
-        Skill: {activeSkills.map((skill) => QUIZ_SKILLS[skill].name).join(', ')}
+        {t('quiz.lobby.skillLinePrefix', {
+          skills: activeSkills.map((skill) => t(`common.skills.${skill}`)).join(', '),
+        })}
         {activeRoom.mode === 'COOP'
-          ? ' · Tối đa 3 lượt từ kho mỗi người'
-          : ' · 1 lượt miễn phí mỗi loại'}
+          ? t('quiz.lobby.skillCoopRule')
+          : t('quiz.lobby.skillStandardRule')}
       </p>
       <div className="actions">
         <Button
@@ -156,14 +181,14 @@ export function QuizLobby({
           }
           onClick={() => void onCommand('room:ready')}
         >
-          Tôi đã sẵn sàng
+          {t('quiz.lobby.readyButton')}
         </Button>
         {activeRoom.hostPlayerId === identityPlayerId && (
           <Button
             disabled={busy || !connected || activeRoom.status !== 'READY'}
             onClick={() => void onCommand('match:start')}
           >
-            Bắt đầu →
+            {t('quiz.lobby.startButton')}
           </Button>
         )}
       </div>

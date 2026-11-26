@@ -1,0 +1,31 @@
+export const viHub = {
+  eyebrow: 'DuoQuest Hub • Pastel Playfield',
+  welcomeTitle: 'Hôm nay, bạn muốn chơi gì?',
+  welcomeSubtitle:
+    'Chọn một trò chơi rồi rủ người ấy vào. Biết đâu hai bạn lại tâm đầu ý hợp!',
+  heroAlt: 'Minh họa đất sét 3D Thỏ Lavender và Chim Xanh trước cánh cửa gỗ nhỏ',
+  stickerWithName: '{nickname} & Người ấy',
+  stickerDefault: 'Dành cho hai người',
+  sectionTitle: 'Các trò chơi',
+  countBadge: '1 game có sẵn · 2 ý tưởng tiếp theo',
+  sectionHint: 'Chọn sảnh chờ để bắt đầu',
+  quizCard: {
+    imageAlt: 'Minh họa 3D bàn đấu Quiz Battle với các thẻ dấu hỏi phát sáng và nút bấm chuông',
+    playersPill: '1–2 người',
+    readyPill: 'Có sẵn',
+    modesTag: 'Solo · Duel · Co-op',
+    layoutTag: 'Chung màn hình / LAN',
+    title: 'Quiz Battle',
+    description:
+      'Tự thử sức, so tài với người ấy hoặc xem hai bạn ăn ý đến đâu khi cùng vượt ải.',
+    cta: 'Vào game',
+  },
+  futureCard: {
+    ariaLabel: 'Trò chơi tiếp theo — Đang lên ý tưởng',
+    chestAlt: 'Minh họa 3D rương bí ẩn màu pastel đang đóng kín',
+    giftAlt: 'Minh họa 3D hộp quà bí ẩn thắt nơ pastel giữa những đám mây nhỏ',
+    statusPill: 'Đang lên ý tưởng',
+    title: 'Trò chơi tiếp theo',
+    description: 'Một trải nghiệm mới đang được khám phá.',
+  },
+} as const;

@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import type { FormEvent } from 'react';
+import { useI18n } from '../../../i18n';
 import { AuthField } from '../components/auth-field';
 import { AuthFeedback, AuthStepIndicator, AuthSubmitButton } from '../components/auth-ui';
 import type { ChallengePurpose } from '../auth-api';
@@ -25,8 +26,9 @@ export function EmailStep({
   guestNickname?: string;
   onSubmit: () => void;
 }) {
+  const { t } = useI18n();
   const isReset = purpose === 'reset';
-  const title = isReset ? 'Quên mật khẩu?' : 'Tạo tài khoản';
+  const title = isReset ? t('auth.emailStep.resetTitle') : t('auth.emailStep.registerTitle');
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -42,7 +44,9 @@ export function EmailStep({
 
       {!isReset && guestNickname && (
         <div className="auth-info-banner">
-          Đăng ký sẽ giữ tiến trình của hồ sơ <strong>{guestNickname}</strong>.
+          {t('auth.emailStep.guestUpgradePrefix')}
+          <strong>{guestNickname}</strong>
+          {t('auth.emailStep.guestUpgradeSuffix')}
         </div>
       )}
 
@@ -51,34 +55,34 @@ export function EmailStep({
       <form className="auth-form" onSubmit={handleSubmit}>
         <AuthField
           id="auth-email"
-          label="Email"
+          label={t('auth.login.emailLabel')}
           type="email"
           autoComplete="email"
           maxLength={254}
-          placeholder="banthan@duoquest.vn"
+          placeholder={t('auth.login.emailPlaceholder')}
           value={email}
           onChange={(event) => onEmailChange(event.target.value)}
           required
         />
 
-        {isReset && <p className="auth-neutral-note">Nếu email đã đăng ký, bạn sẽ nhận được mã.</p>}
+        {isReset && <p className="auth-neutral-note">{t('auth.emailStep.resetNote')}</p>}
 
-        <AuthSubmitButton busy={submitting} busyLabel="Đang gửi…">
-          Gửi mã
+        <AuthSubmitButton busy={submitting} busyLabel={t('auth.emailStep.submitting')}>
+          {t('auth.emailStep.submit')}
         </AuthSubmitButton>
       </form>
 
       {emailAlreadyRegistered && (
         <p className="auth-extra-row">
           <Link href="/forgot-password" className="auth-inline-link">
-            Quên mật khẩu?
+            {t('auth.emailStep.forgotLink')}
           </Link>
         </p>
       )}
 
       <div className="auth-footer-links auth-footer-single">
         <Link href="/login" className="auth-secondary-link">
-          ← Về đăng nhập
+          {t('auth.emailStep.backToLogin')}
         </Link>
       </div>
     </div>

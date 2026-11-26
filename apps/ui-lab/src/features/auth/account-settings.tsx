@@ -4,11 +4,13 @@ import { passwordRequirementsMessage } from '@duoquest/shared-types';
 import { validatePassword } from './auth-api';
 import Link from 'next/link';
 import { useState } from 'react';
+import { useI18n } from '../../i18n';
 import { Button } from '../../ui';
 import { api, authChanged, isLocalAccountHost, type GameIdentity } from '../../lib/client';
 import { usePlatform } from '../../providers/platform-provider';
 
 export function AccountSettings({ identity }: { identity: GameIdentity }) {
+  const { t } = useI18n();
   const { currentRoom, logoutSession } = usePlatform();
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
@@ -25,7 +27,7 @@ export function AccountSettings({ identity }: { identity: GameIdentity }) {
     try {
       await task();
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Không thể hoàn thành thao tác.');
+      setMessage(error instanceof Error ? error.message : t('auth.accountSettings.actionFailed'));
     } finally {
       setBusy(false);
     }
@@ -33,16 +35,10 @@ export function AccountSettings({ identity }: { identity: GameIdentity }) {
 
   const logout = (all: boolean) => {
     if (currentRoom) {
-      setMessage(`Hãy rời phòng ${currentRoom.code} trước khi đăng xuất hoặc thoát hồ sơ.`);
+      setMessage(t('auth.accountSettings.leaveRoomBeforeLogout', { code: currentRoom.code }));
       return;
     }
-    if (
-      !account &&
-      !window.confirm(
-        'Thoát hồ sơ guest sẽ mất quyền truy cập tiến trình này trên trình duyệt. Bạn có thể tạo tài khoản để giữ tiến trình trước khi thoát.',
-      )
-    )
-      return;
+    if (!account && !window.confirm(t('auth.accountSettings.confirmExitGuest'))) return;
     void run(async () => {
       await logoutSession(all);
     });
@@ -67,7 +63,7 @@ export function AccountSettings({ identity }: { identity: GameIdentity }) {
             <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
             <path d="M7 11V7a5 5 0 0 1 10 0v4" />
           </svg>
-          Bảo mật tài khoản
+          {t('auth.accountSettings.heading')}
         </h2>
       </div>
 
@@ -102,7 +98,9 @@ export function AccountSettings({ identity }: { identity: GameIdentity }) {
                     <path d="m15.5 7.5 3 3L22 7l-3-3" />
                   </svg>
                 </span>
-                <span className="profile-security-row-label">Đổi mật khẩu</span>
+                <span className="profile-security-row-label">
+                  {t('auth.accountSettings.changePassword')}
+                </span>
               </span>
               <svg
                 aria-hidden="true"
@@ -129,19 +127,22 @@ export function AccountSettings({ identity }: { identity: GameIdentity }) {
                   event.preventDefault();
                   void run(async () => {
                     if (!validatePassword(password)) throw new Error(passwordRequirementsMessage);
-                    if (password !== confirmation) throw new Error('Hai mật khẩu chưa khớp.');
+                    if (password !== confirmation)
+                      throw new Error(t('auth.accountSettings.passwordMismatch'));
                     await api('/auth/password/change', { currentPassword, password });
                     setCurrentPassword('');
                     setPassword('');
                     setConfirmation('');
                     setShowPasswordForm(false);
                     authChanged();
-                    setMessage('Đã đổi mật khẩu và đăng xuất các phiên cũ.');
+                    setMessage(t('auth.accountSettings.passwordChanged'));
                   });
                 }}
               >
                 <div className="profile-password-field">
-                  <label htmlFor="current-password">Mật khẩu hiện tại</label>
+                  <label htmlFor="current-password">
+                    {t('auth.accountSettings.currentPasswordLabel')}
+                  </label>
                   <input
                     id="current-password"
                     type="password"
@@ -153,7 +154,7 @@ export function AccountSettings({ identity }: { identity: GameIdentity }) {
                   />
                 </div>
                 <div className="profile-password-field">
-                  <label htmlFor="new-password">Mật khẩu mới</label>
+                  <label htmlFor="new-password">{t('auth.accountSettings.newPasswordLabel')}</label>
                   <p className="profile-password-hint">{passwordRequirementsMessage}</p>
                   <input
                     id="new-password"
@@ -166,7 +167,9 @@ export function AccountSettings({ identity }: { identity: GameIdentity }) {
                   />
                 </div>
                 <div className="profile-password-field">
-                  <label htmlFor="repeat-password">Xác nhận mật khẩu mới</label>
+                  <label htmlFor="repeat-password">
+                    {t('auth.accountSettings.confirmNewPasswordLabel')}
+                  </label>
                   <input
                     id="repeat-password"
                     type="password"
@@ -179,7 +182,7 @@ export function AccountSettings({ identity }: { identity: GameIdentity }) {
                 </div>
                 <div className="profile-password-actions">
                   <Button type="submit" disabled={busy}>
-                    Lưu mật khẩu mới
+                    {t('auth.accountSettings.saveNewPassword')}
                   </Button>
                   <Button
                     type="button"
@@ -187,7 +190,7 @@ export function AccountSettings({ identity }: { identity: GameIdentity }) {
                     disabled={busy}
                     onClick={() => setShowPasswordForm(false)}
                   >
-                    Đóng
+                    {t('auth.accountSettings.cancel')}
                   </Button>
                 </div>
               </form>
@@ -217,7 +220,9 @@ export function AccountSettings({ identity }: { identity: GameIdentity }) {
                     <path d="M12 17v4" />
                   </svg>
                 </span>
-                <span className="profile-security-row-label">Đăng xuất mọi thiết bị</span>
+                <span className="profile-security-row-label">
+                  {t('auth.accountSettings.logoutAll')}
+                </span>
               </span>
               <svg
                 aria-hidden="true"
@@ -254,9 +259,11 @@ export function AccountSettings({ identity }: { identity: GameIdentity }) {
                 </svg>
               </span>
               <span className="profile-security-row-text">
-                <span className="profile-security-row-label">Tạo tài khoản để giữ tiến trình</span>
+                <span className="profile-security-row-label">
+                  {t('auth.accountSettings.upgradeBannerTitle')}
+                </span>
                 <span className="profile-security-row-sub">
-                  Giữ nguyên Coins, XP, vật phẩm và lịch sử chơi hiện tại
+                  {t('auth.accountSettings.upgradeBannerDesc')}
                 </span>
               </span>
             </span>
@@ -276,9 +283,7 @@ export function AccountSettings({ identity }: { identity: GameIdentity }) {
             </svg>
           </Link>
         ) : (
-          <div className="profile-guest-lan-note">
-            Tạo tài khoản để giữ tiến trình hiện được hỗ trợ trên localhost.
-          </div>
+          <div className="profile-guest-lan-note">{t('auth.accountSettings.upgradeLanNote')}</div>
         )}
 
         <div className="profile-security-divider">
@@ -307,7 +312,9 @@ export function AccountSettings({ identity }: { identity: GameIdentity }) {
                 </svg>
               </span>
               <span className="profile-security-row-label">
-                {account ? 'Đăng xuất' : 'Thoát hồ sơ guest'}
+                {account
+                  ? t('auth.accountSettings.logoutDevice')
+                  : t('auth.accountSettings.exitGuest')}
               </span>
             </span>
             <svg

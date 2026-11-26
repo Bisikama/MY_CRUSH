@@ -1,13 +1,13 @@
 'use client';
 
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
+import { useI18n } from '../../../i18n';
 
 export function AuthStepIndicator({ step, total = 3 }: { step: 1 | 2 | 3; total?: number }) {
+  const { t } = useI18n();
   return (
     <div className="auth-step-indicator">
-      <span className="auth-step-badge">
-        Bước {step} / {total}
-      </span>
+      <span className="auth-step-badge">{t('auth.shell.stepBadge', { step, total })}</span>
       <div className="auth-step-dots" aria-hidden="true">
         {Array.from({ length: total }, (_, idx) => (
           <span

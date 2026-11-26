@@ -565,10 +565,40 @@ test('uses mock shop, profile and imported pack without requesting remote images
 }) => {
   await login(page);
   await page.getByRole('link', { name: 'Shop', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'Tiệm Vật Phẩm Diệu Kỳ' })).toBeVisible();
   await page.getByRole('button', { name: 'Mua vật phẩm' }).click();
   await page.getByRole('button', { name: 'Trang bị', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Đang trang bị' })).toBeDisabled();
   await expect(page.getByLabel('Số dư 230 Coins')).toBeVisible();
+
+  await page.getByRole('tab', { name: 'Kỹ năng Skill' }).click();
+  await expect(page.getByRole('heading', { name: 'Kỹ năng Quiz Battle' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Khung & Trang trí' })).toHaveCount(0);
+  await page.getByPlaceholder('Tìm vật phẩm...').fill('50/50');
+  await expect(page.getByRole('heading', { name: '50/50' })).toBeVisible();
+  await page.getByRole('button', { name: 'Đổi 1 lượt' }).click();
+  await expect(page.getByLabel('Số dư 215 Coins')).toBeVisible();
+
+  await page.getByPlaceholder('Tìm vật phẩm...').fill('');
+  await page.getByRole('tab', { name: 'Sắp ra mắt' }).click();
+  await expect(page.getByRole('heading', { name: 'Biểu cảm trong trận' })).toBeVisible();
+  const motionToggle = page.getByRole('button', { name: /Mây & sao:/ });
+  await expect(motionToggle).toHaveAttribute('aria-pressed', 'true');
+  await motionToggle.click();
+  await expect(motionToggle).toHaveAttribute('aria-pressed', 'false');
+  await page.getByRole('button', { name: 'Thả sao băng' }).click();
+  await expect(motionToggle).toHaveAttribute('aria-pressed', 'true');
+
+  for (const viewport of [
+    { width: 1440, height: 900 },
+    { width: 390, height: 844 },
+  ]) {
+    await page.setViewportSize(viewport);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
+      viewport.width,
+    );
+  }
+  await page.setViewportSize({ width: 1280, height: 720 });
   await page.getByRole('link', { name: 'Bộ câu hỏi', exact: true }).click();
   const json = page.getByLabel('Nội dung JSON');
   const validate = page.getByRole('button', { name: 'Kiểm tra & xem trước' });

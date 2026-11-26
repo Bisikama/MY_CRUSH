@@ -1,12 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useI18n } from '../../i18n';
 import { quizAudioController, type AudioPreviewKind } from '../quiz/themes/quiz-audio-controller';
 import { useQuizPreferencesStore } from '../quiz/themes/quiz-preferences.store';
 import { QUIZ_THEMES, type QuizThemeDefinition } from '../quiz/themes/quiz-theme-registry';
 import styles from './quiz-theme-settings.module.css';
 
 export function QuizThemeSettings() {
+  const { t } = useI18n();
   const {
     themeId,
     lobbyBgmEnabled,
@@ -59,20 +61,24 @@ export function QuizThemeSettings() {
             <circle cx="14.5" cy="7.5" r="1" />
             <circle cx="7.5" cy="13.5" r="1" />
           </svg>
-          Chủ đề & Âm thanh phòng chơi
+          {t('profile.themeSettings.heading')}
         </h2>
-        <span className="profile-section-pill">Tùy chỉnh cá nhân</span>
+        <span className="profile-section-pill">{t('profile.themeSettings.pill')}</span>
       </div>
 
       <div className={styles.container}>
-        <p className={styles.intro}>
-          Chọn phông nền sân đấu và bộ âm thanh yêu thích của bạn. Thay đổi chỉ áp dụng cho giao
-          diện và trải nghiệm nghe nhìn trên máy của bạn, giữ nguyên bố cục và luật tính điểm.
-        </p>
+        <p className={styles.intro}>{t('profile.themeSettings.intro')}</p>
 
-        <div className={styles.themeGrid} role="group" aria-label="Danh sách chủ đề sân đấu">
+        <div
+          className={styles.themeGrid}
+          role="group"
+          aria-label={t('profile.themeSettings.themeListAria')}
+        >
           {QUIZ_THEMES.map((theme) => {
             const selected = theme.id === themeId;
+            const themeName = t(`quiz.themes.${theme.id}.name`);
+            const themeTagline = t(`quiz.themes.${theme.id}.tagline`);
+            const themeBadge = t(`quiz.themes.${theme.id}.badge`);
             return (
               <div
                 key={theme.id}
@@ -85,14 +91,16 @@ export function QuizThemeSettings() {
                     backgroundImage: theme.visuals.arenaBgImage,
                   }}
                 >
-                  <span className={styles.badge}>{theme.badge}</span>
-                  {selected && <span className={styles.activeTag}>Đang dùng</span>}
+                  <span className={styles.badge}>{themeBadge}</span>
+                  {selected && (
+                    <span className={styles.activeTag}>{t('profile.themeSettings.activeTag')}</span>
+                  )}
                 </div>
 
                 <div className={styles.cardBody}>
                   <div>
-                    <h3 className={styles.themeTitle}>{theme.name}</h3>
-                    <p className={styles.themeTagline}>{theme.tagline}</p>
+                    <h3 className={styles.themeTitle}>{themeName}</h3>
+                    <p className={styles.themeTagline}>{themeTagline}</p>
                   </div>
 
                   <div className={styles.previewRow}>
@@ -103,7 +111,9 @@ export function QuizThemeSettings() {
                       }`}
                       onClick={() => handlePreview(theme, 'lobby')}
                     >
-                      {previewing === `${theme.id}:lobby` ? 'Dừng thử' : 'Nghe nhạc sảnh'}
+                      {previewing === `${theme.id}:lobby`
+                        ? t('profile.themeSettings.stopPreview')
+                        : t('profile.themeSettings.previewLobby')}
                     </button>
                     <button
                       type="button"
@@ -112,7 +122,9 @@ export function QuizThemeSettings() {
                       }`}
                       onClick={() => handlePreview(theme, 'match')}
                     >
-                      {previewing === `${theme.id}:match` ? 'Dừng thử' : 'Nghe nhạc trận'}
+                      {previewing === `${theme.id}:match`
+                        ? t('profile.themeSettings.stopPreview')
+                        : t('profile.themeSettings.previewMatch')}
                     </button>
                     <button
                       type="button"
@@ -121,18 +133,22 @@ export function QuizThemeSettings() {
                       }`}
                       onClick={() => handlePreview(theme, 'skill')}
                     >
-                      {previewing === `${theme.id}:skill` ? 'Dừng thử' : 'Nghe âm skill'}
+                      {previewing === `${theme.id}:skill`
+                        ? t('profile.themeSettings.stopPreview')
+                        : t('profile.themeSettings.previewSkill')}
                     </button>
                   </div>
 
                   <button
                     type="button"
                     aria-pressed={selected}
-                    aria-label={`Chọn chủ đề ${theme.name}`}
+                    aria-label={t('profile.themeSettings.selectThemeAria', { name: themeName })}
                     className={`${styles.selectBtn} ${selected ? styles.selectBtnSelected : ''}`}
                     onClick={() => setThemeId(theme.id)}
                   >
-                    {selected ? 'Đang sử dụng' : 'Chọn chủ đề'}
+                    {selected
+                      ? t('profile.themeSettings.selectedButton')
+                      : t('profile.themeSettings.selectButton')}
                   </button>
                 </div>
               </div>
@@ -140,8 +156,12 @@ export function QuizThemeSettings() {
           })}
         </div>
 
-        <div className={styles.audioChannels} role="group" aria-label="Cài đặt 3 kênh âm thanh">
-          <h3 className={styles.channelHeading}>Kênh âm thanh trong phòng chơi</h3>
+        <div
+          className={styles.audioChannels}
+          role="group"
+          aria-label={t('profile.themeSettings.audioChannelsAria')}
+        >
+          <h3 className={styles.channelHeading}>{t('profile.themeSettings.audioHeading')}</h3>
           <div className={styles.channelList}>
             <label className={styles.channelItem}>
               <input
@@ -150,9 +170,11 @@ export function QuizThemeSettings() {
                 onChange={(event) => setLobbyBgmEnabled(event.target.checked)}
               />
               <span className={styles.channelText}>
-                <span className={styles.channelTitle}>Nhạc nền sảnh chờ</span>
+                <span className={styles.channelTitle}>
+                  {t('profile.themeSettings.lobbyBgmTitle')}
+                </span>
                 <span className={styles.channelDesc}>
-                  Phát nhạc dạo theo chủ đề khi đang đợi người chơi khác Sẵn sàng.
+                  {t('profile.themeSettings.lobbyBgmDesc')}
                 </span>
               </span>
             </label>
@@ -164,9 +186,11 @@ export function QuizThemeSettings() {
                 onChange={(event) => setMatchBgmEnabled(event.target.checked)}
               />
               <span className={styles.channelText}>
-                <span className={styles.channelTitle}>Nhạc nền trong trận</span>
+                <span className={styles.channelTitle}>
+                  {t('profile.themeSettings.matchBgmTitle')}
+                </span>
                 <span className={styles.channelDesc}>
-                  Phát nhạc nền xuyên suốt các câu hỏi khi trận đấu đang diễn ra.
+                  {t('profile.themeSettings.matchBgmDesc')}
                 </span>
               </span>
             </label>
@@ -178,9 +202,11 @@ export function QuizThemeSettings() {
                 onChange={(event) => setSkillSfxEnabled(event.target.checked)}
               />
               <span className={styles.channelText}>
-                <span className={styles.channelTitle}>Âm thanh hiệu ứng Skill</span>
+                <span className={styles.channelTitle}>
+                  {t('profile.themeSettings.skillSfxTitle')}
+                </span>
                 <span className={styles.channelDesc}>
-                  Phát tiếng hiệu ứng khi dùng Gợi ý, 50/50, Che câu hỏi (tiếng sét) và Làm mờ.
+                  {t('profile.themeSettings.skillSfxDesc')}
                 </span>
               </span>
             </label>

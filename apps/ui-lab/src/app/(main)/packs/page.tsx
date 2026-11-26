@@ -2,22 +2,25 @@
 import { useState } from 'react';
 import { Button, Card } from '../../../ui';
 import { questionPackSchema, type QuestionPack } from '@duoquest/shared-types';
+import { useI18n } from '../../../i18n';
 import { api, loadIdentity } from '../../../lib/client';
-import { knowledgeTypeLabels } from '../../../lib/knowledge-type';
+import { getKnowledgeTypeLabel } from '../../../lib/knowledge-type';
 import { QuestionImages } from '../../../features/quiz/question-images';
 
 export default function PacksPage() {
+  const { locale, t } = useI18n();
   const [raw, setRaw] = useState('');
   const [preview, setPreview] = useState<QuestionPack | null>(null);
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
+
   async function validate() {
     setBusy(true);
     setMessage('');
     setPreview(null);
     try {
       const identity = await loadIdentity();
-      if (!identity) throw new Error('Hãy tạo hồ sơ khách tại trang Chơi trước.');
+      if (!identity) throw new Error(t('packs.guestRequiredError'));
       const pack = questionPackSchema.parse(JSON.parse(raw));
       const data = await api<{ pack: QuestionPack; warning: string }>(
         '/question-packs/preview',
@@ -26,37 +29,38 @@ export default function PacksPage() {
       setPreview(data.pack);
       setMessage(data.warning);
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'JSON không hợp lệ');
+      setMessage(error instanceof Error ? error.message : t('packs.invalidJsonError'));
     } finally {
       setBusy(false);
     }
   }
+
   async function save() {
     if (!preview) return;
     setBusy(true);
     try {
       await api('/question-packs', preview);
-      setMessage('Đã lưu phiên bản bộ đề. Bạn có thể chọn bộ đề này khi tạo phòng.');
+      setMessage(t('packs.savedMessage'));
       setPreview(null);
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : 'Không thể lưu');
+      setMessage(error instanceof Error ? error.message : t('packs.saveFailedError'));
     } finally {
       setBusy(false);
     }
   }
+
   return (
     <div className="narrow">
-      <p className="eyebrow">THƯ VIỆN CỦA BẠN</p>
+      <p className="eyebrow">{t('packs.eyebrow')}</p>
       <h1>
-        Mang câu hỏi
+        {t('packs.titleLine1')}
         <br />
-        của bạn <em>vào cuộc chơi.</em>
+        {t('packs.titleLine2Prefix')}
+        <em>{t('packs.titleLine2Em')}</em>
       </h1>
-      <p className="lead">
-        Dán bộ đề JSON schemaVersion 1, kiểm tra rồi duyệt nội dung trước khi lưu.
-      </p>
+      <p className="lead">{t('packs.lead')}</p>
       <Card>
-        <label htmlFor="pack-json">Nội dung JSON</label>
+        <label htmlFor="pack-json">{t('packs.jsonLabel')}</label>
         <textarea
           id="pack-json"
           rows={14}
@@ -68,7 +72,7 @@ export default function PacksPage() {
           placeholder={'{ "schemaVersion": 1, "packId": "my-pack", ... }'}
         />
         <Button disabled={busy || !raw.trim()} onClick={() => void validate()}>
-          Kiểm tra & xem trước
+          {t('packs.validateButton')}
         </Button>
         {message && (
           <p className="notice" role="status">
@@ -80,12 +84,16 @@ export default function PacksPage() {
         <Card>
           <h2>{preview.title}</h2>
           <p>
-            {preview.questions.length} câu · {preview.language} · {preview.category} ·{' '}
-            {knowledgeTypeLabels[preview.knowledgeType ?? 'unclassified']}
+            {t('packs.previewSummary', {
+              count: preview.questions.length,
+              language: preview.language,
+              category: preview.category,
+              knowledgeType: getKnowledgeTypeLabel(preview.knowledgeType, locale),
+            })}
           </p>
           {!!preview.relatedKnowledge?.length && (
             <div>
-              <h3>Kiến thức bổ sung</h3>
+              <h3>{t('packs.relatedKnowledgeTitle')}</h3>
               <ul>
                 {preview.relatedKnowledge.map(({ category, topic, reason }, index) => (
                   <li key={index}>
@@ -105,12 +113,16 @@ export default function PacksPage() {
               </summary>
               <QuestionImages images={question.images} lazy />
               <p>
-                Đáp án {question.correctOptionId}:{' '}
+                {t('packs.answerPrefix', { optionId: question.correctOptionId })}{' '}
                 {question.options.find((o) => o.id === question.correctOptionId)?.text}
               </p>
               <p>{question.explanation}</p>
               <p>
-                {question.topic} · {question.difficulty} · {question.hints.length} gợi ý
+                {t('packs.questionMeta', {
+                  topic: question.topic,
+                  difficulty: question.difficulty,
+                  hintsCount: question.hints.length,
+                })}
               </p>
               {!!question.hints.length && (
                 <ol>
@@ -119,15 +131,12 @@ export default function PacksPage() {
                   ))}
                 </ol>
               )}
-              {question.hints.length < 3 && <p>Chuẩn soạn đề mới khuyến nghị 3–5 gợi ý.</p>}
+              {question.hints.length < 3 && <p>{t('packs.hintsRecommendation')}</p>}
             </details>
           ))}
-          <p className="small muted">
-            Xác nhận bạn đã kiểm tra nội dung. Lưu sẽ tạo phiên bản mới; các trận đang chơi giữ
-            snapshot cũ.
-          </p>
+          <p className="small muted">{t('packs.confirmNote')}</p>
           <Button disabled={busy} onClick={() => void save()}>
-            Xác nhận lưu bộ đề
+            {t('packs.saveButton')}
           </Button>
         </Card>
       )}

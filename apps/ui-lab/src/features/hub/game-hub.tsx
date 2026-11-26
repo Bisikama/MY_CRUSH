@@ -1,9 +1,11 @@
 'use client';
 
 import Link from 'next/link';
+import { useI18n } from '../../i18n';
 import { usePlatform } from '../../providers/platform-provider';
 
 export function GameHub() {
+  const { t } = useI18n();
   const { identity } = usePlatform();
 
   return (
@@ -17,21 +19,19 @@ export function GameHub() {
           <div className="hub-welcome-copy">
             <div className="hub-eyebrow-pill">
               <span aria-hidden="true">✦</span>
-              <span>DuoQuest Hub • Pastel Playfield</span>
+              <span>{t('hub.eyebrow')}</span>
             </div>
             <h1 id="hub-welcome-heading" className="hub-welcome-title">
-              Hôm nay, bạn muốn chơi gì?
+              {t('hub.welcomeTitle')}
             </h1>
-            <p className="hub-welcome-subtitle">
-              Chọn một trò chơi rồi rủ người ấy vào. Biết đâu hai bạn lại tâm đầu ý hợp!
-            </p>
+            <p className="hub-welcome-subtitle">{t('hub.welcomeSubtitle')}</p>
           </div>
 
           <div className="hub-welcome-art-wrap">
             <div className="hub-welcome-art-frame">
               <img
                 src="/images/hub/hero-mascots.jpg"
-                alt="Minh họa đất sét 3D Thỏ Lavender và Chim Xanh trước cánh cửa gỗ nhỏ"
+                alt={t('hub.heroAlt')}
                 className="hub-welcome-art-img"
               />
             </div>
@@ -39,7 +39,11 @@ export function GameHub() {
               <span className="hub-sticker-star" aria-hidden="true">
                 ★
               </span>
-              <span>{identity ? `${identity.nickname} & Người ấy` : 'Dành cho hai người'}</span>
+              <span>
+                {identity
+                  ? t('hub.stickerWithName', { nickname: identity.nickname })
+                  : t('hub.stickerDefault')}
+              </span>
             </div>
           </div>
         </div>
@@ -50,11 +54,11 @@ export function GameHub() {
         <div className="hub-section-header">
           <div className="hub-section-title-group">
             <h2 id="hub-games-heading" className="hub-section-title">
-              Các trò chơi
+              {t('hub.sectionTitle')}
             </h2>
-            <span className="hub-count-badge">1 game có sẵn · 2 ý tưởng tiếp theo</span>
+            <span className="hub-count-badge">{t('hub.countBadge')}</span>
           </div>
-          <span className="hub-section-hint">Chọn sảnh chờ để bắt đầu</span>
+          <span className="hub-section-hint">{t('hub.sectionHint')}</span>
         </div>
 
         <div className="hub-cards-grid">
@@ -63,31 +67,33 @@ export function GameHub() {
             <div className="hub-card-media">
               <img
                 src="/images/hub/quiz-battle.jpg"
-                alt="Minh họa 3D bàn đấu Quiz Battle với các thẻ dấu hỏi phát sáng và nút bấm chuông"
+                alt={t('hub.quizCard.imageAlt')}
                 className="hub-card-img"
               />
               <div className="hub-card-top-left">
-                <span className="hub-media-pill hub-media-pill-players">1–2 người</span>
+                <span className="hub-media-pill hub-media-pill-players">
+                  {t('hub.quizCard.playersPill')}
+                </span>
               </div>
               <div className="hub-card-top-right">
-                <span className="hub-media-pill hub-media-pill-ready">Có sẵn</span>
+                <span className="hub-media-pill hub-media-pill-ready">
+                  {t('hub.quizCard.readyPill')}
+                </span>
               </div>
             </div>
 
             <div className="hub-card-body">
               <div>
                 <div className="hub-card-tags">
-                  <span className="hub-tag-chip">Solo · Duel · Co-op</span>
-                  <span className="hub-tag-chip">Chung màn hình / LAN</span>
+                  <span className="hub-tag-chip">{t('hub.quizCard.modesTag')}</span>
+                  <span className="hub-tag-chip">{t('hub.quizCard.layoutTag')}</span>
                 </div>
-                <h3 className="hub-card-title">Quiz Battle</h3>
-                <p className="hub-card-desc">
-                  Tự thử sức, so tài với người ấy hoặc xem hai bạn ăn ý đến đâu khi cùng vượt ải.
-                </p>
+                <h3 className="hub-card-title">{t('hub.quizCard.title')}</h3>
+                <p className="hub-card-desc">{t('hub.quizCard.description')}</p>
               </div>
 
               <Link href="/play" className="hub-play-cta">
-                <span>Vào game</span>
+                <span>{t('hub.quizCard.cta')}</span>
                 <span className="hub-play-arrow" aria-hidden="true">
                   →
                 </span>
@@ -98,16 +104,18 @@ export function GameHub() {
           {/* CARD 2: FUTURE GAME 1 */}
           <article
             className="hub-game-card hub-game-card-future"
-            aria-label="Trò chơi tiếp theo — Đang lên ý tưởng"
+            aria-label={t('hub.futureCard.ariaLabel')}
           >
             <div className="hub-card-media hub-card-media-muted">
               <img
                 src="/images/hub/mystery-chest.jpg"
-                alt="Minh họa 3D rương bí ẩn màu pastel đang đóng kín"
+                alt={t('hub.futureCard.chestAlt')}
                 className="hub-card-img hub-card-img-muted"
               />
               <div className="hub-card-top-left">
-                <span className="hub-media-pill hub-media-pill-muted">Đang lên ý tưởng</span>
+                <span className="hub-media-pill hub-media-pill-muted">
+                  {t('hub.futureCard.statusPill')}
+                </span>
               </div>
               <div className="hub-mystery-center-badge" aria-hidden="true">
                 ?
@@ -117,16 +125,18 @@ export function GameHub() {
             <div className="hub-card-body">
               <div>
                 <div className="hub-card-tags">
-                  <span className="hub-tag-chip hub-tag-chip-muted">Đang lên ý tưởng</span>
+                  <span className="hub-tag-chip hub-tag-chip-muted">
+                    {t('hub.futureCard.statusPill')}
+                  </span>
                 </div>
-                <h3 className="hub-card-title hub-card-title-muted">Trò chơi tiếp theo</h3>
+                <h3 className="hub-card-title hub-card-title-muted">{t('hub.futureCard.title')}</h3>
                 <p className="hub-card-desc hub-card-desc-muted">
-                  Một trải nghiệm mới đang được khám phá.
+                  {t('hub.futureCard.description')}
                 </p>
               </div>
 
               <div className="hub-future-status" aria-disabled="true">
-                <span>Đang lên ý tưởng</span>
+                <span>{t('hub.futureCard.statusPill')}</span>
               </div>
             </div>
           </article>
@@ -134,16 +144,18 @@ export function GameHub() {
           {/* CARD 3: FUTURE GAME 2 */}
           <article
             className="hub-game-card hub-game-card-future"
-            aria-label="Trò chơi tiếp theo — Đang lên ý tưởng"
+            aria-label={t('hub.futureCard.ariaLabel')}
           >
             <div className="hub-card-media hub-card-media-muted">
               <img
                 src="/images/hub/mystery-gift.jpg"
-                alt="Minh họa 3D hộp quà bí ẩn thắt nơ pastel giữa những đám mây nhỏ"
+                alt={t('hub.futureCard.giftAlt')}
                 className="hub-card-img hub-card-img-muted"
               />
               <div className="hub-card-top-left">
-                <span className="hub-media-pill hub-media-pill-muted">Đang lên ý tưởng</span>
+                <span className="hub-media-pill hub-media-pill-muted">
+                  {t('hub.futureCard.statusPill')}
+                </span>
               </div>
               <div className="hub-mystery-center-badge" aria-hidden="true">
                 ✦
@@ -153,16 +165,18 @@ export function GameHub() {
             <div className="hub-card-body">
               <div>
                 <div className="hub-card-tags">
-                  <span className="hub-tag-chip hub-tag-chip-muted">Đang lên ý tưởng</span>
+                  <span className="hub-tag-chip hub-tag-chip-muted">
+                    {t('hub.futureCard.statusPill')}
+                  </span>
                 </div>
-                <h3 className="hub-card-title hub-card-title-muted">Trò chơi tiếp theo</h3>
+                <h3 className="hub-card-title hub-card-title-muted">{t('hub.futureCard.title')}</h3>
                 <p className="hub-card-desc hub-card-desc-muted">
-                  Một trải nghiệm mới đang được khám phá.
+                  {t('hub.futureCard.description')}
                 </p>
               </div>
 
               <div className="hub-future-status" aria-disabled="true">
-                <span>Đang lên ý tưởng</span>
+                <span>{t('hub.futureCard.statusPill')}</span>
               </div>
             </div>
           </article>

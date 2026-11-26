@@ -1,10 +1,12 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { useI18n } from '../i18n';
 import { usePlatform } from '../providers/platform-provider';
 import styles from './leave-match-dialog.module.css';
 
 export function LeaveMatchDialog() {
+  const { t } = useI18n();
   const { leaveConfirm, confirmLeaveAndNavigate, cancelLeaveConfirm } = usePlatform();
   const stayButtonRef = useRef<HTMLButtonElement | null>(null);
   const leaveButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -79,13 +81,11 @@ export function LeaveMatchDialog() {
         <div className={styles.content}>
           <div className={styles.copy}>
             <h2 id="leave-match-title" className={styles.title}>
-              Xác nhận rời phòng {leaveConfirm.code}
+              {t('nav.leaveDialog.title', { code: leaveConfirm.code })}
             </h2>
             <p id="leave-match-desc" className={styles.description}>
-              Trận đấu đang diễn ra.{' '}
-              <strong>
-                Rời phòng sẽ hủy trận cho cả hai người, trận bị hủy không được thưởng.
-              </strong>
+              {t('nav.leaveDialog.inProgressLead')}{' '}
+              <strong>{t('nav.leaveDialog.inProgressWarning')}</strong>
             </p>
             {leaveConfirm.error && (
               <div className={styles.error} role="alert">
@@ -101,7 +101,7 @@ export function LeaveMatchDialog() {
               className={styles.stay}
               onClick={cancelLeaveConfirm}
             >
-              Ở lại trận
+              {t('nav.leaveDialog.stayButton')}
             </button>
             <button
               ref={leaveButtonRef}
@@ -113,7 +113,9 @@ export function LeaveMatchDialog() {
               <span className={styles.exitIcon} aria-hidden="true">
                 ➜
               </span>
-              {leaveConfirm.busy ? 'Đang rời phòng…' : 'Rời phòng'}
+              {leaveConfirm.busy
+                ? t('nav.leaveDialog.leavingButton')
+                : t('nav.leaveDialog.leaveButton')}
             </button>
           </div>
         </div>
@@ -121,7 +123,7 @@ export function LeaveMatchDialog() {
           ref={closeButtonRef}
           type="button"
           className={styles.close}
-          aria-label="Đóng xác nhận rời phòng"
+          aria-label={t('nav.leaveDialog.closeAria')}
           disabled={leaveConfirm.busy}
           onClick={cancelLeaveConfirm}
         >

@@ -1,4 +1,5 @@
 import type { ActiveRoomStatus, CurrentRoomSummary } from '@duoquest/shared-types';
+import { DEFAULT_LOCALE, translate, type LocaleCode } from '../../i18n';
 
 export interface RoomBannerDescriptor {
   key: string;
@@ -18,6 +19,7 @@ export function getRoomBannerDescriptor(
   summary: CurrentRoomSummary | null,
   pathname: string | null,
   dismissedKey: string | null,
+  locale: LocaleCode = DEFAULT_LOCALE,
 ): RoomBannerDescriptor | null {
   if (!summary) return null;
   const targetHref = `/play/${summary.code}`;
@@ -33,8 +35,8 @@ export function getRoomBannerDescriptor(
       key,
       code: summary.code,
       status: summary.status,
-      headline: 'Trận Quiz Battle đang diễn ra',
-      ctaLabel: 'Quay lại trận',
+      headline: translate(locale, 'nav.banner.liveHeadline'),
+      ctaLabel: translate(locale, 'nav.banner.liveCta'),
       href: targetHref,
       tone: 'live',
     };
@@ -44,8 +46,8 @@ export function getRoomBannerDescriptor(
       key,
       code: summary.code,
       status: summary.status,
-      headline: 'Phòng đã hoàn tất trận',
-      ctaLabel: 'Xem kết quả / Về phòng',
+      headline: translate(locale, 'nav.banner.finishedHeadline'),
+      ctaLabel: translate(locale, 'nav.banner.finishedCta'),
       href: targetHref,
       tone: 'finished',
     };
@@ -54,8 +56,8 @@ export function getRoomBannerDescriptor(
     key,
     code: summary.code,
     status: summary.status,
-    headline: 'Bạn có phòng đang mở',
-    ctaLabel: 'Quay lại phòng',
+    headline: translate(locale, 'nav.banner.waitingHeadline'),
+    ctaLabel: translate(locale, 'nav.banner.waitingCta'),
     href: targetHref,
     tone: 'waiting',
   };

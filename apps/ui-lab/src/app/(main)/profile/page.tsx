@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { LanguageSwitcher } from '../../../components/language-switcher';
+import { useI18n } from '../../../i18n';
 import { api, loadIdentity, onAuthChanged, type GameIdentity } from '../../../lib/client';
 import { usePlatform } from '../../../providers/platform-provider';
 import { AccountSettings } from '../../../features/auth/account-settings';
@@ -87,11 +89,13 @@ function ModeIcon({ tone }: { tone: 'solo' | 'duel' | 'coop' }) {
 }
 
 export default function ProfilePage() {
+  const { locale, t, formatNumber } = useI18n();
   const { hydrated, localHost } = usePlatform();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [history, setHistory] = useState<HistoryRow[]>([]);
   const [identity, setIdentity] = useState<GameIdentity | null>(null);
-  const [message, setMessage] = useState('Đang tải hồ sơ…');
+  const [statusKind, setStatusKind] = useState<'loading' | 'empty' | 'ready' | 'error'>('loading');
+  const [errorDetail, setErrorDetail] = useState('');
 
   useEffect(() => {
     let live = true;
@@ -103,7 +107,7 @@ export default function ProfilePage() {
         if (!nextIdentity) {
           setProfile(null);
           setHistory([]);
-          setMessage('Đăng nhập hoặc tạo hồ sơ khách tại trang Chơi.');
+          setStatusKind('empty');
           return;
         }
         const [data, rows] = await Promise.all([
@@ -113,9 +117,12 @@ export default function ProfilePage() {
         if (!live) return;
         setProfile(data);
         setHistory(rows);
-        setMessage('');
+        setStatusKind('ready');
       })().catch((error: unknown) => {
-        if (live) setMessage(error instanceof Error ? error.message : 'Không thể tải hồ sơ');
+        if (live) {
+          setErrorDetail(error instanceof Error ? error.message : '');
+          setStatusKind('error');
+        }
       });
     refresh();
     const unsubscribe = onAuthChanged(refresh);
@@ -125,6 +132,44 @@ export default function ProfilePage() {
     };
   }, []);
 
+  const message =
+    statusKind === 'loading'
+      ? t('profile.loadingProfile')
+      : statusKind === 'empty'
+        ? t('profile.emptyIdentityMessage')
+        : statusKind === 'error'
+          ? errorDetail || t('profile.loadFailed')
+          : '';
+
+  const languageSection = (
+    <section className="profile-section-card" aria-labelledby="profile-language-heading">
+      <div className="profile-section-header">
+        <h2 id="profile-language-heading" className="profile-section-title">
+          <svg
+            aria-hidden="true"
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="profile-section-icon"
+          >
+            <circle cx="12" cy="12" r="9.5" />
+            <path d="M2.5 12h19" />
+            <path d="M12 2.5a14.5 14.5 0 0 1 0 19 14.5 14.5 0 0 1 0-19Z" />
+          </svg>
+          {t('common.language.sectionTitle')}
+        </h2>
+        <span className="profile-section-pill">{t('common.language.sectionPill')}</span>
+      </div>
+      <p className="small muted">{t('common.language.sectionDesc')}</p>
+      <LanguageSwitcher variant="cards" />
+    </section>
+  );
+
   return (
     <div className="profile-shell">
       <header className="profile-page-header">
@@ -133,15 +178,13 @@ export default function ProfilePage() {
             <svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 3 3 10v11h6v-6h6v6h6V10L12 3z" />
             </svg>
-            Trang chủ / Hồ sơ
+            {t('profile.breadcrumb')}
           </Link>
         </div>
         <h1 className="profile-page-title">
-          Góc của bạn <span aria-hidden="true">✨</span>
+          {t('profile.pageTitle')} <span aria-hidden="true">✨</span>
         </h1>
-        <p className="profile-page-subtitle">
-          Không gian cá nhân ấm cúng của bạn trong thế giới DuoQuest.
-        </p>
+        <p className="profile-page-subtitle">{t('profile.pageSubtitle')}</p>
       </header>
 
       {message && (
@@ -150,11 +193,11 @@ export default function ProfilePage() {
           {!identity && (
             <div className="profile-empty-actions">
               <Link href="/play" className="hub-btn-primary">
-                Tạo hồ sơ khách tại trang Chơi →
+                {t('profile.createGuestCta')}
               </Link>
               {hydrated && localHost && (
                 <Link href="/login" className="site-header-btn site-header-btn--outline">
-                  Đăng nhập tài khoản
+                  {t('profile.loginAccountCta')}
                 </Link>
               )}
             </div>
@@ -165,7 +208,7 @@ export default function ProfilePage() {
       {profile && (
         <div className="profile-stack">
           {/* 1. USER PROFILE CARD (Horizontal Layout: Avatar Left, Info Right) */}
-          <section className="profile-identity-card" aria-label="Thông tin người chơi">
+          <section className="profile-identity-card" aria-label={t('profile.identitySectionAria')}>
             <div
               className="profile-identity-bloom profile-identity-bloom--top"
               aria-hidden="true"
@@ -180,7 +223,7 @@ export default function ProfilePage() {
                   <div className="profile-avatar-inner">
                     <img
                       src="/images/profile/default-avatar.jpg"
-                      alt={`Ảnh đại diện ${profile.nickname}`}
+                      alt={t('profile.avatarAlt', { nickname: profile.nickname })}
                       className="profile-avatar-img"
                     />
                   </div>
@@ -218,22 +261,24 @@ export default function ProfilePage() {
                     >
                       <path d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1.4 14.6L6.8 11.8l1.4-1.4 2.4 2.4 5.2-5.2 1.4 1.4-6.6 6.6z" />
                     </svg>
-                    <span>{identity?.kind === 'account' ? 'Tài khoản' : 'Khách'}</span>
+                    <span>
+                      {identity?.kind === 'account'
+                        ? t('profile.badgeAccount')
+                        : t('profile.badgeGuest')}
+                    </span>
                   </span>
                 </div>
 
                 <p className="profile-identity-email">
                   {identity?.kind === 'account' && identity.email
                     ? identity.email
-                    : 'Đang chơi với hồ sơ khách trên trình duyệt này'}
+                    : t('profile.guestBrowserNote')}
                 </p>
 
                 <div className="profile-identity-member">
                   <span className="profile-identity-dot" aria-hidden="true" />
                   <span>
-                    {identity?.role === 'ADMIN'
-                      ? 'Quản trị viên · Thành viên học tập DuoQuest'
-                      : 'Thành viên học tập DuoQuest'}
+                    {identity?.role === 'ADMIN' ? t('profile.roleAdmin') : t('profile.roleMember')}
                   </span>
                 </div>
               </div>
@@ -241,7 +286,7 @@ export default function ProfilePage() {
           </section>
 
           {/* 2. STATS GRID (Coins & Tổng XP) */}
-          <section className="profile-stats-grid" aria-label="Chỉ số tích lũy">
+          <section className="profile-stats-grid" aria-label={t('profile.statsAria')}>
             <div className="profile-stat-card">
               <div className="profile-stat-icon profile-stat-icon--coins" aria-hidden="true">
                 <svg
@@ -260,9 +305,9 @@ export default function ProfilePage() {
                 </svg>
               </div>
               <div className="profile-stat-body">
-                <span className="profile-stat-label">Coins</span>
+                <span className="profile-stat-label">{t('profile.coinsLabel')}</span>
                 <strong className="profile-stat-value">
-                  {(profile.wallet?.balance ?? 0).toLocaleString('vi-VN')}
+                  {formatNumber(profile.wallet?.balance ?? 0)}
                 </strong>
               </div>
             </div>
@@ -274,15 +319,15 @@ export default function ProfilePage() {
                 </svg>
               </div>
               <div className="profile-stat-body">
-                <span className="profile-stat-label">Tổng XP</span>
+                <span className="profile-stat-label">{t('profile.totalXpLabel')}</span>
                 <strong className="profile-stat-value">
-                  {profile.xp.toLocaleString('vi-VN')} XP
+                  {t('profile.xpValue', { xp: formatNumber(profile.xp) })}
                 </strong>
               </div>
             </div>
           </section>
 
-          {/* 3. RECENT MATCHES ("Trận gần đây") */}
+          {/* 3. RECENT MATCHES */}
           <section className="profile-section-card" aria-labelledby="profile-history-heading">
             <div className="profile-section-header">
               <h2 id="profile-history-heading" className="profile-section-title">
@@ -302,17 +347,19 @@ export default function ProfilePage() {
                   <path d="M3 3v5h5" />
                   <path d="M12 7v5l4 2" />
                 </svg>
-                Trận gần đây
+                {t('profile.history.heading')}
               </h2>
               <span className="profile-section-pill">
-                {history.length ? `${history.length} lượt chơi gần nhất` : 'Chưa có lượt chơi'}
+                {history.length
+                  ? t('profile.history.countPill', { count: history.length })
+                  : t('profile.history.emptyPill')}
               </span>
             </div>
 
             {history.length ? (
               <div className="profile-match-list">
                 {history.map((row) => {
-                  const descriptor = getProfileModeDescriptor(row.session.mode);
+                  const descriptor = getProfileModeDescriptor(row.session.mode, locale);
                   return (
                     <div className="history-row profile-match-row" key={row.session.id}>
                       <div className="profile-match-left">
@@ -331,14 +378,16 @@ export default function ProfilePage() {
                             </span>
                           </div>
                           <span className="profile-match-time">
-                            {formatProfileMatchTime(row.session.finishedAt)}
+                            {formatProfileMatchTime(row.session.finishedAt, undefined, locale)}
                           </span>
                         </div>
                       </div>
                       <div className="profile-match-right">
-                        <span className="profile-match-score-label">Điểm trận</span>
+                        <span className="profile-match-score-label">
+                          {t('profile.history.scoreLabel')}
+                        </span>
                         <strong className="profile-match-score">
-                          {row.score.toLocaleString('vi-VN')} điểm
+                          {t('profile.history.scoreValue', { score: formatNumber(row.score) })}
                         </strong>
                       </div>
                     </div>
@@ -346,14 +395,17 @@ export default function ProfilePage() {
                 })}
               </div>
             ) : (
-              <p className="profile-history-empty">Chưa có trận hoàn tất.</p>
+              <p className="profile-history-empty">{t('profile.history.emptyMessage')}</p>
             )}
           </section>
 
-          {/* 4. THEME & AUDIO SETTINGS ("Chủ đề & Âm thanh phòng chơi") */}
+          {/* 4. LANGUAGE PREFERENCES */}
+          {languageSection}
+
+          {/* 5. THEME & AUDIO SETTINGS */}
           <QuizThemeSettings />
 
-          {/* 5. TITLES / BADGES ("Bộ sưu tập danh hiệu" — Future Concept Placeholders) */}
+          {/* 6. TITLES / BADGES */}
           <section className="profile-section-card" aria-labelledby="profile-titles-heading">
             <div className="profile-section-header">
               <h2 id="profile-titles-heading" className="profile-section-title">
@@ -372,12 +424,12 @@ export default function ProfilePage() {
                   <circle cx="12" cy="8" r="6" />
                   <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
                 </svg>
-                Bộ sưu tập danh hiệu
+                {t('profile.titles.heading')}
               </h2>
-              <span className="profile-section-pill">Sắp ra mắt</span>
+              <span className="profile-section-pill">{t('profile.titles.comingSoonPill')}</span>
             </div>
 
-            <div className="profile-titles-grid" aria-label="Ô danh hiệu dự kiến">
+            <div className="profile-titles-grid" aria-label={t('profile.titles.gridAria')}>
               <div className="profile-title-slot">
                 <div className="profile-title-silhouette" aria-hidden="true">
                   <svg
@@ -439,6 +491,7 @@ export default function ProfilePage() {
 
       {!profile && (
         <div className="profile-stack">
+          {languageSection}
           <QuizThemeSettings />
         </div>
       )}

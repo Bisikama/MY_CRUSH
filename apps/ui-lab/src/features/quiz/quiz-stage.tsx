@@ -2,6 +2,7 @@
 
 import type { ReactNode } from 'react';
 import { allowedQuizSkills, type QuizAction, type RoomView } from '@duoquest/shared-types';
+import { useI18n } from '../../i18n';
 import { Button } from '../../ui';
 import { PreloadQuestionCover } from './question-cover';
 import { QuizArena } from './quiz-arena';
@@ -43,6 +44,7 @@ export function QuizStage({
   onCommand,
   onAction,
 }: Props) {
+  const { t } = useI18n();
   const game = activeRoom.game;
   const playing = activeRoom.status === 'IN_PROGRESS' && Boolean(game);
   const activeSkills = allowedQuizSkills(activeRoom.mode, activeRoom.layout);
@@ -67,7 +69,7 @@ export function QuizStage({
       aria-pressed={skillSfxEnabled}
       onClick={() => setSkillSfxEnabled(!skillSfxEnabled)}
     >
-      Tiếng sét
+      {t('quiz.arena.thunderSound')}
     </Button>
   );
 

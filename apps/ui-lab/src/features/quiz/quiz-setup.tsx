@@ -15,10 +15,12 @@ import {
   type CasualCatalog,
   type CasualCustomSelection,
 } from '@duoquest/shared-types';
+import { useI18n } from '../../i18n';
 import type { GameIdentity } from '../../lib/client';
-import { knowledgeTypeLabels, type KnowledgeTypeFilter } from '../../lib/knowledge-type';
+import { getKnowledgeTypeLabel, type KnowledgeTypeFilter } from '../../lib/knowledge-type';
 import { CasualFilters } from './casual-filters';
 import { matchesLabCasual } from '../../mock/packs';
+
 interface Props {
   selectionType: QuizSelection['type'];
   setSelectionType: (value: QuizSelection['type']) => void;
@@ -50,29 +52,13 @@ interface Props {
   joinRoom: () => Promise<void>;
   leaveRoom: (code: string) => Promise<void>;
 }
-const modeInfo = [
-  {
-    id: 'SOLO' as const,
-    icon: '01',
-    title: 'Solo',
-    subtitle: 'Một mình, một kỷ lục mới',
-    description: 'Luyện kiến thức theo nhịp của bạn. Mỗi câu trả lời là một điều mới để nhớ.',
-  },
-  {
-    id: 'DUEL' as const,
-    icon: '02',
-    title: 'Duel',
-    subtitle: 'Một lời thách đấu dành cho người ấy',
-    description: 'Cùng trả lời một bộ câu hỏi. Ai sẽ nhanh tay và ghi nhiều điểm hơn?',
-  },
-  {
-    id: 'COOP' as const,
-    icon: '∞',
-    title: 'Co-op',
-    subtitle: 'Cặp đôi tâm đầu ý hợp',
-    description: 'Thay nhau làm đội trưởng và xem hai bạn phối hợp ăn ý đến đâu qua từng ải.',
-  },
+
+const MODE_OPTIONS = [
+  { id: 'SOLO' as const, icon: '01' },
+  { id: 'DUEL' as const, icon: '02' },
+  { id: 'COOP' as const, icon: '∞' },
 ];
+
 export function QuizSetup({
   selectionType,
   setSelectionType,
@@ -104,6 +90,8 @@ export function QuizSetup({
   joinRoom,
   leaveRoom,
 }: Props) {
+  const { locale, localeMeta, t } = useI18n();
+
   const casualCount = casualCatalog.reduce(
     (count, row) =>
       count +
@@ -114,7 +102,7 @@ export function QuizSetup({
   );
   const distinct = (values: string[]) =>
     [...new Map(values.map((value) => [knowledgeKey(value), value])).values()].sort((a, b) =>
-      a.localeCompare(b, 'vi'),
+      a.localeCompare(b, localeMeta.code),
     );
   const categories = distinct(packs.map((pack) => pack.category));
   const topics = distinct(
@@ -133,37 +121,43 @@ export function QuizSetup({
     }))
     .filter(({ count }) => count > 0);
   const selected = choices.find(({ pack }) => pack.id === packId);
+
   return (
     <>
       {resumeCode && (
         <Card>
-          <h2>Bạn có phòng đang mở: {resumeCode}</h2>
+          <h2>{t('quiz.setup.resumeTitle', { code: resumeCode })}</h2>
           <div className="actions">
             <Button asChild>
-              <Link href={`/play/${resumeCode}`}>Quay lại phòng</Link>
+              <Link href={`/play/${resumeCode}`}>{t('quiz.setup.resumeButton')}</Link>
             </Button>
             <Button
               variant="outline"
               disabled={busy || !connected}
               onClick={() => void leaveRoom(resumeCode)}
             >
-              Rời phòng hiện tại
+              {t('quiz.setup.leaveCurrentButton')}
             </Button>
           </div>
         </Card>
       )}
       <div className="hero">
         <div>
-          <p className="eyebrow">CHÀO {identity.nickname.toLocaleUpperCase('vi')} · QUIZ BATTLE</p>
+          <p className="eyebrow">
+            {t('quiz.setup.heroEyebrow', {
+              nickname: identity.nickname.toLocaleUpperCase(localeMeta.code),
+            })}
+          </p>
           <h1>
-            Mỗi câu hỏi,
+            {t('quiz.setup.heroTitleLine1')}
             <br />
-            một cuộc <em>phiêu lưu.</em>
+            {t('quiz.setup.heroTitleLine2Prefix')}
+            <em>{t('quiz.setup.heroTitleLine2Em')}</em>
           </h1>
           <p className="lead">
-            Tự phá kỷ lục, gửi người ấy một lời thách đấu hoặc cùng nhau vượt ải.
+            {t('quiz.setup.heroLeadLine1')}
             <br />
-            Chọn cách chơi của bạn hôm nay.
+            {t('quiz.setup.heroLeadLine2')}
           </p>
         </div>
         <div className="quiz-illustration" aria-hidden="true">
@@ -172,16 +166,16 @@ export function QuizSetup({
           <span className="quiz-tile">
             Q<span>✦</span>
           </span>
-          <b className="floating-pill">+1 điều mới</b>
+          <b className="floating-pill">{t('quiz.setup.floatingPill')}</b>
           <i className="spark">✧</i>
         </div>
       </div>
       <div className="section-heading">
-        <h2>Hôm nay, bạn chơi thế nào?</h2>
-        <span>01 GAME · 03 CÁCH CHƠI</span>
+        <h2>{t('quiz.setup.sectionHeading')}</h2>
+        <span>{t('quiz.setup.sectionMeta')}</span>
       </div>
       <div className="mode-grid">
-        {modeInfo.map((item) => (
+        {MODE_OPTIONS.map((item) => (
           <button
             key={item.id}
             className={`mode-card ${mode === item.id ? 'selected' : ''}`}
@@ -190,21 +184,21 @@ export function QuizSetup({
           >
             <span className="mode-icon">{item.icon}</span>
             <span className="mode-title">
-              {item.title}
+              {t(`quiz.modes.${item.id}.title`)}
               <span className="radio" />
             </span>
-            <strong>{item.subtitle}</strong>
-            <p>{item.description}</p>
+            <strong>{t(`quiz.modes.${item.id}.subtitle`)}</strong>
+            <p>{t(`quiz.modes.${item.id}.description`)}</p>
           </button>
         ))}
       </div>
       <div className="setup-grid">
         <Card>
-          <span className="tag">SẴN SÀNG MỘT VÒNG MỚI?</span>
-          <h2>Thiết lập sân chơi</h2>
+          <span className="tag">{t('quiz.setup.cardTag')}</span>
+          <h2>{t('quiz.setup.cardTitle')}</h2>
           <div className="form-grid">
             <div>
-              <label htmlFor="quiz-experience">Trải nghiệm</label>
+              <label htmlFor="quiz-experience">{t('quiz.setup.experienceLabel')}</label>
               <select
                 id="quiz-experience"
                 value={selectionType === 'STUDY' ? 'STUDY' : 'CASUAL'}
@@ -212,26 +206,26 @@ export function QuizSetup({
                   setSelectionType(event.target.value === 'STUDY' ? 'STUDY' : 'CASUAL_RANDOM')
                 }
               >
-                <option value="CASUAL">Đố vui thử thách</option>
-                <option value="STUDY">Học luyện chuyên môn</option>
+                <option value="CASUAL">{t('quiz.setup.experienceCasual')}</option>
+                <option value="STUDY">{t('quiz.setup.experienceStudy')}</option>
               </select>
             </div>
             {mode !== 'SOLO' && (
               <div>
-                <label htmlFor="layout">Không gian chơi</label>
+                <label htmlFor="layout">{t('quiz.setup.layoutLabel')}</label>
                 <select
                   id="layout"
                   value={layout}
                   onChange={(event) => setLayout(event.target.value as GameLayout)}
                 >
-                  <option value="MULTI_DEVICE">Mỗi người một thiết bị · LAN</option>
-                  <option value="SHARED_SCREEN">Chung một màn hình</option>
+                  <option value="MULTI_DEVICE">{t('quiz.setup.layoutMultiDevice')}</option>
+                  <option value="SHARED_SCREEN">{t('quiz.setup.layoutSharedScreen')}</option>
                 </select>
               </div>
             )}
             {selectionType !== 'STUDY' && (
               <div>
-                <label htmlFor="casual-method">Cách chọn đề</label>
+                <label htmlFor="casual-method">{t('quiz.setup.casualMethodLabel')}</label>
                 <select
                   id="casual-method"
                   value={selectionType}
@@ -239,8 +233,8 @@ export function QuizSetup({
                     setSelectionType(event.target.value as QuizSelection['type'])
                   }
                 >
-                  <option value="CASUAL_RANDOM">Ngẫu nhiên</option>
-                  <option value="CASUAL_CUSTOM">Tự chọn</option>
+                  <option value="CASUAL_RANDOM">{t('quiz.setup.casualRandom')}</option>
+                  <option value="CASUAL_CUSTOM">{t('quiz.setup.casualCustom')}</option>
                 </select>
               </div>
             )}
@@ -254,7 +248,7 @@ export function QuizSetup({
             {selectionType === 'STUDY' && (
               <>
                 <div>
-                  <label htmlFor="pack-knowledge-type">Nhóm kiến thức</label>
+                  <label htmlFor="pack-knowledge-type">{t('quiz.setup.knowledgeTypeLabel')}</label>
                   <select
                     id="pack-knowledge-type"
                     value={knowledgeType}
@@ -262,19 +256,21 @@ export function QuizSetup({
                       setKnowledgeType(event.target.value as KnowledgeTypeFilter)
                     }
                   >
-                    <option value="all">Tất cả</option>
+                    <option value="all">{t('common.knowledgeType.all')}</option>
                     {knowledgeTypeSchema.options.map((value) => (
                       <option key={value} value={value}>
-                        {knowledgeTypeLabels[value]}
+                        {getKnowledgeTypeLabel(value, locale)}
                       </option>
                     ))}
                     {hasUnclassifiedPacks && (
-                      <option value="unclassified">{knowledgeTypeLabels.unclassified}</option>
+                      <option value="unclassified">
+                        {getKnowledgeTypeLabel('unclassified', locale)}
+                      </option>
                     )}
                   </select>
                 </div>
                 <div>
-                  <label htmlFor="pack-category">Lĩnh vực</label>
+                  <label htmlFor="pack-category">{t('quiz.setup.categoryLabel')}</label>
                   <select
                     id="pack-category"
                     value={filter.category ?? ''}
@@ -286,14 +282,14 @@ export function QuizSetup({
                       })
                     }
                   >
-                    <option value="">Tất cả lĩnh vực</option>
+                    <option value="">{t('quiz.setup.allCategories')}</option>
                     {categories.map((value) => (
                       <option key={value}>{value}</option>
                     ))}
                   </select>
                 </div>
                 <div>
-                  <label htmlFor="pack-topic">Đề tài</label>
+                  <label htmlFor="pack-topic">{t('quiz.setup.topicLabel')}</label>
                   <select
                     id="pack-topic"
                     value={filter.topic ?? ''}
@@ -301,14 +297,14 @@ export function QuizSetup({
                       setFilter({ ...filter, topic: event.target.value || undefined })
                     }
                   >
-                    <option value="">Tất cả đề tài</option>
+                    <option value="">{t('quiz.setup.allTopics')}</option>
                     {topics.map((value) => (
                       <option key={value}>{value}</option>
                     ))}
                   </select>
                 </div>
                 <div>
-                  <label htmlFor="pack-difficulty">Độ khó</label>
+                  <label htmlFor="pack-difficulty">{t('quiz.setup.difficultyLabel')}</label>
                   <select
                     id="pack-difficulty"
                     value={filter.difficulty ?? ''}
@@ -319,25 +315,25 @@ export function QuizSetup({
                       })
                     }
                   >
-                    <option value="">Mọi độ khó</option>
-                    <option value="easy">Dễ</option>
-                    <option value="medium">Trung bình</option>
-                    <option value="hard">Khó</option>
+                    <option value="">{t('common.difficulty.any')}</option>
+                    <option value="easy">{t('common.difficulty.easy')}</option>
+                    <option value="medium">{t('common.difficulty.medium')}</option>
+                    <option value="hard">{t('common.difficulty.hard')}</option>
                   </select>
                 </div>
                 <div>
-                  <label htmlFor="pack">Bộ câu hỏi</label>
+                  <label htmlFor="pack">{t('quiz.setup.packLabel')}</label>
                   <select
                     id="pack"
                     value={selected?.pack.id ?? ''}
                     onChange={(event) => setPackId(event.target.value)}
                   >
                     <option value="" disabled>
-                      Chọn bộ đề
+                      {t('quiz.setup.selectPackPlaceholder')}
                     </option>
                     {choices.map(({ pack, count }) => (
                       <option key={pack.id} value={pack.id}>
-                        {pack.title} · {count} câu phù hợp
+                        {t('quiz.setup.packOptionCount', { title: pack.title, count })}
                       </option>
                     ))}
                   </select>
@@ -346,28 +342,23 @@ export function QuizSetup({
             )}
           </div>
           {selectionType === 'CASUAL_RANDOM' && (
-            <p className="small">
-              Tối đa 20 câu, ưu tiên câu bạn chưa gặp. Hết câu mới trong lựa chọn này sẽ bắt đầu
-              vòng mới.
-            </p>
+            <p className="small">{t('quiz.setup.casualRandomHint')}</p>
           )}
           {selectionType === 'CASUAL_CUSTOM' && casualCatalog.length > 0 && (
             <p className="small" role="status">
               {casualCount
-                ? `${casualCount} câu phù hợp · Tối đa 20 câu mỗi ván.`
-                : 'Không có câu phù hợp. Hãy đổi độ khó hoặc xóa bớt bộ lọc.'}
+                ? t('quiz.setup.casualCustomCount', { count: casualCount })
+                : t('quiz.setup.casualCustomEmpty')}
             </p>
           )}
           {selectionType !== 'STUDY' && !casualCatalog.length && (
-            <p role="status">Chưa có câu đố vui trong thư viện.</p>
+            <p role="status">{t('quiz.setup.casualLibraryEmpty')}</p>
           )}
           {selectionType === 'STUDY' && !choices.length && (
-            <p role="status">Không có bộ đề phù hợp với bộ lọc.</p>
+            <p role="status">{t('quiz.setup.studyPacksEmpty')}</p>
           )}
           {selectionType === 'STUDY' && selected && (
-            <p className="small">
-              {knowledgeTypeLabels[selected.pack.knowledgeType ?? 'unclassified']}
-            </p>
+            <p className="small">{getKnowledgeTypeLabel(selected.pack.knowledgeType, locale)}</p>
           )}
           {selectionType === 'STUDY' &&
             selected?.pack.relatedKnowledge.map(({ category, topic, reason }, index) => {
@@ -390,7 +381,7 @@ export function QuizSetup({
             })}
           {layout === 'SHARED_SCREEN' && mode !== 'SOLO' && (
             <>
-              <label htmlFor="second">Tên người chơi 2</label>
+              <label htmlFor="second">{t('quiz.setup.secondNicknameLabel')}</label>
               <input
                 id="second"
                 value={secondNickname}
@@ -399,8 +390,7 @@ export function QuizSetup({
                 maxLength={30}
               />
               <p className="small muted" style={{ marginTop: -8, marginBottom: 14 }}>
-                Người chơi 2 là slot khách tạm của phòng này; tiến trình và thưởng chỉ lưu cho chủ
-                phòng.
+                {t('quiz.setup.secondNicknameNote')}
               </p>
             </>
           )}
@@ -408,24 +398,24 @@ export function QuizSetup({
             onClick={() => void createRoom()}
             disabled={busy || !connected || (selectionType === 'STUDY' ? !selected : !casualCount)}
           >
-            Tạo {mode === 'SOLO' ? 'ván Solo' : 'phòng chơi'} →
+            {mode === 'SOLO' ? t('quiz.setup.createSolo') : t('quiz.setup.createRoom')}
           </Button>
           <p className="small muted">
-            {connected ? '● Đã kết nối máy chủ' : '○ Đang kết nối máy chủ…'} · Điểm và thời gian do
-            server xác nhận.
+            {connected ? t('quiz.setup.serverConnected') : t('quiz.setup.serverConnecting')} ·{' '}
+            {t('quiz.setup.serverAuthoritativeNote')}
           </p>
         </Card>
         <Card className="join-card">
-          <span className="tag">ĐÃ CÓ LỜI MỜI?</span>
-          <h2>Vào phòng của bạn</h2>
-          <p>Nhập mã 6 ký tự từ host. Hai thiết bị cần cùng mạng LAN.</p>
+          <span className="tag">{t('quiz.setup.joinTag')}</span>
+          <h2>{t('quiz.setup.joinTitle')}</h2>
+          <p>{t('quiz.setup.joinDesc')}</p>
           <form
             onSubmit={(event) => {
               event.preventDefault();
               void joinRoom();
             }}
           >
-            <label htmlFor="room-code">Mã phòng</label>
+            <label htmlFor="room-code">{t('quiz.setup.roomCodeLabel')}</label>
             <input
               id="room-code"
               className="code-input"
@@ -436,7 +426,7 @@ export function QuizSetup({
               required
             />
             <Button variant="outline" disabled={busy || !connected || joinCode.length !== 6}>
-              Tham gia phòng ↗
+              {t('quiz.setup.joinButton')}
             </Button>
           </form>
         </Card>

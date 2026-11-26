@@ -1,12 +1,12 @@
 import { useEffect, useState, type CSSProperties, type ReactNode } from 'react';
 import {
-  QUIZ_SKILLS,
   QUIZ_SKILL_TIMING,
   type QuizAction,
   type QuizSkill,
   type QuizView,
   type RoomView,
 } from '@duoquest/shared-types';
+import { useI18n } from '../../i18n';
 import { Button, Card } from '../../ui';
 import { QuestionCover } from './question-cover';
 import { QuestionImages } from './question-images';
@@ -57,6 +57,7 @@ export function QuizArena({
   onLeave,
   onAction,
 }: Props) {
+  const { locale, localeMeta, t } = useI18n();
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
@@ -103,15 +104,17 @@ export function QuizArena({
   const { supportSkills, attackSkills } = partitionQuizSkills(activeSkills);
   const skillColumns = [
     {
+      key: 'support',
       skills: supportSkills,
       className: styles.supportSkills,
-      label: 'Skill hỗ trợ',
+      label: t('quiz.arena.supportSkillsLabel'),
       support: true,
     },
     {
+      key: 'attack',
       skills: attackSkills,
       className: styles.attackSkills,
-      label: 'Skill đối kháng',
+      label: t('quiz.arena.attackSkillsLabel'),
       support: false,
     },
   ];
@@ -130,7 +133,7 @@ export function QuizArena({
     game.phase === 'QUESTION' &&
     Boolean(answerer) &&
     !game.answeredPlayerIds.includes(answerer!);
-  const answerStatus = getAnswerStatusText(activeRoom.mode, game, answerer);
+  const answerStatus = getAnswerStatusText(activeRoom.mode, game, answerer, locale);
 
   const arenaStyle = {
     '--quiz-arena-bg-color': theme.visuals.arenaBgColor,
@@ -140,7 +143,7 @@ export function QuizArena({
   return (
     <Card
       className={`question-card ${styles.arena}`}
-      aria-label="Sân đấu Quiz Battle"
+      aria-label={t('quiz.arena.ariaLabel')}
       data-quiz-theme={theme.id}
       style={arenaStyle}
     >
@@ -150,20 +153,22 @@ export function QuizArena({
             key={player.playerId}
             className={styles.playerBadge}
             role="group"
-            aria-label={`Người chơi ${index + 1}`}
+            aria-label={t('quiz.arena.playerAria', { index: index + 1 })}
           >
             <span className={styles.playerAvatar} aria-hidden="true">
               {player.playerId === accountPlayerId ? (
                 <img src="/images/profile/default-avatar.jpg" alt="" width={80} height={80} />
               ) : (
-                player.nickname.slice(0, 1).toLocaleUpperCase('vi')
+                player.nickname.slice(0, 1).toLocaleUpperCase(localeMeta.code)
               )}
             </span>
             <div className={styles.playerDetails}>
               <strong>{player.nickname}</strong>
               <span
                 className={styles.playerScore}
-                aria-label={`Điểm: ${game.scores[player.playerId] ?? 0}`}
+                aria-label={t('quiz.arena.scoreAria', {
+                  score: game.scores[player.playerId] ?? 0,
+                })}
               >
                 {game.scores[player.playerId] ?? 0}
               </span>
@@ -176,22 +181,28 @@ export function QuizArena({
         <div className={hasCover ? `${styles.panel} ${styles.compactPanel}` : styles.panel}>
           {!connected && (
             <div className="notice" role="status">
-              Mất kết nối. Đang kết nối lại và xin snapshot từ server…
+              {t('quiz.lobby.reconnecting')}
             </div>
           )}
           {notice}
           <div className="question-meta">
             <span>
-              CÂU {game.questionNumber} / {game.questionCount}
+              {t('quiz.arena.questionCounter', {
+                current: game.questionNumber,
+                total: game.questionCount,
+              })}
             </span>
             {coverSoundButton}
-            <span className="timer" aria-label={`Còn ${seconds} giây`}>
+            <span className="timer" aria-label={t('quiz.arena.timerAria', { seconds })}>
               {seconds}s
             </span>
           </div>
           {activeRoom.mode === 'COOP' && (
             <div className="coop-info">
-              {game.lives} mạng · {playerName(game.captainId)} khóa đáp án
+              {t('quiz.arena.coopInfo', {
+                lives: game.lives ?? 0,
+                captain: playerName(game.captainId),
+              })}
             </div>
           )}
           {hasCover ? (
@@ -215,7 +226,9 @@ export function QuizArena({
             </>
           )}
           {blurred && (
-            <p role="status">{QUIZ_SKILLS.BLUR.name} đang có hiệu lực. Bạn vẫn có thể trả lời.</p>
+            <p role="status">
+              {t('quiz.arena.blurActiveStatus', { skillName: t('common.skills.BLUR') })}
+            </p>
           )}
           {!!game.support?.hints.length && (
             <ol className="explanation">
@@ -237,12 +250,13 @@ export function QuizArena({
                     }
                     onClick={() => void onAction(id, { type: 'BUZZ' })}
                   >
-                    <kbd>{index === 0 ? 'A' : 'L'}</kbd> {playerName(id)} giành quyền
+                    <kbd>{index === 0 ? 'A' : 'L'}</kbd>{' '}
+                    {t('quiz.arena.buzzAction', { nickname: playerName(id) })}
                   </Button>
                 ))}
                 {game.buzzerPlayerId && (
                   <p className="small" role="status">
-                    {playerName(game.buzzerPlayerId)} đang trả lời
+                    {t('quiz.arena.buzzingStatus', { nickname: playerName(game.buzzerPlayerId) })}
                   </p>
                 )}
               </div>
@@ -275,7 +289,7 @@ export function QuizArena({
           </div>
           {game.reveal ? (
             <div className="explanation" role="status">
-              <strong>Đáp án {game.reveal.correctOptionId}</strong>
+              <strong>{t('quiz.arena.revealAnswer', { optionId: game.reveal.correctOptionId })}</strong>
               <p>{game.reveal.explanation}</p>
             </div>
           ) : answerStatus ? (
@@ -289,17 +303,23 @@ export function QuizArena({
           skillColumns
             .filter((column) => column.skills.length)
             .map((column) => (
-              <div key={column.label} className={`${styles.skillColumn} ${column.className}`}>
+              <div key={column.key} className={`${styles.skillColumn} ${column.className}`}>
                 {skillSlots.map((slot) => (
                   <div
                     key={slot.playerId}
                     className={styles.skillGroup}
                     role="group"
-                    aria-label={`${column.label} của ${playerName(slot.playerId)}`}
+                    aria-label={t('quiz.arena.skillGroupAria', {
+                      columnLabel: column.label,
+                      nickname: playerName(slot.playerId),
+                    })}
                   >
                     {column.support && (
                       <p className={styles.skillSummary}>
-                        {playerName(slot.playerId)} · Còn {slot.remaining} lượt
+                        {t('quiz.arena.skillRemaining', {
+                          nickname: playerName(slot.playerId),
+                          count: slot.remaining,
+                        })}
                       </p>
                     )}
                     {column.skills.map((skill) => {
@@ -312,6 +332,7 @@ export function QuizArena({
                         answerer,
                         canUseSkills,
                         serverTime,
+                        locale,
                       });
                       return (
                         <QuizSkillButton
@@ -338,14 +359,14 @@ export function QuizArena({
           aria-pressed={isFullscreen}
           onClick={() => void toggleFullscreen()}
         >
-          {isFullscreen ? 'Thoát toàn màn hình' : 'Toàn màn hình'}
+          {isFullscreen ? t('quiz.arena.exitFullscreen') : t('quiz.arena.enterFullscreen')}
         </Button>
         <Button
           className={styles.leaveMatch}
           disabled={busy || !connected}
           onClick={() => void onLeave()}
         >
-          Rời phòng
+          {t('quiz.arena.leaveRoom')}
         </Button>
       </div>
     </Card>

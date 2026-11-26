@@ -1,0 +1,173 @@
+.wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 11px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(124, 92, 224, 0.22);
+  background: rgba(255, 255, 255, 0.88);
+  color: #463578;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    transform 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.trigger:hover {
+  background: #ffffff;
+  border-color: rgba(124, 92, 224, 0.45);
+  box-shadow: 0 4px 12px rgba(102, 74, 198, 0.12);
+}
+
+.trigger:active {
+  transform: scale(0.97);
+}
+
+.globe {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  color: #7c5ce0;
+}
+
+.chevron {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+  transition: transform 160ms ease;
+  opacity: 0.72;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 164px;
+  padding: 6px;
+  border-radius: 16px;
+  border: 1.5px solid rgba(124, 92, 224, 0.18);
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow:
+    0 14px 32px rgba(55, 36, 118, 0.14),
+    0 2px 6px rgba(55, 36, 118, 0.06);
+  backdrop-filter: blur(10px);
+  z-index: 80;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 11px;
+  border: 0;
+  border-radius: 11px;
+  background: transparent;
+  color: #35295c;
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 140ms ease, color 140ms ease;
+}
+
+.option:hover {
+  background: #f3eeff;
+}
+
+.optionActive {
+  background: #ece3ff;
+  color: #5b3cc4;
+  font-weight: 700;
+}
+
+.optionCode {
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(124, 92, 224, 0.12);
+  color: #5b3cc4;
+}
+
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.cardBtn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 13px 16px;
+  border-radius: 16px;
+  border: 1.5px solid rgba(124, 92, 224, 0.18);
+  background: #ffffff;
+  color: #35295c;
+  cursor: pointer;
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.cardBtn:hover {
+  border-color: rgba(124, 92, 224, 0.45);
+  box-shadow: 0 6px 16px rgba(102, 74, 198, 0.1);
+}
+
+.cardBtnActive {
+  border-color: #7c5ce0;
+  background: #f6f1ff;
+  box-shadow: 0 6px 18px rgba(124, 92, 224, 0.14);
+}
+
+.cardLabelWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.cardNativeName {
+  font-size: 0.96rem;
+  font-weight: 700;
+}
+
+.cardCode {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #6b5b95;
+}
+
+.cardActiveBadge {
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: #7c5ce0;
+  color: #ffffff;
+}

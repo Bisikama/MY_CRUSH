@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import type { FormEvent } from 'react';
+import { useI18n } from '../../../i18n';
 import { AuthField, PasswordField } from '../components/auth-field';
 import { AuthFeedback, AuthSubmitButton } from '../components/auth-ui';
 import { IdentitySwitchDialog } from '../components/identity-switch-dialog';
@@ -31,6 +32,7 @@ export function LoginForm({
   onConfirmSwitch: () => void;
   onCancelSwitch: () => void;
 }) {
+  const { t } = useI18n();
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
     onSubmit();
@@ -41,9 +43,9 @@ export function LoginForm({
       <div className="auth-header-block">
         <div className="auth-kicker">
           <span className="auth-kicker-dot" aria-hidden="true" />
-          <span>Đăng nhập</span>
+          <span>{t('auth.login.kicker')}</span>
         </div>
-        <h1 className="auth-title">Chào bạn trở lại</h1>
+        <h1 className="auth-title">{t('auth.login.title')}</h1>
       </div>
 
       <AuthFeedback variant="error">{error}</AuthFeedback>
@@ -51,11 +53,11 @@ export function LoginForm({
       <form className="auth-form" onSubmit={handleSubmit}>
         <AuthField
           id="auth-email"
-          label="Email"
+          label={t('auth.login.emailLabel')}
           type="email"
           autoComplete="email"
           maxLength={254}
-          placeholder="banthan@duoquest.vn"
+          placeholder={t('auth.login.emailPlaceholder')}
           value={email}
           onChange={(event) => onEmailChange(event.target.value)}
           required
@@ -63,10 +65,10 @@ export function LoginForm({
 
         <PasswordField
           id="auth-password"
-          label="Mật khẩu"
+          label={t('auth.login.passwordLabel')}
           labelExtra={
             <Link href="/forgot-password" className="auth-inline-link">
-              Quên mật khẩu?
+              {t('auth.login.forgotLink')}
             </Link>
           }
           autoComplete="current-password"
@@ -77,17 +79,17 @@ export function LoginForm({
           required
         />
 
-        <AuthSubmitButton busy={submitting} busyLabel="Đang đăng nhập…">
-          Đăng nhập
+        <AuthSubmitButton busy={submitting} busyLabel={t('auth.login.submitting')}>
+          {t('auth.login.submit')}
         </AuthSubmitButton>
       </form>
 
       <div className="auth-footer-links">
         <Link href="/register" className="auth-secondary-link">
-          {guestNickname ? 'Tạo tài khoản để giữ tiến trình' : 'Tạo tài khoản'}
+          {guestNickname ? t('auth.login.createWithProgress') : t('auth.login.createAccount')}
         </Link>
         <Link href="/play" className="auth-guest-pill">
-          Chơi dưới dạng khách ⚡
+          {t('auth.login.playAsGuest')}
         </Link>
       </div>
 

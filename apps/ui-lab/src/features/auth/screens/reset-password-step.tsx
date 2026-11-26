@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import type { FormEvent } from 'react';
+import { useI18n } from '../../../i18n';
 import { PasswordField } from '../components/auth-field';
 import { AuthFeedback, AuthStepIndicator, AuthSubmitButton } from '../components/auth-ui';
 
@@ -26,6 +27,7 @@ export function ResetPasswordStep({
   onSubmit: () => void;
   onChangeEmail: () => void;
 }) {
+  const { t } = useI18n();
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
     onSubmit();
@@ -35,7 +37,7 @@ export function ResetPasswordStep({
     <div className="auth-screen-enter">
       <div className="auth-header-block">
         <AuthStepIndicator step={3} />
-        <h1 className="auth-title">Tạo mật khẩu mới</h1>
+        <h1 className="auth-title">{t('auth.resetPassword.title')}</h1>
       </div>
 
       <div className="auth-email-pill-row">
@@ -48,7 +50,7 @@ export function ResetPasswordStep({
           className="auth-text-action"
           onClick={onChangeEmail}
         >
-          Đổi email
+          {t('auth.verification.changeEmail')}
         </button>
       </div>
 
@@ -57,10 +59,10 @@ export function ResetPasswordStep({
       <form className="auth-form" onSubmit={handleSubmit}>
         <PasswordField
           id="auth-password"
-          label="Mật khẩu"
+          label={t('auth.registration.passwordLabel')}
           autoComplete="new-password"
           maxLength={256}
-          placeholder="Tối thiểu 9 ký tự, có ký tự đặc biệt"
+          placeholder={t('auth.registration.passwordPlaceholder')}
           showQualityMeter
           value={password}
           onChange={(event) => onPasswordChange(event.target.value)}
@@ -69,26 +71,26 @@ export function ResetPasswordStep({
 
         <PasswordField
           id="auth-confirm"
-          label="Xác nhận mật khẩu"
+          label={t('auth.registration.confirmLabel')}
           autoComplete="new-password"
           maxLength={256}
-          placeholder="Nhập lại mật khẩu"
-          toggleAriaLabel="Hiện hoặc ẩn mật khẩu xác nhận"
+          placeholder={t('auth.registration.confirmPlaceholder')}
+          toggleAriaLabel={t('auth.registration.confirmToggleAria')}
           value={confirmation}
           onChange={(event) => onConfirmationChange(event.target.value)}
           required
         />
 
-        <AuthSubmitButton busy={submitting} busyLabel="Đang lưu…">
-          Lưu mật khẩu
+        <AuthSubmitButton busy={submitting} busyLabel={t('auth.resetPassword.submitting')}>
+          {t('auth.resetPassword.submit')}
         </AuthSubmitButton>
 
-        <p className="auth-session-note">Các phiên cũ sẽ được đăng xuất.</p>
+        <p className="auth-session-note">{t('auth.resetPassword.sessionsNote')}</p>
       </form>
 
       <div className="auth-footer-links auth-footer-single">
         <Link href="/login" className="auth-secondary-link">
-          ← Về đăng nhập
+          {t('auth.emailStep.backToLogin')}
         </Link>
       </div>
     </div>

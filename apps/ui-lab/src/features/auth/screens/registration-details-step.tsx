@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import type { FormEvent } from 'react';
+import { useI18n } from '../../../i18n';
 import { AuthField, PasswordField } from '../components/auth-field';
 import { AuthFeedback, AuthStepIndicator, AuthSubmitButton } from '../components/auth-ui';
 
@@ -30,6 +31,7 @@ export function RegistrationDetailsStep({
   onSubmit: () => void;
   onChangeEmail: () => void;
 }) {
+  const { t } = useI18n();
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
     onSubmit();
@@ -39,7 +41,7 @@ export function RegistrationDetailsStep({
     <div className="auth-screen-enter">
       <div className="auth-header-block">
         <AuthStepIndicator step={3} />
-        <h1 className="auth-title">Hoàn tất tài khoản</h1>
+        <h1 className="auth-title">{t('auth.registration.title')}</h1>
       </div>
 
       <div className="auth-email-pill-row">
@@ -52,7 +54,7 @@ export function RegistrationDetailsStep({
           className="auth-text-action"
           onClick={onChangeEmail}
         >
-          Đổi email
+          {t('auth.verification.changeEmail')}
         </button>
       </div>
 
@@ -61,11 +63,11 @@ export function RegistrationDetailsStep({
       <form className="auth-form" onSubmit={handleSubmit}>
         <AuthField
           id="auth-nickname"
-          label="Nickname"
+          label={t('auth.registration.nicknameLabel')}
           autoComplete="nickname"
           minLength={2}
           maxLength={30}
-          placeholder="Tên hiển thị (2–30 ký tự)"
+          placeholder={t('auth.registration.nicknamePlaceholder')}
           value={nickname}
           onChange={(event) => onNicknameChange(event.target.value)}
           required
@@ -73,10 +75,10 @@ export function RegistrationDetailsStep({
 
         <PasswordField
           id="auth-password"
-          label="Mật khẩu"
+          label={t('auth.registration.passwordLabel')}
           autoComplete="new-password"
           maxLength={256}
-          placeholder="Tối thiểu 9 ký tự, có ký tự đặc biệt"
+          placeholder={t('auth.registration.passwordPlaceholder')}
           showQualityMeter
           value={password}
           onChange={(event) => onPasswordChange(event.target.value)}
@@ -85,24 +87,24 @@ export function RegistrationDetailsStep({
 
         <PasswordField
           id="auth-confirm"
-          label="Xác nhận mật khẩu"
+          label={t('auth.registration.confirmLabel')}
           autoComplete="new-password"
           maxLength={256}
-          placeholder="Nhập lại mật khẩu"
-          toggleAriaLabel="Hiện hoặc ẩn mật khẩu xác nhận"
+          placeholder={t('auth.registration.confirmPlaceholder')}
+          toggleAriaLabel={t('auth.registration.confirmToggleAria')}
           value={confirmation}
           onChange={(event) => onConfirmationChange(event.target.value)}
           required
         />
 
-        <AuthSubmitButton busy={submitting} busyLabel="Đang tạo tài khoản…">
-          Tạo tài khoản
+        <AuthSubmitButton busy={submitting} busyLabel={t('auth.registration.submitting')}>
+          {t('auth.registration.submit')}
         </AuthSubmitButton>
       </form>
 
       <div className="auth-footer-links auth-footer-single">
         <Link href="/login" className="auth-secondary-link">
-          ← Về đăng nhập
+          {t('auth.emailStep.backToLogin')}
         </Link>
       </div>
     </div>

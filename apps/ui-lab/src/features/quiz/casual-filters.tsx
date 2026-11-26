@@ -4,6 +4,7 @@ import {
   type CasualCatalog,
   type CasualCustomSelection,
 } from '@duoquest/shared-types';
+import { useI18n } from '../../i18n';
 import styles from './casual-filters.module.css';
 
 interface Props {
@@ -14,10 +15,12 @@ interface Props {
 
 const topicKey = (category: string, topic: string) =>
   JSON.stringify([knowledgeKey(category), knowledgeKey(topic)]);
-const categoryLabel = (category: string) => (category === 'general' ? 'Kiến thức chung' : category);
 const maxSelections = 50;
 
 export function CasualFilters({ catalog, selection, onChange }: Props) {
+  const { t } = useI18n();
+  const categoryLabel = (category: string) =>
+    category === 'general' ? t('quiz.casualFilters.generalCategory') : category;
   const categories = new Map(catalog.map(({ category }) => [knowledgeKey(category), category]));
   const selectedCategories = new Set(selection.categories.map(knowledgeKey));
   const selectedTopics = new Set(
@@ -37,7 +40,7 @@ export function CasualFilters({ catalog, selection, onChange }: Props) {
   return (
     <>
       <fieldset className={styles.field}>
-        <legend>Lĩnh vực</legend>
+        <legend>{t('quiz.casualFilters.categoriesLegend')}</legend>
         <div className={styles.options}>
           {Array.from(categories, ([key, category]) => (
             <label key={key} className={styles.option}>
@@ -62,11 +65,13 @@ export function CasualFilters({ catalog, selection, onChange }: Props) {
               {categoryLabel(category)}
             </label>
           ))}
-          {!categories.size && <p className={styles.empty}>Chưa có lĩnh vực.</p>}
+          {!categories.size && (
+            <p className={styles.empty}>{t('quiz.casualFilters.emptyCategories')}</p>
+          )}
         </div>
       </fieldset>
       <fieldset className={styles.field}>
-        <legend>Chủ đề</legend>
+        <legend>{t('quiz.casualFilters.topicsLegend')}</legend>
         <div className={styles.options}>
           {Array.from(topics, ([key, { category, topic }]) => (
             <label key={key} className={styles.option}>
@@ -91,11 +96,11 @@ export function CasualFilters({ catalog, selection, onChange }: Props) {
               </span>
             </label>
           ))}
-          {!topics.size && <p className={styles.empty}>Chưa có chủ đề.</p>}
+          {!topics.size && <p className={styles.empty}>{t('quiz.casualFilters.emptyTopics')}</p>}
         </div>
       </fieldset>
       <div>
-        <label htmlFor="casual-difficulty">Độ khó</label>
+        <label htmlFor="casual-difficulty">{t('quiz.casualFilters.difficultyLabel')}</label>
         <select
           id="casual-difficulty"
           value={selection.difficulty}
@@ -106,14 +111,14 @@ export function CasualFilters({ catalog, selection, onChange }: Props) {
             })
           }
         >
-          <option value="mixed">Hỗn hợp</option>
-          <option value="easy">Dễ</option>
-          <option value="medium">Trung bình</option>
-          <option value="hard">Khó</option>
+          <option value="mixed">{t('common.difficulty.mixed')}</option>
+          <option value="easy">{t('common.difficulty.easy')}</option>
+          <option value="medium">{t('common.difficulty.medium')}</option>
+          <option value="hard">{t('common.difficulty.hard')}</option>
         </select>
       </div>
       <div className={styles.footer}>
-        <span>Bỏ trống lĩnh vực hoặc chủ đề để lấy tất cả mục phù hợp.</span>
+        <span>{t('quiz.casualFilters.footerHint')}</span>
         {Boolean(hasFilters) && (
           <button
             type="button"
@@ -121,7 +126,7 @@ export function CasualFilters({ catalog, selection, onChange }: Props) {
               onChange({ type: 'CASUAL_CUSTOM', categories: [], topics: [], difficulty: 'mixed' })
             }
           >
-            Xóa bộ lọc
+            {t('quiz.casualFilters.clearButton')}
           </button>
         )}
       </div>

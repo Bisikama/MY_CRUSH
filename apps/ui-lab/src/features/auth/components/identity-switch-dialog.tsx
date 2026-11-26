@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { useI18n } from '../../../i18n';
 
 export function IdentitySwitchDialog({
   open,
@@ -15,6 +16,7 @@ export function IdentitySwitchDialog({
   onConfirm: () => void;
   onCancel: () => void;
 }) {
+  const { t } = useI18n();
   const cancelBtnRef = useRef<HTMLButtonElement | null>(null);
   const confirmBtnRef = useRef<HTMLButtonElement | null>(null);
 
@@ -74,12 +76,12 @@ export function IdentitySwitchDialog({
           🎒 👜
         </div>
         <h2 id="identity-switch-title" className="auth-modal-title">
-          Tách biệt túi đồ
+          {t('auth.identitySwitch.title')}
         </h2>
         <p id="identity-switch-desc" className="auth-modal-desc">
-          Đăng nhập sẽ chuyển sang hồ sơ của tài khoản đã có và thoát hồ sơ khách
-          {guestNickname ? ` (${guestNickname})` : ''}. Coins, XP và vật phẩm của hồ sơ khách không
-          tự cộng vào tài khoản này.
+          {t('auth.identitySwitch.descBase', {
+            guestSuffix: guestNickname ? ` (${guestNickname})` : '',
+          })}
         </p>
         <div className="auth-modal-actions">
           <button
@@ -89,7 +91,7 @@ export function IdentitySwitchDialog({
             className="auth-secondary-btn auth-btn-squish"
             onClick={onCancel}
           >
-            Ở lại
+            {t('auth.identitySwitch.stay')}
           </button>
           <button
             ref={confirmBtnRef}
@@ -98,7 +100,7 @@ export function IdentitySwitchDialog({
             className="auth-primary-modal-btn auth-btn-squish"
             onClick={onConfirm}
           >
-            Tiếp tục đăng nhập
+            {t('auth.identitySwitch.confirm')}
           </button>
         </div>
       </div>

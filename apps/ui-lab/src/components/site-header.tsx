@@ -3,11 +3,14 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, type MouseEvent } from 'react';
+import { useI18n } from '../i18n';
 import { usePlatform } from '../providers/platform-provider';
 import { shouldConfirmLeaveOnNavigation } from '../features/hub/room-banner.utils';
+import { LanguageSwitcher } from './language-switcher';
 
 export function SiteHeader() {
   const pathname = usePathname();
+  const { localeMeta, t } = useI18n();
   const {
     hydrated,
     localHost,
@@ -21,7 +24,7 @@ export function SiteHeader() {
     navigateSafely,
   } = usePlatform();
 
-  const [roomAuthWarning, setRoomAuthWarning] = useState('');
+  const [roomAuthWarningCode, setRoomAuthWarningCode] = useState<string | null>(null);
 
   const activeStatus = room?.status ?? currentRoom?.status;
   const activeCode = room?.code ?? currentRoom?.code;
@@ -37,7 +40,7 @@ export function SiteHeader() {
     ) {
       return;
     }
-    setRoomAuthWarning('');
+    setRoomAuthWarningCode(null);
     if (shouldConfirmLeaveOnNavigation(pathname, href, activeStatus, activeCode)) {
       event.preventDefault();
       navigateSafely(href);
@@ -57,12 +60,10 @@ export function SiteHeader() {
     }
     if (currentRoom) {
       event.preventDefault();
-      setRoomAuthWarning(
-        `Hãy rời phòng ${currentRoom.code} trước khi đăng nhập hoặc chuyển danh tính.`,
-      );
+      setRoomAuthWarningCode(currentRoom.code);
       return;
     }
-    setRoomAuthWarning('');
+    setRoomAuthWarningCode(null);
     if (shouldConfirmLeaveOnNavigation(pathname, href, activeStatus, activeCode)) {
       event.preventDefault();
       navigateSafely(href);
@@ -85,14 +86,14 @@ export function SiteHeader() {
           <span className="lavender-logo-text">DuoQuest</span>
         </Link>
 
-        <nav className="lavender-nav" aria-label="Điều hướng chính">
+        <nav className="lavender-nav" aria-label={t('nav.ariaMain')}>
           <Link
             href="/"
             className={`lavender-nav-link ${isHubActive ? 'active' : ''}`}
             aria-current={isHubActive ? 'page' : undefined}
             onClick={(e) => handleNavClick(e, '/')}
           >
-            Các trò chơi
+            {t('nav.games')}
           </Link>
           <Link
             href="/play"
@@ -100,7 +101,7 @@ export function SiteHeader() {
             aria-current={isQuizActive ? 'page' : undefined}
             onClick={(e) => handleNavClick(e, '/play')}
           >
-            Quiz Battle
+            {t('nav.quizBattle')}
           </Link>
           <Link
             href="/packs"
@@ -108,7 +109,7 @@ export function SiteHeader() {
             aria-current={isPacksActive ? 'page' : undefined}
             onClick={(e) => handleNavClick(e, '/packs')}
           >
-            Bộ câu hỏi
+            {t('nav.packs')}
           </Link>
           <Link
             href="/shop"
@@ -116,14 +117,16 @@ export function SiteHeader() {
             aria-current={isShopActive ? 'page' : undefined}
             onClick={(e) => handleNavClick(e, '/shop')}
           >
-            Shop
+            {t('nav.shop')}
           </Link>
         </nav>
 
         <div className="lavender-account-cluster">
+          <LanguageSwitcher variant="compact" />
+
           {!hydrated ? (
             <span className="lavender-status-pill" role="status">
-              Đang tải…
+              {t('nav.loading')}
             </span>
           ) : identityError && !identity ? (
             <button
@@ -131,7 +134,7 @@ export function SiteHeader() {
               className="lavender-retry-btn"
               onClick={() => void retryIdentity()}
             >
-              Thử lại phiên
+              {t('nav.retrySession')}
             </button>
           ) : !identity ? (
             localHost ? (
@@ -140,7 +143,7 @@ export function SiteHeader() {
                 className="lavender-auth-cta"
                 onClick={(e) => handleAuthActionClick(e, '/login')}
               >
-                Đăng nhập
+                {t('nav.login')}
               </Link>
             ) : (
               <Link
@@ -148,13 +151,16 @@ export function SiteHeader() {
                 className="lavender-auth-cta"
                 onClick={(e) => handleNavClick(e, '/play')}
               >
-                Chơi với tên khách
+                {t('nav.playAsGuest')}
               </Link>
             )
           ) : (
             <>
               {profileStatus === 'ready' && walletBalance !== null ? (
-                <div className="lavender-coins-chip" aria-label={`Số dư ${walletBalance} Coins`}>
+                <div
+                  className="lavender-coins-chip"
+                  aria-label={t('nav.coinsBalanceAria', { balance: walletBalance })}
+                >
                   <span className="lavender-coin-icon" aria-hidden="true">
                     ★
                   </span>
@@ -163,7 +169,7 @@ export function SiteHeader() {
               ) : (
                 <div
                   className="lavender-coins-chip lavender-coins-loading"
-                  aria-label="Đang tải số dư Coins"
+                  aria-label={t('nav.coinsLoadingAria')}
                 >
                   <span className="lavender-coin-icon" aria-hidden="true">
                     ★
@@ -179,14 +185,14 @@ export function SiteHeader() {
                     className="lavender-upgrade-link"
                     onClick={(e) => handleAuthActionClick(e, '/register')}
                   >
-                    Tạo tài khoản để giữ tiến trình
+                    {t('nav.upgradeAccount')}
                   </Link>
                   <Link
                     href="/login"
                     className="lavender-signin-link"
                     onClick={(e) => handleAuthActionClick(e, '/login')}
                   >
-                    Đăng nhập
+                    {t('nav.login')}
                   </Link>
                 </>
               )}
@@ -194,11 +200,11 @@ export function SiteHeader() {
               <Link
                 href="/profile"
                 className={`lavender-profile-pill ${isProfileActive ? 'active' : ''}`}
-                aria-label={`Hồ sơ của ${identity.nickname}`}
+                aria-label={t('nav.profileAria', { nickname: identity.nickname })}
                 onClick={(e) => handleNavClick(e, '/profile')}
               >
                 <span className="lavender-avatar-badge" aria-hidden="true">
-                  {identity.nickname.slice(0, 1).toLocaleUpperCase('vi')}
+                  {identity.nickname.slice(0, 1).toLocaleUpperCase(localeMeta.code)}
                 </span>
                 <span className="lavender-profile-name">{identity.nickname}</span>
               </Link>
@@ -211,27 +217,27 @@ export function SiteHeader() {
         <div className="lavender-header-warning" role="alert">
           <span>{identityError}</span>
           <button type="button" className="lavender-retry-btn" onClick={() => void retryIdentity()}>
-            Thử lại phiên
+            {t('nav.retrySession')}
           </button>
         </div>
       )}
-      {roomAuthWarning && (
+      {roomAuthWarningCode && (
         <div className="lavender-header-warning" role="alert">
-          <span>{roomAuthWarning}</span>
+          <span>{t('nav.roomAuthWarning', { code: roomAuthWarningCode })}</span>
           {currentRoom && (
             <Link
               href={`/play/${currentRoom.code}`}
               className="lavender-warning-link"
-              onClick={() => setRoomAuthWarning('')}
+              onClick={() => setRoomAuthWarningCode(null)}
             >
-              Về phòng {currentRoom.code}
+              {t('nav.backToRoomCode', { code: currentRoom.code })}
             </Link>
           )}
           <button
             type="button"
             className="lavender-warning-close"
-            aria-label="Đóng cảnh báo"
-            onClick={() => setRoomAuthWarning('')}
+            aria-label={t('nav.closeWarningAria')}
+            onClick={() => setRoomAuthWarningCode(null)}
           >
             ✕
           </button>

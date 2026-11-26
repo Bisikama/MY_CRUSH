@@ -1,5 +1,6 @@
 import { useId, type CSSProperties } from 'react';
-import { QUIZ_SKILLS, type QuizSkill } from '@duoquest/shared-types';
+import type { QuizSkill } from '@duoquest/shared-types';
+import { useI18n } from '../../i18n';
 import styles from './quiz-skill-button.module.css';
 
 const skillIcons = {
@@ -17,6 +18,7 @@ interface Props {
 }
 
 export function QuizSkillButton({ skill, usage, disabled, onActivate }: Props) {
+  const { t } = useI18n();
   const { src, accent } = skillIcons[skill];
   const nameId = useId();
   const usageId = useId();
@@ -33,7 +35,7 @@ export function QuizSkillButton({ skill, usage, disabled, onActivate }: Props) {
     >
       <img className={styles.icon} src={src} alt="" width={88} height={88} />
       <span className={styles.name} id={nameId}>
-        {QUIZ_SKILLS[skill].name}
+        {t(`common.skills.${skill}`)}
       </span>
       <span className={styles.usage} id={usageId}>
         {usage}

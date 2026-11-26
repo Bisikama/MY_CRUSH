@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import type { FormEvent } from 'react';
+import { useI18n } from '../../../i18n';
 import { OtpInput } from '../components/otp-input';
 import { AuthFeedback, AuthStepIndicator, AuthSubmitButton } from '../components/auth-ui';
 import type { ChallengePurpose } from '../auth-api';
@@ -29,6 +30,7 @@ export function VerificationStep({
   onResend: () => void;
   onChangeEmail: () => void;
 }) {
+  const { t } = useI18n();
   const isReset = purpose === 'reset';
 
   const handleSubmit = (event: FormEvent) => {
@@ -40,7 +42,7 @@ export function VerificationStep({
     <div className="auth-screen-enter">
       <div className="auth-header-block">
         <AuthStepIndicator step={2} />
-        <h1 className="auth-title">Nhập mã xác minh</h1>
+        <h1 className="auth-title">{t('auth.verification.title')}</h1>
       </div>
 
       <div className="auth-email-pill-row">
@@ -53,14 +55,12 @@ export function VerificationStep({
           className="auth-text-action"
           onClick={onChangeEmail}
         >
-          Đổi email
+          {t('auth.verification.changeEmail')}
         </button>
       </div>
 
       <p className="auth-neutral-note">
-        {isReset
-          ? 'Nếu có tài khoản với email này, mã sẽ được gửi tới hộp thư của bạn.'
-          : 'Mã xác minh đã được gửi. Hãy kiểm tra hộp thư.'}
+        {isReset ? t('auth.verification.resetNote') : t('auth.verification.registerNote')}
       </p>
 
       <AuthFeedback variant="error">{error}</AuthFeedback>
@@ -68,14 +68,14 @@ export function VerificationStep({
       <form className="auth-form" onSubmit={handleSubmit}>
         <OtpInput
           id="auth-code"
-          label="Mã xác minh 6 số"
+          label={t('auth.verification.otpLabel')}
           value={code}
           onChange={onCodeChange}
           disabled={submitting}
         />
 
-        <AuthSubmitButton busy={submitting} busyLabel="Đang kiểm tra…">
-          Xác minh mã
+        <AuthSubmitButton busy={submitting} busyLabel={t('auth.verification.submitting')}>
+          {t('auth.verification.submit')}
         </AuthSubmitButton>
       </form>
 
@@ -86,14 +86,16 @@ export function VerificationStep({
           className="auth-resend-btn"
           onClick={onResend}
         >
-          {remainingSeconds > 0 ? `Gửi lại sau ${remainingSeconds} giây` : 'Gửi lại mã'}
+          {remainingSeconds > 0
+            ? t('auth.verification.resendCountdown', { seconds: remainingSeconds })
+            : t('auth.verification.resendButton')}
         </button>
-        <span className="auth-otp-validity">Mã có hiệu lực 5 phút.</span>
+        <span className="auth-otp-validity">{t('auth.verification.validityNote')}</span>
       </div>
 
       <div className="auth-footer-links auth-footer-single">
         <Link href="/login" className="auth-secondary-link">
-          ← Về đăng nhập
+          {t('auth.emailStep.backToLogin')}
         </Link>
       </div>
     </div>

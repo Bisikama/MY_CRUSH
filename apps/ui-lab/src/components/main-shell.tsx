@@ -1,5 +1,6 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
 import type { CSSProperties, ReactNode } from 'react';
 import { useActiveQuizTheme } from '../features/quiz/themes/quiz-preferences.store';
 import { usePlatform } from '../providers/platform-provider';
@@ -9,8 +10,11 @@ import { SiteHeader } from './site-header';
 import styles from './main-shell.module.css';
 
 export function MainShell({ children, fonts }: { children: ReactNode; fonts: string }) {
+  const pathname = usePathname();
   const { matchFocused } = usePlatform();
   const theme = useActiveQuizTheme();
+  const isWideRoute =
+    pathname === '/' || pathname === '/shop' || pathname === '/packs' || pathname === '/profile';
   const shellStyle = matchFocused
     ? ({ '--quiz-shell-bg': theme.visuals.shellBgColor } as CSSProperties)
     : undefined;
@@ -21,7 +25,11 @@ export function MainShell({ children, fonts }: { children: ReactNode; fonts: str
       style={shellStyle}
     >
       {!matchFocused && <SiteHeader />}
-      <div className={matchFocused ? styles.match : 'app-shell'}>
+      <div
+        className={
+          matchFocused ? styles.match : isWideRoute ? 'app-shell app-shell-wide' : 'app-shell'
+        }
+      >
         {!matchFocused && <ActiveRoomBanner />}
         <main>{children}</main>
         {!matchFocused && (

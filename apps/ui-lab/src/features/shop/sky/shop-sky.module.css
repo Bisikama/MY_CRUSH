@@ -1,0 +1,27 @@
+.fallbackSky {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, #b998f7 0%, #d5bcff 28%, #eadbff 62%, #f9f0ff 100%);
+}
+
+.canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.aura {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 75% 45% at 50% 8%, rgba(255, 245, 255, 0.35), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 15% 85%, rgba(167, 132, 232, 0.22), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 85% 80%, rgba(196, 161, 255, 0.22), transparent 70%);
+}

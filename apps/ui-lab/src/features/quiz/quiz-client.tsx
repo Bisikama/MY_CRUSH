@@ -15,6 +15,7 @@ import {
   type PackSummary,
   type QuizAction,
 } from '@duoquest/shared-types';
+import { useI18n } from '../../i18n';
 import { actionId, api, copyText } from '../../lib/client';
 import type { KnowledgeTypeFilter } from '../../lib/knowledge-type';
 import { usePlatform } from '../../providers/platform-provider';
@@ -25,6 +26,7 @@ import { QuizStage } from './quiz-stage';
 const errorText = (error: unknown) => (error instanceof Error ? error.message : 'Có lỗi xảy ra');
 
 export function QuizClient({ code }: { code?: string }) {
+  const { t } = useI18n();
   const router = useRouter();
   const {
     hydrated,
@@ -243,29 +245,28 @@ export function QuizClient({ code }: { code?: string }) {
     return (
       <div className="welcome-grid">
         <div>
-          <p className="eyebrow">HỌC • CHƠI • KẾT NỐI</p>
+          <p className="eyebrow">{t('quiz.welcome.eyebrow')}</p>
           <h1>
-            Một câu đố nhỏ
+            {t('quiz.welcome.titleLine1')}
             <br />
-            cho <em>hai người.</em>
+            {t('quiz.welcome.titleLine2Prefix')}
+            <em>{t('quiz.welcome.titleLine2Em')}</em>
           </h1>
-          <p className="lead">
-            Một bộ câu hỏi. Nhiều cách khám phá. Chọn tên của bạn để bắt đầu một vòng Quiz Battle.
-          </p>
+          <p className="lead">{t('quiz.welcome.lead')}</p>
           <div className="intro-art" aria-hidden="true">
             <span>?</span>
             <i>✦</i>
             <b>A</b>
-            <small>+ kiến thức mới</small>
+            <small>{t('quiz.welcome.artCaption')}</small>
           </div>
         </div>
         <Card className="guest-card">
-          <span className="tag">CHÀO NGƯỜI CHƠI MỚI</span>
-          <h2>Bạn muốn được gọi là gì?</h2>
+          <span className="tag">{t('quiz.welcome.cardTag')}</span>
+          <h2>{t('quiz.welcome.cardTitle')}</h2>
           <p>
             {code
-              ? `Tạo hồ sơ khách để tiếp tục vào phòng mời ${code}.`
-              : 'Tạo hồ sơ khách trên máy này để chơi Solo, Duel, Co-op và lưu kết quả.'}
+              ? t('quiz.welcome.cardDescWithCode', { code })
+              : t('quiz.welcome.cardDescDefault')}
           </p>
           <form
             onSubmit={(event) => {
@@ -273,7 +274,7 @@ export function QuizClient({ code }: { code?: string }) {
               void createIdentity();
             }}
           >
-            <label htmlFor="nickname">Biệt danh</label>
+            <label htmlFor="nickname">{t('quiz.welcome.nicknameLabel')}</label>
             <input
               id="nickname"
               value={nickname}
@@ -281,28 +282,25 @@ export function QuizClient({ code }: { code?: string }) {
               minLength={2}
               maxLength={30}
               required
-              placeholder="Ví dụ: Mèo ham học"
+              placeholder={t('quiz.welcome.nicknamePlaceholder')}
             />
             <Button disabled={busy} type="submit">
-              {busy ? 'Đang tạo…' : 'Vào sân chơi →'}
+              {busy ? t('quiz.welcome.creating') : t('quiz.welcome.enterButton')}
             </Button>
           </form>
           {notice}
           {localHost && (
             <div className="guest-auth-links">
               <Link href="/register" className="guest-auth-primary-link">
-                Tạo tài khoản để giữ tiến trình
+                {t('nav.upgradeAccount')}
               </Link>
               <span>·</span>
               <Link href="/login" className="guest-auth-secondary-link">
-                Đăng nhập
+                {t('nav.login')}
               </Link>
             </div>
           )}
-          <p className="small muted">
-            Hồ sơ khách gắn với trình duyệt hiện tại. Trên localhost, bạn có thể tạo tài khoản để
-            giữ tiến trình; không hỗ trợ khôi phục khách nếu đã xóa cookie.
-          </p>
+          <p className="small muted">{t('quiz.welcome.guestFootNote')}</p>
         </Card>
       </div>
     );
@@ -359,23 +357,23 @@ export function QuizClient({ code }: { code?: string }) {
   if (!activeRoom)
     return (
       <Card className="narrow">
-        <p className="eyebrow">PHÒNG {code}</p>
-        <h1>Hẹn bạn ở đây.</h1>
-        <p>Đồng bộ phòng đã tham gia hoặc nhận chỗ trong phòng qua mã mời.</p>
+        <p className="eyebrow">{t('quiz.roomEntry.eyebrow', { code })}</p>
+        <h1>{t('quiz.roomEntry.title')}</h1>
+        <p>{t('quiz.roomEntry.desc')}</p>
         {notice}
         <div className="actions">
           <Button disabled={busy || !connected} onClick={() => void handleJoinRoom()}>
-            Tham gia phòng
+            {t('quiz.roomEntry.joinButton')}
           </Button>
           <Button
             variant="outline"
             disabled={busy || !connected}
             onClick={() => void handleRoomCommand('room:sync')}
           >
-            Đồng bộ lại
+            {t('quiz.roomEntry.syncButton')}
           </Button>
           <Button variant="ghost" onClick={clearLocalRoomAndGoPlay}>
-            Về sân chơi
+            {t('quiz.roomEntry.backToPlay')}
           </Button>
         </div>
       </Card>
